@@ -1,0 +1,12 @@
+//The port on which the server should listen.
+Port:				4296
+
+//The maximum number of clients that can connect to the server. All others will be rejected.
+//Note: The maximum number of connections is actually the minimum between this and the maximum
+//allowed by your license.
+MaxConnections:		65535
+
+//Should passing data be shown output for confirmation?
+//Note: Don't leave on in production servers, writing to any GUI is an expensive operation and 
+//will slow your server dramatically!
+LogData:			False

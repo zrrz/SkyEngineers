@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c4e09afd20b6e14479ccb9d7bcdbc16e
+timeCreated: 1505087591
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - fogPrefab: {fileID: 1228533930739648, guid: 4df8e7860ec94904ea3bc9a861e900f6,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
