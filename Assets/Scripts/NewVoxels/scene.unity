@@ -282,7 +282,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockArray:
-  - solid: 000000000000
+  - texturePosition: []
+    solid: 000000000000
     ID: 0
     name: Air
     hardnessTier: 0
@@ -293,8 +294,45 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
-  - solid: 010101010101
+  - texturePosition:
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    solid: 010101010101
     ID: 1
+    name: Rock
+    hardnessTier: 0
+    brightness: 0
+    eastTexture: {fileID: 0}
+    westTexture: {fileID: 0}
+    topTexture: {fileID: 0}
+    bottomTexture: {fileID: 0}
+    frontTexture: {fileID: 0}
+    backTexture: {fileID: 0}
+  - texturePosition:
+    - x: 2
+      y: 0
+    - x: 2
+      y: 0
+    - x: 3
+      y: 0
+    - x: 3
+      y: 0
+    - x: 3
+      y: 0
+    - x: 3
+      y: 0
+    solid: 010101010101
+    ID: 2
     name: Dirt
     hardnessTier: 0
     brightness: 0
@@ -304,20 +342,22 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
-  - solid: 010101010101
-    ID: 2
-    name: Air
-    hardnessTier: 0
-    brightness: 0
-    eastTexture: {fileID: 0}
-    westTexture: {fileID: 0}
-    topTexture: {fileID: 0}
-    bottomTexture: {fileID: 0}
-    frontTexture: {fileID: 0}
-    backTexture: {fileID: 0}
-  - solid: 010101010101
+  - texturePosition:
+    - x: 0
+      y: 1
+    - x: 0
+      y: 1
+    - x: 0
+      y: 1
+    - x: 0
+      y: 1
+    - x: 0
+      y: 1
+    - x: 0
+      y: 1
+    solid: 000000000000
     ID: 3
-    name: Air
+    name: Leaves
     hardnessTier: 0
     brightness: 0
     eastTexture: {fileID: 0}
@@ -326,20 +366,22 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
-  - solid: 010101010101
+  - texturePosition:
+    - x: 2
+      y: 1
+    - x: 2
+      y: 1
+    - x: 1
+      y: 1
+    - x: 1
+      y: 1
+    - x: 1
+      y: 1
+    - x: 1
+      y: 1
+    solid: 010101010101
     ID: 4
-    name: Air
-    hardnessTier: 0
-    brightness: 0
-    eastTexture: {fileID: 0}
-    westTexture: {fileID: 0}
-    topTexture: {fileID: 0}
-    bottomTexture: {fileID: 0}
-    frontTexture: {fileID: 0}
-    backTexture: {fileID: 0}
-  - solid: 010101010101
-    ID: 5
-    name: Air
+    name: Wood
     hardnessTier: 0
     brightness: 0
     eastTexture: {fileID: 0}

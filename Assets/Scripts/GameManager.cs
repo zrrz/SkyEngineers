@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
 
-	OldWorld world;
+	World world;
 
 	void Awake() {
 		if(instance != null) {
@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 			this.enabled = false;
 		} else {
 			instance = this;
-            world = GameObject.FindObjectOfType<OldWorld>();
+            world = GameObject.FindObjectOfType<World>();
 			if(world == null) {
 				Debug.LogError("No instance of world in scene.");
 			}

@@ -2,7 +2,7 @@
 using System.Collections;
 using SimplexNoise;
 
-public class TerrainGen
+public class TerrainGenerator
 {
 
     float stoneBaseHeight = -24;
@@ -107,15 +107,7 @@ public class TerrainGen
             {
                 chunk.SetBlock(x, y, z, block);
             }
-//            else
-//            {
-//                Debug.LogError("!replaceBlocks || chunk.blocks[x, y, z] == null");
-//            }
         }
-//        else
-//        {
-//            Debug.LogError("Not in range");
-//        }
     }
 
     public static int GetNoise(int x, int y, int z, float scale, int max)

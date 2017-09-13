@@ -12,6 +12,7 @@ public class BlockData {
 		Iron = 3,
 	}
 
+	[System.Serializable]
     public struct TexturePosition { 
         public TexturePosition(int x, int y) {
             this.x = x; this.y = y;

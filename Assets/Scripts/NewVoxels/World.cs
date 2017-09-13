@@ -9,6 +9,34 @@ public class World : MonoBehaviour {
 
     public string worldName = "world";
 
+	public static GameManager instance;
+
+	public GameObject fogPrefab;
+
+	public Vector3 spawnPoint;
+
+	IEnumerator Start () {
+//		chunks = new OldChunk[WORLD_WIDTH,WORLD_HEIGHT];
+//		for(int i = 0; i < WORLD_WIDTH; i++) {
+//			for(int j = 0; j < WORLD_HEIGHT; j++) {
+//				GameObject chunk = new GameObject("Chunk[" + i + " " + j + "]");
+//				chunk.transform.parent = transform;
+//				chunk.transform.position = new Vector3(i * OldChunk.CHUNK_WIDTH - (WORLD_WIDTH*OldChunk.CHUNK_WIDTH/2), 0f, j * OldChunk.CHUNK_HEIGHT - (WORLD_HEIGHT*OldChunk.CHUNK_HEIGHT/2));
+//				chunk.AddComponent<OldChunk>();
+//				chunk.GetComponent<OldChunk>().fogPrefab = fogPrefab;
+//			}
+//		}
+		yield return new WaitForSeconds(2f);
+		RaycastHit hit;
+		Debug.DrawRay(new Vector3(1f, 300f, 0f), Vector3.down, Color.red, 5f);
+		if(Physics.Raycast(new Vector3(1f, 3000f, 1f), Vector3.down, out hit, 3000f, LayerMask.GetMask("Blocks"))) {
+			spawnPoint = new Vector3Int((int)hit.point.x, (int)hit.point.y, (int)hit.point.z);
+		} else {
+			Debug.LogError("Can't find spawnpoint");
+		}
+		FindObjectOfType<PlayerData>().gameObject.transform.position = spawnPoint;
+	}
+
     public void CreateChunk(int x, int y, int z)
     {
         WorldPos worldPos = new WorldPos(x, y, z);
@@ -20,14 +48,14 @@ public class World : MonoBehaviour {
                     ) as GameObject;
 
         Chunk newChunk = newChunkObject.GetComponent<Chunk>();
-
+		newChunkObject.layer = LayerMask.NameToLayer("Blocks");
         newChunk.pos = worldPos;
         newChunk.world = this;
 
         //Add it to the chunks dictionary with the position as the key
         chunks.Add(worldPos, newChunk);
 
-        var terrainGen = new TerrainGen();
+        var terrainGen = new TerrainGenerator();
         newChunk = terrainGen.ChunkGen(newChunk);
 
         newChunk.SetBlocksUnmodified();

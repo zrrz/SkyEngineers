@@ -117,7 +117,7 @@ public class LoadChunks : MonoBehaviour
     {
         if (buildList.Count != 0)
         {
-            for (int i = 0; i < buildList.Count && i < 8; i++)
+            for (int i = 0; i < buildList.Count && i < 64; i++)
             {
                 BuildChunk(buildList[0]);
                 buildList.RemoveAt(0);
@@ -129,10 +129,13 @@ public class LoadChunks : MonoBehaviour
 
         if (updateList.Count != 0)
         {
-            Chunk chunk = world.GetChunk(updateList[0].x, updateList[0].y, updateList[0].z);
-            if (chunk != null)
-                chunk.update = true;
-            updateList.RemoveAt(0);
+			for (int i = 0; i < updateList.Count && i < 16; i++)
+			{
+            	Chunk chunk = world.GetChunk(updateList[0].x, updateList[0].y, updateList[0].z);
+            	if (chunk != null)
+                	chunk.update = true;
+            	updateList.RemoveAt(0);
+			}
         }
     }
 

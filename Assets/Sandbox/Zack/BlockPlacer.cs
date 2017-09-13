@@ -13,18 +13,13 @@ public class BlockPlacer : MonoBehaviour {
 		
 	}
 	
-//	void Update () {
-//		if(Input.GetButton("Fire1")) {
-//			Debug.DrawRay(Camera.main.ScreenPointToRay(Input.mousePosition).origin, Camera.main.ScreenPointToRay(Input.mousePosition).direction, Color.red);
-//			RaycastHit hit;
-//			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore)) {//, int.MaxValue, QueryTriggerInteraction.Ignore)) {
-//                BlockData block = hit.collider.GetComponentInParent<BlockData>();
-//				if(block != null) {
-//					if(block.Damage(damageAmount*Time.deltaTime)) {
-//						Destroy(block.gameObject);
-//					}
-//				}
-//			}
-// 		}
-//	}
+	void Update () {
+		if(Input.GetButtonDown("Fire1")) {
+			Debug.DrawRay(Camera.main.ScreenPointToRay(Input.mousePosition).origin, Camera.main.ScreenPointToRay(Input.mousePosition).direction, Color.red);
+			RaycastHit hit;
+			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore)) {//, int.MaxValue, QueryTriggerInteraction.Ignore)) {
+				EditTerrain.SetBlock(hit, BlockLoader.GetBlock(0));
+			}
+ 		}
+	}
 }

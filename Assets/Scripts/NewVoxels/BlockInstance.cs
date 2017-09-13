@@ -5,7 +5,7 @@ using System;
 [Serializable]
 public class BlockInstance
 {
-    public enum Direction { North, East, South, West, Up, Down };
+	public enum Direction { Up, Down, East, West, North, South,};
 
     public int ID = 0; //ID of corresponding BlockData this is an instance of
     const float tileSize = 0.25f;
@@ -143,7 +143,10 @@ public class BlockInstance
 //        return tile;
 //
 //
-        return new BlockData.TexturePosition(0,0);
+		if(BlockLoader.GetBlock(ID).texturePosition != null && BlockLoader.GetBlock(ID).texturePosition.Length > (int)direction)
+			return BlockLoader.GetBlock(ID).texturePosition[(int)direction];
+		else 
+        	return new BlockData.TexturePosition(0,0);
 //        return BlockDatabase.GetBlock(ID).texturePosition[(int)direction];
     }
 

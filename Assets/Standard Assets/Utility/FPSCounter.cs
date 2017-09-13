@@ -32,6 +32,7 @@ namespace UnityStandardAssets.Utility
                 m_FpsAccumulator = 0;
                 m_FpsNextPeriod += fpsMeasurePeriod;
                 m_Text.text = string.Format(display, m_CurrentFps);
+				m_Text.color = Color.Lerp(Color.red, Color.green, (float)m_CurrentFps/60f);
             }
         }
     }
