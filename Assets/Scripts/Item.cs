@@ -14,7 +14,7 @@ public class Item : MonoBehaviour {
 	//TODO usable/equipable/consumable
 
 	public bool placeable;
-	public Block block;
+	public BlockData block;
 
 	//TODO recipe
 
