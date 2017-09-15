@@ -67,7 +67,7 @@ public class ItemLoader : MonoBehaviour {
         newItem.sprite = item.sprite;
         newItem.model = item.model;
         newItem.placeable = item.placeable;
-        newItem.block = item.block;
+        newItem.blockID = item.blockID;
         return item;
     }
 }

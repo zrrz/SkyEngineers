@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Item {
 
 	public int ID;
@@ -28,7 +29,7 @@ public class Item {
 	//TODO usable/equipable/consumable
 
 	public bool placeable;
-	public BlockData block;
+	public int blockID;
 
 	//TODO recipe
 
