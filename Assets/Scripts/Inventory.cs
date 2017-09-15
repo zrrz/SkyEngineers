@@ -9,6 +9,10 @@ public class Inventory {
     public Item[] items;
 
     public virtual bool AddItem(int itemID, int amount = 1) {
+		if(items == null) {
+			items = new Item[slots];
+		}
+
         for (int i = 0; i < slots; i++)
         {
             if (items[i] == null)

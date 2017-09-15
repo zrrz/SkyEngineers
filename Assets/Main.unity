@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028365, g: 0.225714, b: 0.30692267, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -154,6 +154,7 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
+    drops: 
   - texturePosition:
     - x: 0
       y: 0
@@ -178,6 +179,7 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
+    drops: 0000000000000000
   - texturePosition:
     - x: 2
       y: 0
@@ -202,6 +204,7 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
+    drops: 00000000
   - texturePosition:
     - x: 0
       y: 1
@@ -226,6 +229,7 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
+    drops: 
   - texturePosition:
     - x: 2
       y: 1
@@ -250,6 +254,7 @@ MonoBehaviour:
     bottomTexture: {fileID: 0}
     frontTexture: {fileID: 0}
     backTexture: {fileID: 0}
+    drops: 
 --- !u!4 &127794954
 Transform:
   m_ObjectHideFlags: 0
@@ -287,14 +292,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemArray:
   - ID: 0
-    stackSize: 0
-    amount: 0
-    itemName: 
+    stackSize: 64
+    amount: 1
+    itemName: Dirt
     sprite: {fileID: 0}
-    model: {fileID: 0}
+    model: {fileID: 1695908607416308, guid: c9c20aa77ed9a724f949d7dcf6616081, type: 2}
     slot: 0
-    placeable: 0
-    blockID: 0
+    placeable: 1
+    blockID: 2
 --- !u!1 &174845536
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +670,7 @@ GameObject:
   - component: {fileID: 580356243}
   - component: {fileID: 580356248}
   - component: {fileID: 580356250}
+  - component: {fileID: 580356251}
   m_Layer: 0
   m_Name: FPSController
   m_TagString: Untagged
@@ -818,7 +824,7 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.8
+  m_Height: 1.6
   m_Radius: 0.28
   m_SlopeLimit: 45
   m_StepOffset: 0.5
@@ -949,6 +955,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 1274361945}
+--- !u!114 &580356251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 580356242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a67281c4e160444a89915cb531ea9bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &813720203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1153,8 +1170,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1066014890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 432, y: 243, z: 0}
-  m_LocalScale: {x: 0.54, y: 0.54, z: 0.54}
+  m_LocalPosition: {x: 467.5, y: 263, z: 0}
+  m_LocalScale: {x: 0.584375, y: 0.584375, z: 0.584375}
   m_Children:
   - {fileID: 297984562}
   - {fileID: 1602559136}

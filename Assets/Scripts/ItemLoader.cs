@@ -34,10 +34,10 @@ public class ItemLoader : MonoBehaviour {
     }
 
     //TODO uuuuuuuuuugh replace this.
-    public static Item GetItem(int ID) {
+    public static Item GetItemData(int ID) {
         Item item;
         if(instance.items.TryGetValue(ID, out item)) {
-            return Clone(item);
+			return item;
         } else {
             Debug.LogError("Item ID: " + ID + " not found.");
             return null;
@@ -47,13 +47,26 @@ public class ItemLoader : MonoBehaviour {
     public static Item CreateItem(int ID) {
         Item item;
         if(instance.items.TryGetValue(ID, out item)) {
-            return item;
+			return Clone(item);
         } else {
             Debug.LogError("Item ID: " + ID + " not found.");
             return null;
         }
     }
 
+	//TODO maybe show multiple of the item depending on stack size
+	public static GameObject CreateModel(int ID) {
+		Item item;
+		if(instance.items.TryGetValue(ID, out item)) {
+			GameObject itemObj = ((GameObject)Instantiate(item.model));
+			itemObj.AddComponent<ItemPickup>();
+			itemObj.AddComponent<Rigidbody>();
+			return itemObj;
+		} else {
+			Debug.LogError("Item ID: " + ID + " not found.");
+			return null;
+		}
+	}
 
     //Man I don't like this
     static Item Clone(Item item) {

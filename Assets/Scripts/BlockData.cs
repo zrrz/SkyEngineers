@@ -74,7 +74,14 @@ public class BlockData {
 	//TODO Player Phys
     //Probably a collection of predefined statuses that player can poll beneath them to recieve. Will keep it cleaner per block
 
+	public int[] drops;
 
+	public void Break(Vector3 pos) {
+		for(int i = 0; i < drops.Length; i++) {
+			GameObject obj = ItemLoader.CreateModel(drops[i]);
+			obj.transform.position = pos;
+		}
+	}
 
 
     //TODO move to chunk.cs

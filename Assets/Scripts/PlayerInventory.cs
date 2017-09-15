@@ -17,12 +17,16 @@ public class PlayerInventory : MonoBehaviour {
     }
 
     public const int EQUIPMENT_SIZE = 6; //Should correspond to slot size
+	public const int INVENTORY_SIZE = 64; //Should correspond to slot size
     Inventory inventory;
     Inventory equipment;
 
 	// Use this for initialization
 	void Start () {
+		equipment = new Inventory();
         equipment.slots = EQUIPMENT_SIZE;
+		inventory = new Inventory();
+		inventory.slots = INVENTORY_SIZE;
 	}
 	
 //	// Update is called once per frame
@@ -34,7 +38,7 @@ public class PlayerInventory : MonoBehaviour {
     {
         //Add to the equipment slot if it's empty or stackable
 
-        Item data = ItemLoader.GetItem(itemID);
+        Item data = ItemLoader.GetItemData(itemID);
         if (data.slot != Item.EquipSlot.None)
         {
             if (equipment.GetItemAt((int)data.slot) == null || equipment.GetItemAt((int)data.slot).ID == itemID)
@@ -47,4 +51,22 @@ public class PlayerInventory : MonoBehaviour {
         }
         return inventory.AddItem(itemID, amount);
     }
+
+	void OnControllerColliderHit(ControllerColliderHit hit) {
+		Debug.LogError(hit.gameObject.name);
+//		Rigidbody body = hit.collider.attachedRigidbody;
+//		if (body == null || body.isKinematic)
+//			return;
+//
+//		if (hit.moveDirection.y < -0.3F)
+//			return;
+//
+//		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+//		body.velocity = pushDir * pushPower;
+		//TODO cleanup
+		if(hit.gameObject.GetComponent<ItemPickup>()) {
+			AddItem(hit.gameObject.GetComponent<ItemPickup>().itemID, hit.gameObject.GetComponent<ItemPickup>().itemID);
+			Destroy(hit.gameObject);
+		}
+	}
 }
