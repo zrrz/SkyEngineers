@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BlockLoader : MonoBehaviour {
 
-	[SerializeField]
-	BlockData[] blockArray;
+    BlockDatabaseScriptableObject blockDatabase;
 
 	Dictionary<int, BlockData> blocks;
 
@@ -24,11 +23,11 @@ public class BlockLoader : MonoBehaviour {
 
 	void InitializeBlocks() {
 		blocks = new Dictionary<int, BlockData>();
-		for(int i = 0; i < blockArray.Length; i++) {
-			if(blocks.ContainsKey(blockArray[i].ID)) {
+        for(int i = 0; i < blockDatabase.blocks.Count; i++) {
+            if(blocks.ContainsKey(blockDatabase.blocks[i].ID)) {
 				Debug.LogError("DUPLICATE BLOCK ID. SKIPPING BLOCK");
 			} else {
-				blocks.Add(blockArray[i].ID, blockArray[i]);
+                blocks.Add(blockDatabase.blocks[i].ID, blockDatabase.blocks[i]);
 			}
 		}
 	}

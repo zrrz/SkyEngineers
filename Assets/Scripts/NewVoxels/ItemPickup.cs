@@ -7,13 +7,12 @@ public class ItemPickup : MonoBehaviour {
 	public int itemID;
 	public int amount;
 
-	void OnCollisionEnter(Collision col) {
-		if(col.gameObject.GetComponent<PlayerInventory>() != null) {
-			Debug.LogError("Col2!");
-			col.gameObject.GetComponent<PlayerInventory>().AddItem(itemID, amount);
-			Destroy(gameObject);
-		}
-	}
+//	void OnCollisionEnter(Collision col) {
+//		if(col.gameObject.GetComponent<PlayerInventory>() != null) {
+//			col.gameObject.GetComponent<PlayerInventory>().AddItem(itemID, amount);
+//			Destroy(gameObject);
+//		}
+//	}
 
 //	void Start () {
 //		

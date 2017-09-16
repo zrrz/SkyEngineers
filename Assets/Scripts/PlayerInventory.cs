@@ -27,6 +27,11 @@ public class PlayerInventory : MonoBehaviour {
         equipment.slots = EQUIPMENT_SIZE;
 		inventory = new Inventory();
 		inventory.slots = INVENTORY_SIZE;
+
+        if (grabbedItems == null)
+        {
+            grabbedItems = new List<ItemPickup>();
+        }
 	}
 	
 //	// Update is called once per frame
@@ -52,21 +57,58 @@ public class PlayerInventory : MonoBehaviour {
         return inventory.AddItem(itemID, amount);
     }
 
-	void OnControllerColliderHit(ControllerColliderHit hit) {
-		Debug.LogError(hit.gameObject.name);
-//		Rigidbody body = hit.collider.attachedRigidbody;
-//		if (body == null || body.isKinematic)
-//			return;
-//
-//		if (hit.moveDirection.y < -0.3F)
-//			return;
-//
-//		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-//		body.velocity = pushDir * pushPower;
-		//TODO cleanup
-		if(hit.gameObject.GetComponent<ItemPickup>()) {
-			AddItem(hit.gameObject.GetComponent<ItemPickup>().itemID, hit.gameObject.GetComponent<ItemPickup>().itemID);
-			Destroy(hit.gameObject);
-		}
-	}
+
+    List<ItemPickup> grabbedItems;
+
+    void OnTriggerEnter(Collider col) {
+        ItemPickup item = col.gameObject.GetComponent<ItemPickup>();
+        if (item != null)
+        {
+//            if (!grabbedItems.Contains(item))
+//            {
+            item.GetComponent<Collider>().enabled = false;
+            Destroy(item.GetComponent<Rigidbody>());//.enabled = false;
+                grabbedItems.Add(item);
+//            }
+        }
+    }
+
+    void Update() {
+        for (int i = 0; i < grabbedItems.Count; i++)
+        {
+            grabbedItems[i].transform.position = Vector3.MoveTowards(grabbedItems[i].transform.position, transform.position, 4f * Time.deltaTime);
+            if (Vector3.Distance(grabbedItems[i].transform.position, transform.position) < 0.5f)
+            {
+                ItemPickup item = grabbedItems[i];
+                if (AddItem(item.itemID, item.amount))
+                {
+                    grabbedItems.RemoveAt(i);
+                    i--;
+                    Destroy(item.gameObject);
+                }
+                else
+                {
+                    Debug.LogError("Can't add to inventory");
+                }
+            }
+        }
+    }
+
+//	void OnControllerColliderHit(ControllerColliderHit hit) {
+////		Rigidbody body = hit.collider.attachedRigidbody;
+////		if (body == null || body.isKinematic)
+////			return;
+////
+////		if (hit.moveDirection.y < -0.3F)
+////			return;
+////
+////		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+////		body.velocity = pushDir * pushPower;
+//		//TODO cleanup
+//        ItemPickup item = hit.gameObject.GetComponent<ItemPickup>();
+//        if(item != null) {
+//            AddItem(item.itemID, item.itemID);
+//			Destroy(hit.gameObject);
+//		}
+//	}
 }
