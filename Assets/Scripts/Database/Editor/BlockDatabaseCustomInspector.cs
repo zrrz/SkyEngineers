@@ -12,6 +12,7 @@ public class BlockDatabaseCustomInspector : Editor {
         {
             BlockDatabaseEditorWindow.Init();
         }
+		DrawDefaultInspector();
 //        LevelScript myTarget = (LevelScript)target;
 //
 //        myTarget.experience = EditorGUILayout.IntField("Experience", myTarget.experience);
