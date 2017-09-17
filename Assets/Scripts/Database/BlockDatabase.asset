@@ -31,25 +31,25 @@ MonoBehaviour:
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: 06bc718a087044ae083d6684f63a3d08, type: 3}
-    - {fileID: 2800000, guid: 8b8db19df91f741948f077b0865f86e5, type: 3}
-    - {fileID: 2800000, guid: 922914014ee1a48efba5ec2044088df1, type: 3}
+    - {fileID: 2800000, guid: 8fd4b9e1d820245e6a90ca1fac427b91, type: 3}
+    - {fileID: 2800000, guid: fd6940d72c96546219b6b62a14fa55b0, type: 3}
+    - {fileID: 2800000, guid: 9f8356a725f6848fb94241b5597cadae, type: 3}
     - {fileID: 2800000, guid: 922914014ee1a48efba5ec2044088df1, type: 3}
     - {fileID: 2800000, guid: af9d4903f68de42ae9ea79180472c0d2, type: 3}
     - {fileID: 2800000, guid: 3f5c4c67ef6c3486cbcaeeb11736ca52, type: 3}
     drops: 
   - texturePosition:
-    - x: 0
+    - x: 6
       y: 0
-    - x: 0
+    - x: 7
       y: 0
-    - x: 0
+    - x: 8
       y: 0
-    - x: 0
+    - x: 9
       y: 0
-    - x: 0
+    - x: 10
       y: 0
-    - x: 0
+    - x: 11
       y: 0
     solid: 010101010101
     ID: 1
@@ -57,25 +57,25 @@ MonoBehaviour:
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
+    - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
+    - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
+    - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
+    - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
+    - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
     drops: 
   - texturePosition:
-    - x: 0
+    - x: 12
       y: 0
-    - x: 0
+    - x: 13
       y: 0
-    - x: 0
+    - x: 14
       y: 0
-    - x: 0
+    - x: 15
       y: 0
-    - x: 0
+    - x: 16
       y: 0
-    - x: 0
+    - x: 17
       y: 0
     solid: 010101010101
     ID: 2
@@ -83,25 +83,25 @@ MonoBehaviour:
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: 829cb289dd8e04db6a936aed38e077a1, type: 3}
+    - {fileID: 2800000, guid: 922914014ee1a48efba5ec2044088df1, type: 3}
+    - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
+    - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
+    - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
+    - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
     drops: 
   - texturePosition:
-    - x: 0
+    - x: 18
       y: 0
-    - x: 0
+    - x: 19
       y: 0
-    - x: 0
+    - x: 20
       y: 0
-    - x: 0
+    - x: 21
       y: 0
-    - x: 0
+    - x: 22
       y: 0
-    - x: 0
+    - x: 23
       y: 0
     solid: 000000000000
     ID: 3
@@ -109,25 +109,25 @@ MonoBehaviour:
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
+    - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
+    - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
+    - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
+    - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
+    - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
     drops: 
   - texturePosition:
-    - x: 0
+    - x: 24
       y: 0
-    - x: 0
+    - x: 25
       y: 0
-    - x: 0
+    - x: 26
       y: 0
-    - x: 0
+    - x: 27
       y: 0
-    - x: 0
+    - x: 28
       y: 0
-    - x: 0
+    - x: 29
       y: 0
     solid: 000000000000
     ID: 4
@@ -135,10 +135,10 @@ MonoBehaviour:
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
-    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
+    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
+    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
+    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
+    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
+    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
     drops: 
