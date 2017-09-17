@@ -11,4 +11,134 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a46de61f77804955a367d5e7723400e, type: 3}
   m_Name: BlockDatabase
   m_EditorClassIdentifier: 
-  blocks: []
+  blocks:
+  - texturePosition:
+    - x: 0
+      y: 0
+    - x: 1
+      y: 0
+    - x: 2
+      y: 0
+    - x: 3
+      y: 0
+    - x: 4
+      y: 0
+    - x: 5
+      y: 0
+    solid: 000000000000
+    ID: 0
+    name: Air
+    hardnessTier: 0
+    brightness: 0
+    textures:
+    - {fileID: 2800000, guid: 06bc718a087044ae083d6684f63a3d08, type: 3}
+    - {fileID: 2800000, guid: 8b8db19df91f741948f077b0865f86e5, type: 3}
+    - {fileID: 2800000, guid: 922914014ee1a48efba5ec2044088df1, type: 3}
+    - {fileID: 2800000, guid: 922914014ee1a48efba5ec2044088df1, type: 3}
+    - {fileID: 2800000, guid: af9d4903f68de42ae9ea79180472c0d2, type: 3}
+    - {fileID: 2800000, guid: 3f5c4c67ef6c3486cbcaeeb11736ca52, type: 3}
+    drops: 
+  - texturePosition:
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    solid: 010101010101
+    ID: 1
+    name: Rock
+    hardnessTier: 0
+    brightness: 0
+    textures:
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    drops: 
+  - texturePosition:
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    solid: 010101010101
+    ID: 2
+    name: Dirt
+    hardnessTier: 0
+    brightness: 0
+    textures:
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    drops: 
+  - texturePosition:
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    solid: 000000000000
+    ID: 3
+    name: Leaves
+    hardnessTier: 0
+    brightness: 0
+    textures:
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    drops: 
+  - texturePosition:
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0
+    solid: 000000000000
+    ID: 4
+    name: Wood
+    hardnessTier: 0
+    brightness: 0
+    textures:
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    - {fileID: 2800000, guid: a5331cb4a9dd249cba9032ee15b4007e, type: 3}
+    drops: 

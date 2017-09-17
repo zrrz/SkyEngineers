@@ -34,12 +34,12 @@ public class BlockData {
 
 
     //TODO idk maybe optimize this somehow by not cluttering this objs size. And or exclude from build
-    public Texture2D eastTexture;
-    public Texture2D westTexture; 
-    public Texture2D topTexture; 
-    public Texture2D bottomTexture; 
-    public Texture2D frontTexture;
-    public Texture2D backTexture; 
+    public Texture2D[] textures;
+//    public Texture2D westTexture; 
+//    public Texture2D topTexture; 
+//    public Texture2D bottomTexture; 
+//    public Texture2D frontTexture;
+//    public Texture2D backTexture; 
 
 	//TODO Func
 	//	IO (Logic)

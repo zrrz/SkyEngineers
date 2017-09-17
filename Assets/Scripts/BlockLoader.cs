@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BlockLoader : MonoBehaviour {
 
+	[SerializeField]
     BlockDatabaseScriptableObject blockDatabase;
 
 	Dictionary<int, BlockData> blocks;
