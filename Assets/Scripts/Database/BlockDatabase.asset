@@ -25,9 +25,9 @@ MonoBehaviour:
       y: 0
     - x: 5
       y: 0
-    solid: 010101010101
+    solid: 000000000000
     ID: 0
-    name: 
+    name: Air
     hardnessTier: 0
     brightness: 0
     textures:
@@ -53,7 +53,7 @@ MonoBehaviour:
       y: 0
     solid: 010101010101
     ID: 1
-    name: 
+    name: Rock
     hardnessTier: 0
     brightness: 0
     textures:
@@ -79,7 +79,7 @@ MonoBehaviour:
       y: 0
     solid: 010101010101
     ID: 2
-    name: 
+    name: Dirt
     hardnessTier: 0
     brightness: 0
     textures:
@@ -103,9 +103,9 @@ MonoBehaviour:
       y: 0
     - x: 0
       y: 0
-    solid: 010101010101
+    solid: 000000000000
     ID: 3
-    name: 
+    name: Leaves
     hardnessTier: 0
     brightness: 0
     textures:
@@ -131,7 +131,7 @@ MonoBehaviour:
       y: 0
     solid: 000000000000
     ID: 4
-    name: 
+    name: Wood
     hardnessTier: 0
     brightness: 0
     textures:

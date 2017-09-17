@@ -26,6 +26,7 @@ public class BlockDatabaseEditorWindow : EditorWindow {
 		scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         for (int i = 0; i < blockDatabase.blocks.Count; i++)
         {
+			blockDatabase.blocks[i].name = GUILayout.TextField(blockDatabase.blocks[i].name);
 			blockDatabase.blocks[i].textures[0] = (Texture2D) EditorGUILayout.ObjectField("Top Texture", blockDatabase.blocks[i].textures[0], typeof (Texture2D), false);
 			blockDatabase.blocks[i].textures[1] = (Texture2D) EditorGUILayout.ObjectField("Bottom Texture", blockDatabase.blocks[i].textures[1], typeof (Texture2D), false);
 			blockDatabase.blocks[i].textures[2] = (Texture2D) EditorGUILayout.ObjectField("West Texture", blockDatabase.blocks[i].textures[2], typeof (Texture2D), false);
@@ -60,7 +61,7 @@ public class BlockDatabaseEditorWindow : EditorWindow {
     }
 
     void BuildAtlas() {
-		Texture2D texture = new Texture2D(2048, 2048, TextureFormat.RGB24, true);
+		Texture2D texture = new Texture2D(2048, 2048, TextureFormat.RGBA32, true);
 
 		int x = 0;
 		int y = 0;
@@ -70,27 +71,28 @@ public class BlockDatabaseEditorWindow : EditorWindow {
 			for(int j = 0; j < 6; j++) {
 				AddTexture(texture, block, (BlockInstance.Direction)j, ref x, ref y);
 			}
+			//TODO skip null for air
 			//TODO skip sides using same texture using a dictionary probably
 
-			string filePath = "Assets/Sandbox/Zack/TempShit/Atlas.png";
-			byte[] bytes = texture.EncodeToPNG();
-			FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-			BinaryWriter writer = new BinaryWriter(stream);
-			writer.Write(bytes);
-			writer.Close();
-			stream.Close();
-			DestroyImmediate(texture);
-			AssetDatabase.Refresh();
-
-			AssetDatabase.LoadAssetAtPath<Material>("Assets/Scripts/NewVoxels/Materials/tiles 2.mat").mainTexture = AssetDatabase.LoadAssetAtPath<Texture>(filePath);
         }
+		string filePath = "Assets/Sandbox/Zack/TempShit/Atlas.png";
+		byte[] bytes = texture.EncodeToPNG();
+		FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+		BinaryWriter writer = new BinaryWriter(stream);
+		writer.Write(bytes);
+		writer.Close();
+		stream.Close();
+		DestroyImmediate(texture);
+		AssetDatabase.Refresh();
+		
+		AssetDatabase.LoadAssetAtPath<Material>("Assets/Scripts/NewVoxels/Materials/tiles 2.mat").mainTexture = AssetDatabase.LoadAssetAtPath<Texture>(filePath);
     }
 
 	void AddTexture(Texture2D atlas, BlockData block, BlockInstance.Direction direction, ref int x, ref int y) {
 		atlas.SetPixels(x*32, y*32, 32, 32, block.textures[(int)direction].GetPixels());
 		block.texturePosition[(int)direction] = new BlockData.TexturePosition(x,y);
 		x++;
-		if(x >= 128) {
+		if(x >= 64) {
 			y++;
 			x = 0;
 		}
