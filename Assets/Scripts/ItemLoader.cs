@@ -59,7 +59,9 @@ public class ItemLoader : MonoBehaviour {
 		Item item;
 		if(instance.items.TryGetValue(ID, out item)) {
 			GameObject itemObj = ((GameObject)Instantiate(item.model));
-			itemObj.AddComponent<ItemPickup>();
+			ItemPickup itemPickup = itemObj.AddComponent<ItemPickup>();
+			itemPickup.itemID = ID;
+			itemPickup.amount = 1;
 			itemObj.AddComponent<Rigidbody>();
 			return itemObj;
 		} else {
@@ -81,6 +83,6 @@ public class ItemLoader : MonoBehaviour {
         newItem.model = item.model;
         newItem.placeable = item.placeable;
         newItem.blockID = item.blockID;
-        return item;
+		return newItem;
     }
 }

@@ -18,26 +18,22 @@ public class PlayerInventory : MonoBehaviour {
 
     public const int EQUIPMENT_SIZE = 6; //Should correspond to slot size
 	public const int INVENTORY_SIZE = 64; //Should correspond to slot size
-    Inventory inventory;
-    Inventory equipment;
+    public Inventory inventory;
+    public Inventory equipment;
 
-	// Use this for initialization
-	void Start () {
+	void Awake () {
 		equipment = new Inventory();
         equipment.slots = EQUIPMENT_SIZE;
+		equipment.items = new Item[EQUIPMENT_SIZE];
 		inventory = new Inventory();
 		inventory.slots = INVENTORY_SIZE;
+		inventory.items = new Item[INVENTORY_SIZE];
 
         if (grabbedItems == null)
         {
             grabbedItems = new List<ItemPickup>();
         }
 	}
-	
-//	// Update is called once per frame
-//	void Update () {
-//		
-//	}
 
     public bool AddItem(int itemID, int amount = 1)
     {

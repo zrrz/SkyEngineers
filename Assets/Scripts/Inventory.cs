@@ -10,7 +10,8 @@ public class Inventory {
 
     public virtual bool AddItem(int itemID, int amount = 1) {
 		if(items == null) {
-			items = new Item[slots];
+			Debug.LogError("Inventory is null");
+			return false;
 		}
 
         for (int i = 0; i < slots; i++)
@@ -22,13 +23,13 @@ public class Inventory {
                 if (items[i].amount < items[i].stackSize)
                 {
                     items[i].amount++;
-                    break;
+					return true;
                 }
-                else
-                {
-                    AddItemAtFirstEmptySlot(itemID, amount);
-                    break;
-                }
+//                else
+//                {
+//                    AddItemAtFirstEmptySlot(itemID, amount);
+//					return true;
+//                }
             }
         }
 
