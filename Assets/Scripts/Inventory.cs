@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Inventory {
 
     public int slots = 64;
 
     public Item[] items;
+
+    public UnityEvent inventoryChangedEvent = new UnityEvent();
 
     public virtual bool AddItem(int itemID, int amount = 1) {
 		if(items == null) {
@@ -23,6 +26,7 @@ public class Inventory {
                 if (items[i].amount < items[i].stackSize)
                 {
                     items[i].amount++;
+                    inventoryChangedEvent.Invoke();
 					return true;
                 }
 //                else
@@ -35,6 +39,7 @@ public class Inventory {
 
         //Otherwise just make a new one
         AddItemAtFirstEmptySlot(itemID, amount);
+        inventoryChangedEvent.Invoke();
         return true;
     }
 
@@ -52,6 +57,8 @@ public class Inventory {
             Debug.LogError("Can't add item because slot not empty, wrong itemID, or already full");
             return false;
         }
+
+        inventoryChangedEvent.Invoke();
         return true;
     }
 
@@ -80,6 +87,7 @@ public class Inventory {
             return false;
         }
 
+        inventoryChangedEvent.Invoke();
         return true;
     }
 
@@ -87,10 +95,9 @@ public class Inventory {
         int slot = FindFirstEmptySlotIndex();
         if (slot == -1)
             return false;
-        
-        items[slot] = ItemLoader.CreateItem(itemID);
-        items[slot].amount = amount;
-        return true;
+
+        return AddItemAtIndex(itemID, amount, slot);
+//        return true;
     }
 
     int FindFirstEmptySlotIndex() {

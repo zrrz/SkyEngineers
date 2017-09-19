@@ -41,7 +41,7 @@ public class Item {
 //		
 //	}
 
-	void PlaceBlock() {
+	public void PlaceBlock() {
 
 	}
 }

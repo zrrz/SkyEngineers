@@ -21,5 +21,14 @@ public class BlockPlacer : MonoBehaviour {
 				EditTerrain.BreakBlock(hit);
 			}
  		}
+        if(Input.GetButtonDown("Fire2")) {
+            Debug.DrawRay(Camera.main.ScreenPointToRay(Input.mousePosition).origin, Camera.main.ScreenPointToRay(Input.mousePosition).direction, Color.red);
+            RaycastHit hit;
+            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore)) {//, int.MaxValue, QueryTriggerInteraction.Ignore)) {
+                if(GetComponent<PlayerInventory>().CurrentActiveItem.placeable)
+                    EditTerrain.PlaceBlock(hit, BlockLoader.GetBlock(FindObjectOfType<PlayerInventory>().CurrentActiveItem.blockID));
+
+            }
+        }
 	}
 }

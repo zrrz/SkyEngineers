@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerInventory : MonoBehaviour {
 
@@ -17,9 +18,17 @@ public class PlayerInventory : MonoBehaviour {
     }
 
     public const int EQUIPMENT_SIZE = 6; //Should correspond to slot size
-	public const int INVENTORY_SIZE = 64; //Should correspond to slot size
+	public const int INVENTORY_SIZE = 40; //Should correspond to slot size
     public Inventory inventory;
     public Inventory equipment;
+
+    public int currentActiveSlot = 0;
+
+    public Item CurrentActiveItem {
+        get { return inventory.items[currentActiveSlot]; }
+    }
+
+    public UnityEvent selectionChangedEvent = new UnityEvent();
 
 	void Awake () {
 		equipment = new Inventory();
@@ -88,6 +97,79 @@ public class PlayerInventory : MonoBehaviour {
                 }
             }
         }
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            currentActiveSlot--;
+            if (currentActiveSlot < 0)
+                currentActiveSlot = 9;
+//            inventoryDirty = true;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            currentActiveSlot++;
+            if (currentActiveSlot > 9)
+                currentActiveSlot = 0;
+//            inventoryDirty = true;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            currentActiveSlot = 9;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentActiveSlot = 0;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentActiveSlot = 1;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentActiveSlot = 2;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentActiveSlot = 3;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            currentActiveSlot = 4;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            currentActiveSlot = 5;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            currentActiveSlot = 6;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            currentActiveSlot = 7;
+            selectionChangedEvent.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            currentActiveSlot = 8;
+            selectionChangedEvent.Invoke();
+        }
+//        
+//        if (Input.GetButtonDown("Fire1"))
+//        {
+//            if(playerInventory.inventory.items[currentActiveSlot] != null && playerInventory.inventory.items[currentActiveSlot].placeable)
+//                playerInventory.inventory.items[currentActiveSlot].PlaceBlock();
+//        }
     }
 
 //	void OnControllerColliderHit(ControllerColliderHit hit) {
