@@ -69,17 +69,27 @@ public class BlockDatabaseEditorWindow : EditorWindow {
     void BuildAtlas() {
 		Texture2D texture = new Texture2D(2048, 2048, TextureFormat.RGBA32, true);
 
+        Dictionary<Texture2D, Vector2Int> addedTextures = new Dictionary<Texture2D, Vector2Int>();
+
 		int x = 0;
 		int y = 0;
         for (int i = 0; i < blockDatabase.blocks.Count; i++)
         {
 			BlockData block = blockDatabase.blocks[i];
 			for(int j = 0; j < 6; j++) {
-				AddTexture(texture, block, (BlockInstance.Direction)j, ref x, ref y);
+                if (block.textures[j] != null)
+                {
+                    if (addedTextures.ContainsKey(block.textures[j]))
+                    {
+                        block.texturePosition[j] = new BlockData.TexturePosition(addedTextures[block.textures[j]]);
+                    }
+                    else
+                    {
+                        addedTextures.Add(block.textures[j], new Vector2Int(x, y));
+                        AddTexture(texture, block, (BlockInstance.Direction)j, ref x, ref y);
+                    }
+                }
 			}
-			//TODO skip null for air
-			//TODO skip sides using same texture using a dictionary probably
-
         }
 		string filePath = "Assets/Sandbox/Zack/TempShit/Atlas.png";
 		byte[] bytes = texture.EncodeToPNG();

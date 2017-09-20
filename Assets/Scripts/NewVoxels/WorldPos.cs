@@ -34,4 +34,9 @@ public struct WorldPos
             return true;
         return false;
     }
+
+    public Vector3 ToVector3() {
+        Vector3 vec3 = new Vector3(x, y, z);
+        return vec3;
+    }
 }

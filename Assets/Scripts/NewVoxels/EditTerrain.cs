@@ -61,7 +61,7 @@ public static class EditTerrain
         if (chunk == null)
             return false;
 
-        hit.point += hit.normal;
+//        hit.point += hit.normal;
         WorldPos pos = GetBlockPos(hit, adjacent);
 
         chunk.world.SetBlock(pos.x, pos.y, pos.z, block);

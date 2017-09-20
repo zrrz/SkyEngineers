@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65258427161372106}
   - component: {fileID: 23441372772563910}
   m_Layer: 0
-  m_Name: DirtItem
+  m_Name: BlockItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 45786efa5fe0d0942a27cea56c4de852, type: 2}
+  - {fileID: 2100000, guid: 56d58eecd2e93af4ea355ad1741cf39e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

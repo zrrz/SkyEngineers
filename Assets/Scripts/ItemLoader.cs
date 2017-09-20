@@ -11,6 +11,8 @@ public class ItemLoader : MonoBehaviour {
 
     static ItemLoader instance;
 
+    public Material cubeMaterial;
+
     void Awake() {
         if(instance != null) {
             Debug.LogError("Already a Item in scene. Disabling", this);
@@ -58,7 +60,26 @@ public class ItemLoader : MonoBehaviour {
 	public static GameObject CreateModel(int ID) {
 		Item item;
 		if(instance.items.TryGetValue(ID, out item)) {
-			GameObject itemObj = ((GameObject)Instantiate(item.model));
+            GameObject itemObj;
+            if (item.model == null)
+            {
+                itemObj = CreateCube(ItemLoader.GetItemData(ID).blockID);
+                itemObj.transform.localScale = Vector3.one * 0.3f;
+//                List<Vector2> uvs = new List<Vector2>();
+//                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.Down));
+//                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.Up));
+//                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.South));
+//                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.North));
+//                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.West));
+//                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.East));
+//                itemObj.GetComponent<MeshFilter>().mesh.uv = uvs.ToArray();
+//                itemObj.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+                //TODO fix. This is really bad. 1 Drawcall per and recreating each time
+            }
+            else
+            {
+                itemObj = ((GameObject)Instantiate(item.model));
+            }
 			ItemPickup itemPickup = itemObj.AddComponent<ItemPickup>();
 			itemPickup.itemID = ID;
 			itemPickup.amount = 1;
@@ -84,5 +105,114 @@ public class ItemLoader : MonoBehaviour {
         newItem.placeable = item.placeable;
         newItem.blockID = item.blockID;
 		return newItem;
+    }
+
+    static GameObject CreateCube(int ID)
+    {
+        MeshData meshData = new MeshData();
+
+        meshData.useRenderDataForCol = true;
+
+        meshData = FaceData(ID, BlockInstance.Direction.Down, meshData);
+        meshData = FaceData(ID, BlockInstance.Direction.Up, meshData);
+        meshData = FaceData(ID, BlockInstance.Direction.South, meshData);
+        meshData = FaceData(ID, BlockInstance.Direction.North, meshData);
+        meshData = FaceData(ID, BlockInstance.Direction.West, meshData);
+        meshData = FaceData(ID, BlockInstance.Direction.East, meshData);
+
+        GameObject obj = new GameObject("Cube");
+        obj.AddComponent<MeshRenderer>().material = instance.cubeMaterial;
+        MeshFilter filter = obj.AddComponent<MeshFilter>();
+
+        filter.mesh.Clear();
+        filter.mesh.vertices = meshData.vertices.ToArray();
+        filter.mesh.triangles = meshData.triangles.ToArray();
+
+        filter.mesh.uv = meshData.uv.ToArray();
+        filter.mesh.RecalculateNormals();
+
+        BoxCollider coll = obj.AddComponent<BoxCollider>();
+//        coll.sharedMesh = null;
+        Mesh mesh = new Mesh();
+        mesh.vertices = meshData.colVertices.ToArray();
+        mesh.triangles = meshData.colTriangles.ToArray();
+        mesh.RecalculateNormals();
+
+        return obj;
+    }
+
+    static MeshData FaceData(int ID, BlockInstance.Direction direction, MeshData meshData)
+    {
+        switch (direction)
+        {
+            case BlockInstance.Direction.Up:
+                meshData.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(0.5f, 0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(0.5f, 0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f));
+                break;
+            case BlockInstance.Direction.Down:
+                meshData.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(0.5f, -0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(0.5f, -0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f));
+                break;
+            case BlockInstance.Direction.North:
+                meshData.AddVertex(new Vector3(0.5f, -0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(0.5f, 0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f));
+                break;
+            case BlockInstance.Direction.South:
+                meshData.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(0.5f, 0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(0.5f, -0.5f, -0.5f));
+                break;
+            case BlockInstance.Direction.East:
+                meshData.AddVertex(new Vector3(0.5f, -0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(0.5f, 0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(0.5f, 0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(0.5f, -0.5f, 0.5f));
+                break;
+            case BlockInstance.Direction.West:
+                meshData.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f));
+                meshData.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f));
+                break;
+            default:
+                break;
+        }   
+
+        meshData.AddQuadTriangles();
+        meshData.uv.AddRange(FaceUVs(ID, direction));
+        return meshData;
+    }
+
+    static Vector2[] FaceUVs(int ID, BlockInstance.Direction direction)
+    {
+        Vector2[] UVs = new Vector2[4];
+
+        BlockData.TexturePosition tilePos;
+        if (BlockLoader.GetBlock(ID).texturePosition != null && BlockLoader.GetBlock(ID).texturePosition.Length > (int)direction)
+        {
+            tilePos = BlockLoader.GetBlock(ID).texturePosition[(int)direction];
+        }
+        else
+        {
+            tilePos = new BlockData.TexturePosition(0, 0);
+        }
+
+        UVs[0] = new Vector2(BlockInstance.tileSize * tilePos.x + BlockInstance.tileSize,
+            BlockInstance.tileSize * tilePos.y);
+        UVs[1] = new Vector2(BlockInstance.tileSize * tilePos.x + BlockInstance.tileSize,
+            BlockInstance.tileSize * tilePos.y + BlockInstance.tileSize);
+        UVs[2] = new Vector2(BlockInstance.tileSize * tilePos.x,
+            BlockInstance.tileSize * tilePos.y + BlockInstance.tileSize);
+        UVs[3] = new Vector2(BlockInstance.tileSize * tilePos.x,
+            BlockInstance.tileSize * tilePos.y);
+
+        return UVs;
     }
 }

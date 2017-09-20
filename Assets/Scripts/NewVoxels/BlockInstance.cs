@@ -8,7 +8,7 @@ public class BlockInstance
 	public enum Direction { Up, Down, East, West, North, South,};
 
     public int ID = 0; //ID of corresponding BlockData this is an instance of
-    const float tileSize = 1f/64f;
+    public const float tileSize = 1f/64f;
     public bool changed = true;
 
     //Base block constructor

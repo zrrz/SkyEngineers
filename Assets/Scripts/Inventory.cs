@@ -63,17 +63,17 @@ public class Inventory {
     }
 
     //TODO maybe remove the itemID validation
-    public bool RemoveItemAt(int itemID, int index, int amount) {
+    public bool RemoveItemAt(/*int itemID,*/ int index, int amount) {
         if (items[index] == null)
         {
             Debug.LogError("Trying to remove item from empty slot");
             return false;
         }
-        if (items[index].ID != itemID)
+        /*if (items[index].ID != itemID)
         {
             Debug.LogError("Trying to remove item using wrong itemID");
             return false;
-        }
+        }*/ //Prob don't need for now
         if (items[index].amount > amount)
         {
             items[index].amount -= amount;

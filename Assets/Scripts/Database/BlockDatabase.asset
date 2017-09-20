@@ -31,25 +31,25 @@ MonoBehaviour:
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: 8fd4b9e1d820245e6a90ca1fac427b91, type: 3}
-    - {fileID: 2800000, guid: fd6940d72c96546219b6b62a14fa55b0, type: 3}
-    - {fileID: 2800000, guid: 9f8356a725f6848fb94241b5597cadae, type: 3}
-    - {fileID: 2800000, guid: 922914014ee1a48efba5ec2044088df1, type: 3}
-    - {fileID: 2800000, guid: af9d4903f68de42ae9ea79180472c0d2, type: 3}
-    - {fileID: 2800000, guid: 3f5c4c67ef6c3486cbcaeeb11736ca52, type: 3}
-    drops: 
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    drops: []
   - texturePosition:
-    - x: 6
+    - x: 0
       y: 0
-    - x: 7
+    - x: 0
       y: 0
-    - x: 8
+    - x: 0
       y: 0
-    - x: 9
+    - x: 0
       y: 0
-    - x: 10
+    - x: 0
       y: 0
-    - x: 11
+    - x: 0
       y: 0
     solid: 010101010101
     ID: 1
@@ -63,19 +63,22 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
     - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
     - {fileID: 2800000, guid: 7e901f645b9ed42138c3bf9420437aac, type: 3}
-    drops: 
+    drops:
+    - itemID: 1
+      amount: 4
+      percentChance: 100
   - texturePosition:
-    - x: 12
+    - x: 1
       y: 0
-    - x: 13
+    - x: 2
       y: 0
-    - x: 14
+    - x: 3
       y: 0
-    - x: 15
+    - x: 3
       y: 0
-    - x: 16
+    - x: 3
       y: 0
-    - x: 17
+    - x: 3
       y: 0
     solid: 010101010101
     ID: 2
@@ -89,19 +92,22 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
     - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
     - {fileID: 2800000, guid: 4058966905e634ae1a345bb0a34483a2, type: 3}
-    drops: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    drops:
+    - itemID: 0
+      amount: 1
+      percentChance: 100
   - texturePosition:
-    - x: 18
+    - x: 4
       y: 0
-    - x: 19
+    - x: 4
       y: 0
-    - x: 20
+    - x: 4
       y: 0
-    - x: 21
+    - x: 4
       y: 0
-    - x: 22
+    - x: 4
       y: 0
-    - x: 23
+    - x: 4
       y: 0
     solid: 000000000000
     ID: 3
@@ -115,30 +121,62 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
     - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
     - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
-    drops: 
+    drops: []
   - texturePosition:
-    - x: 24
+    - x: 5
       y: 0
-    - x: 25
+    - x: 5
       y: 0
-    - x: 26
+    - x: 6
       y: 0
-    - x: 27
+    - x: 6
       y: 0
-    - x: 28
+    - x: 6
       y: 0
-    - x: 29
+    - x: 6
       y: 0
-    solid: 000000000000
+    solid: 010101010101
     ID: 4
-    name: Wood
+    name: Log
     hardnessTier: 0
     brightness: 0
     textures:
-    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
-    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
-    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
-    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
-    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
-    - {fileID: 2800000, guid: 8d79c9c38f268400a91d865d314aa4be, type: 3}
-    drops: 
+    - {fileID: 2800000, guid: 8686065226e1944d9bea60e786d559ef, type: 3}
+    - {fileID: 2800000, guid: 8686065226e1944d9bea60e786d559ef, type: 3}
+    - {fileID: 2800000, guid: 2789d18c0e9d445b8bf8524be29cea5a, type: 3}
+    - {fileID: 2800000, guid: 2789d18c0e9d445b8bf8524be29cea5a, type: 3}
+    - {fileID: 2800000, guid: 2789d18c0e9d445b8bf8524be29cea5a, type: 3}
+    - {fileID: 2800000, guid: 2789d18c0e9d445b8bf8524be29cea5a, type: 3}
+    drops:
+    - itemID: 2
+      amount: 1
+      percentChance: 100
+  - texturePosition:
+    - x: 7
+      y: 0
+    - x: 7
+      y: 0
+    - x: 7
+      y: 0
+    - x: 7
+      y: 0
+    - x: 7
+      y: 0
+    - x: 7
+      y: 0
+    solid: 010101010101
+    ID: 5
+    name: Cobblestone
+    hardnessTier: 0
+    brightness: 0
+    textures:
+    - {fileID: 2800000, guid: 8cc56b55b1ff44928880fe4056f64b28, type: 3}
+    - {fileID: 2800000, guid: 8cc56b55b1ff44928880fe4056f64b28, type: 3}
+    - {fileID: 2800000, guid: 8cc56b55b1ff44928880fe4056f64b28, type: 3}
+    - {fileID: 2800000, guid: 8cc56b55b1ff44928880fe4056f64b28, type: 3}
+    - {fileID: 2800000, guid: 8cc56b55b1ff44928880fe4056f64b28, type: 3}
+    - {fileID: 2800000, guid: 8cc56b55b1ff44928880fe4056f64b28, type: 3}
+    drops:
+    - itemID: 1
+      amount: 1
+      percentChance: 100

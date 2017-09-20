@@ -62,6 +62,9 @@ public class PlayerInventory : MonoBehaviour {
         return inventory.AddItem(itemID, amount);
     }
 
+    public bool ConsumeCurrentItem() {
+        return inventory.RemoveItemAt(currentActiveSlot, 1);
+    }
 
     List<ItemPickup> grabbedItems;
 
