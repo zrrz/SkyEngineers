@@ -108,7 +108,7 @@ public class LoadChunks : MonoBehaviour
                     updateList.Add(new WorldPos(
                                 newChunkPos.x, y * Chunk.CHUNK_SIZE, newChunkPos.z));
                 }
-                return;
+                return; //This is what is throttling chunk loading
             }
         }
     }
@@ -129,7 +129,7 @@ public class LoadChunks : MonoBehaviour
 
         if (updateList.Count != 0)
         {
-			for (int i = 0; i < updateList.Count && i < 16; i++)
+			for (int i = 0; i < updateList.Count && i < 64; i++)
 			{
             	Chunk chunk = world.GetChunk(updateList[0].x, updateList[0].y, updateList[0].z);
             	if (chunk != null)
