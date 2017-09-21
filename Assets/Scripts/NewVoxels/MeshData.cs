@@ -36,6 +36,10 @@ public class MeshData
         }
     }
 
+    public void AddUVs(Vector2[] newUVs) {
+        uv.AddRange(newUVs);
+    }
+
     public void AddVertex(Vector3 vertex)
     {
         vertices.Add(vertex);

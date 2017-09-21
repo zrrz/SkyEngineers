@@ -150,7 +150,7 @@ public class LoadChunks : MonoBehaviour
 
         if (timer == 10)
         {
-            var chunksToDelete = new List<WorldPos>();
+            var chunksToDelete = new List<int>();
             foreach (var chunk in world.chunks)
             {
                 float distance = Vector3.Distance(
@@ -161,8 +161,8 @@ public class LoadChunks : MonoBehaviour
                     chunksToDelete.Add(chunk.Key);
             }
 
-            foreach (var chunk in chunksToDelete)
-                world.DestroyChunk(chunk.x, chunk.y, chunk.z);
+            foreach (int chunkIndex in chunksToDelete)
+                world.DestroyChunk(world.chunks[chunkIndex].pos);
 
             timer = 0;
             return true;

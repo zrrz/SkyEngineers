@@ -53,7 +53,6 @@ public class BlockInstance
         }
 
         return meshData;
-
     }
 
     protected virtual MeshData FaceDataUp
@@ -65,7 +64,7 @@ public class BlockInstance
         meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.uv.AddRange(FaceUVs(Direction.Up));
+        meshData.AddUVs(FaceUVs(Direction.Up));
         return meshData;
     }
 
@@ -78,7 +77,7 @@ public class BlockInstance
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.uv.AddRange(FaceUVs(Direction.Down));
+        meshData.AddUVs(FaceUVs(Direction.Down));
         return meshData;
     }
 
@@ -91,7 +90,7 @@ public class BlockInstance
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.uv.AddRange(FaceUVs(Direction.North));
+        meshData.AddUVs(FaceUVs(Direction.North));
         return meshData;
     }
 
@@ -104,7 +103,7 @@ public class BlockInstance
         meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.uv.AddRange(FaceUVs(Direction.East));
+        meshData.AddUVs(FaceUVs(Direction.East));
         return meshData;
     }
 
@@ -117,7 +116,7 @@ public class BlockInstance
         meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.uv.AddRange(FaceUVs(Direction.South));
+        meshData.AddUVs(FaceUVs(Direction.South));
         return meshData;
     }
 
@@ -130,7 +129,8 @@ public class BlockInstance
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.uv.AddRange(FaceUVs(Direction.West));
+        meshData.AddUVs(FaceUVs(Direction.West));
+
         return meshData;
     }
 

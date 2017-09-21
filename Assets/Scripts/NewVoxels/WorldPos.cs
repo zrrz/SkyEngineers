@@ -14,6 +14,19 @@ public struct WorldPos
         this.z = z;
     }
 
+    public static int GenerateHashCode(int x, int y, int z) {
+        unchecked
+        {
+            int hash = 47;
+
+            hash = hash * 227 + x.GetHashCode();
+            hash = hash * 227 + y.GetHashCode();
+            hash = hash * 227 + z.GetHashCode();
+
+            return hash;
+        }
+    }
+
     public override int GetHashCode()
     {
         unchecked

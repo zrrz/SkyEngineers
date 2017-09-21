@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour {
 
-    public Dictionary<WorldPos, Chunk> chunks = new Dictionary<WorldPos, Chunk>();
+    public Dictionary<int, Chunk> chunks = new Dictionary<int, Chunk>();
     public GameObject chunkPrefab;
 
     public string worldName = "world";
@@ -53,7 +53,7 @@ public class World : MonoBehaviour {
         newChunk.world = this;
 
         //Add it to the chunks dictionary with the position as the key
-        chunks.Add(worldPos, newChunk);
+        chunks.Add(worldPos.GetHashCode(), newChunk);
 
         var terrainGen = new TerrainGenerator();
         newChunk = terrainGen.ChunkGen(newChunk);
@@ -74,28 +74,29 @@ public class World : MonoBehaviour {
         }
     }
 
-    public void DestroyChunk(int x, int y, int z)
+    public void DestroyChunk(WorldPos pos)
     {
         Chunk chunk = null;
-        if (chunks.TryGetValue(new WorldPos(x, y, z), out chunk))
+        int hash = pos.GetHashCode();
+        if (chunks.TryGetValue(hash, out chunk))
         {
             Serialization.SaveChunk(chunk);
             Object.Destroy(chunk.gameObject);
-            chunks.Remove(new WorldPos(x, y, z));
+            chunks.Remove(hash);
         }
     }
 
     public Chunk GetChunk(int x, int y, int z)
     {
-        WorldPos pos = new WorldPos();
-        float multiple = Chunk.CHUNK_SIZE;
-        pos.x = Mathf.FloorToInt(x / multiple) * Chunk.CHUNK_SIZE;
-        pos.y = Mathf.FloorToInt(y / multiple) * Chunk.CHUNK_SIZE;
-        pos.z = Mathf.FloorToInt(z / multiple) * Chunk.CHUNK_SIZE;
+        int hash = WorldPos.GenerateHashCode(
+            Mathf.FloorToInt(x / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
+            Mathf.FloorToInt(y / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
+            Mathf.FloorToInt(z / (float)Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE
+               );
 
         Chunk containerChunk = null;
 
-        chunks.TryGetValue(pos, out containerChunk);
+        chunks.TryGetValue(hash, out containerChunk);
 
         return containerChunk;
     }
