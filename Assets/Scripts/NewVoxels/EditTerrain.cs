@@ -56,6 +56,19 @@ public static class EditTerrain
 		return true;
 	}
 
+    public static bool PlaceBlock(RaycastHit hit, BlockData block, bool adjacent = false) {
+        Chunk chunk = hit.collider.GetComponent<Chunk>();
+        if (chunk == null)
+            return false;
+
+//        hit.point += hit.normal;
+        WorldPos pos = GetBlockPos(hit, adjacent);
+
+        chunk.world.SetBlock(pos.x, pos.y, pos.z, block);
+
+        return true;
+    }
+
     public static bool SetBlock(RaycastHit hit, BlockData block, bool adjacent = false)
     {
         Chunk chunk = hit.collider.GetComponent<Chunk>();

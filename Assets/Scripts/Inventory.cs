@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Inventory {
 
@@ -8,9 +9,12 @@ public class Inventory {
 
     public Item[] items;
 
+    public UnityEvent inventoryChangedEvent = new UnityEvent();
+
     public virtual bool AddItem(int itemID, int amount = 1) {
 		if(items == null) {
-			items = new Item[slots];
+			Debug.LogError("Inventory is null");
+			return false;
 		}
 
         for (int i = 0; i < slots; i++)
@@ -22,18 +26,20 @@ public class Inventory {
                 if (items[i].amount < items[i].stackSize)
                 {
                     items[i].amount++;
-                    break;
+                    inventoryChangedEvent.Invoke();
+					return true;
                 }
-                else
-                {
-                    AddItemAtFirstEmptySlot(itemID, amount);
-                    break;
-                }
+//                else
+//                {
+//                    AddItemAtFirstEmptySlot(itemID, amount);
+//					return true;
+//                }
             }
         }
 
         //Otherwise just make a new one
         AddItemAtFirstEmptySlot(itemID, amount);
+        inventoryChangedEvent.Invoke();
         return true;
     }
 
@@ -51,21 +57,23 @@ public class Inventory {
             Debug.LogError("Can't add item because slot not empty, wrong itemID, or already full");
             return false;
         }
+
+        inventoryChangedEvent.Invoke();
         return true;
     }
 
     //TODO maybe remove the itemID validation
-    public bool RemoveItemAt(int itemID, int index, int amount) {
+    public bool RemoveItemAt(/*int itemID,*/ int index, int amount) {
         if (items[index] == null)
         {
             Debug.LogError("Trying to remove item from empty slot");
             return false;
         }
-        if (items[index].ID != itemID)
+        /*if (items[index].ID != itemID)
         {
             Debug.LogError("Trying to remove item using wrong itemID");
             return false;
-        }
+        }*/ //Prob don't need for now
         if (items[index].amount > amount)
         {
             items[index].amount -= amount;
@@ -79,6 +87,7 @@ public class Inventory {
             return false;
         }
 
+        inventoryChangedEvent.Invoke();
         return true;
     }
 
@@ -86,10 +95,9 @@ public class Inventory {
         int slot = FindFirstEmptySlotIndex();
         if (slot == -1)
             return false;
-        
-        items[slot] = ItemLoader.CreateItem(itemID);
-        items[slot].amount = amount;
-        return true;
+
+        return AddItemAtIndex(itemID, amount, slot);
+//        return true;
     }
 
     int FindFirstEmptySlotIndex() {

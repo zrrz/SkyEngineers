@@ -63,6 +63,17 @@ public class World : MonoBehaviour {
         Serialization.Load(newChunk);
     }
 
+    void OnApplicationQuit() {
+        SaveWorld();
+    }
+
+    public void SaveWorld() {
+        foreach (Chunk chunk in chunks.Values)
+        {
+            Serialization.SaveChunk(chunk);
+        }
+    }
+
     public void DestroyChunk(int x, int y, int z)
     {
         Chunk chunk = null;

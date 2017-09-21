@@ -27,12 +27,14 @@ public class BlockDatabaseEditorWindow : EditorWindow {
         for (int i = 0; i < blockDatabase.blocks.Count; i++)
         {
 			blockDatabase.blocks[i].name = GUILayout.TextField(blockDatabase.blocks[i].name);
-			blockDatabase.blocks[i].textures[0] = (Texture2D) EditorGUILayout.ObjectField("Top Texture", blockDatabase.blocks[i].textures[0], typeof (Texture2D), false);
-			blockDatabase.blocks[i].textures[1] = (Texture2D) EditorGUILayout.ObjectField("Bottom Texture", blockDatabase.blocks[i].textures[1], typeof (Texture2D), false);
-			blockDatabase.blocks[i].textures[2] = (Texture2D) EditorGUILayout.ObjectField("West Texture", blockDatabase.blocks[i].textures[2], typeof (Texture2D), false);
-			blockDatabase.blocks[i].textures[3] = (Texture2D) EditorGUILayout.ObjectField("East Texture", blockDatabase.blocks[i].textures[3], typeof (Texture2D), false);
-			blockDatabase.blocks[i].textures[4] = (Texture2D) EditorGUILayout.ObjectField("Front Texture", blockDatabase.blocks[i].textures[4], typeof (Texture2D), false);
-			blockDatabase.blocks[i].textures[5] = (Texture2D) EditorGUILayout.ObjectField("Back Texture", blockDatabase.blocks[i].textures[5], typeof (Texture2D), false);
+			GUILayout.BeginHorizontal();
+			blockDatabase.blocks[i].textures[0] = (Texture2D) EditorGUILayout.ObjectField("Top", blockDatabase.blocks[i].textures[0], typeof (Texture2D), false);
+			blockDatabase.blocks[i].textures[1] = (Texture2D) EditorGUILayout.ObjectField("Bottom", blockDatabase.blocks[i].textures[1], typeof (Texture2D), false);
+			blockDatabase.blocks[i].textures[2] = (Texture2D) EditorGUILayout.ObjectField("West", blockDatabase.blocks[i].textures[2], typeof (Texture2D), false);
+			blockDatabase.blocks[i].textures[3] = (Texture2D) EditorGUILayout.ObjectField("East", blockDatabase.blocks[i].textures[3], typeof (Texture2D), false);
+			blockDatabase.blocks[i].textures[4] = (Texture2D) EditorGUILayout.ObjectField("Front", blockDatabase.blocks[i].textures[4], typeof (Texture2D), false);
+			blockDatabase.blocks[i].textures[5] = (Texture2D) EditorGUILayout.ObjectField("Back", blockDatabase.blocks[i].textures[5], typeof (Texture2D), false);
+			GUILayout.EndHorizontal();
 			if (GUILayout.Button("Delete"))
 			{
 				blockDatabase.blocks.RemoveAt(i);
@@ -56,12 +58,18 @@ public class BlockDatabaseEditorWindow : EditorWindow {
         if (GUILayout.Button("Compile Database"))
         {
             BuildAtlas();
+			EditorUtility.SetDirty(blockDatabase);
             AssetDatabase.SaveAssets();
+			SerializedObject obj = new SerializedObject(blockDatabase);
+			obj.ApplyModifiedProperties();
         }
+
     }
 
     void BuildAtlas() {
 		Texture2D texture = new Texture2D(2048, 2048, TextureFormat.RGBA32, true);
+
+        Dictionary<Texture2D, Vector2Int> addedTextures = new Dictionary<Texture2D, Vector2Int>();
 
 		int x = 0;
 		int y = 0;
@@ -69,11 +77,19 @@ public class BlockDatabaseEditorWindow : EditorWindow {
         {
 			BlockData block = blockDatabase.blocks[i];
 			for(int j = 0; j < 6; j++) {
-				AddTexture(texture, block, (BlockInstance.Direction)j, ref x, ref y);
+                if (block.textures[j] != null)
+                {
+                    if (addedTextures.ContainsKey(block.textures[j]))
+                    {
+                        block.texturePosition[j] = new BlockData.TexturePosition(addedTextures[block.textures[j]]);
+                    }
+                    else
+                    {
+                        addedTextures.Add(block.textures[j], new Vector2Int(x, y));
+                        AddTexture(texture, block, (BlockInstance.Direction)j, ref x, ref y);
+                    }
+                }
 			}
-			//TODO skip null for air
-			//TODO skip sides using same texture using a dictionary probably
-
         }
 		string filePath = "Assets/Sandbox/Zack/TempShit/Atlas.png";
 		byte[] bytes = texture.EncodeToPNG();

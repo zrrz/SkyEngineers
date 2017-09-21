@@ -17,6 +17,9 @@ public class BlockData {
         public TexturePosition(int x, int y) {
             this.x = x; this.y = y;
         }
+        public TexturePosition(Vector2Int vec2) {
+            this.x = vec2.x; this.y = vec2.y;
+        }
         public int x; public int y;
     } //TODO idk rename maybe
     public TexturePosition[] texturePosition;
@@ -74,12 +77,29 @@ public class BlockData {
 	//TODO Player Phys
     //Probably a collection of predefined statuses that player can poll beneath them to recieve. Will keep it cleaner per block
 
-	public int[] drops;
+    [System.Serializable]
+    public struct DropData
+    {
+        public int itemID;
+        public int amount;
+        public float percentChance; //Out of 100f
+    }
+    public DropData[] drops;
 
 	public void Break(Vector3 pos) {
 		for(int i = 0; i < drops.Length; i++) {
-			GameObject obj = ItemLoader.CreateModel(drops[i]);
-			obj.transform.position = pos;
+            float roll = Random.Range(0f, 100f);
+            if (roll <= drops[i].percentChance) //Is this right?
+            {
+                for (int j = 0; j < drops[i].amount; j++)
+                {
+                    Vector2 xyDir = Random.insideUnitCircle.normalized * 0.25f;
+                    Vector3 direction = new Vector3(xyDir.x, 0f, xyDir.y);
+                    GameObject obj = ItemLoader.CreateModel(drops[i].itemID);
+                    obj.transform.position = pos + direction;
+                    obj.GetComponent<Rigidbody>().AddForce(direction * Random.Range(40f, 60f) + Vector3.up * Random.Range(80f, 110f));
+                }
+            }
 		}
 	}
 

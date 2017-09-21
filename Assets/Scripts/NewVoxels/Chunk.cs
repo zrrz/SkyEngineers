@@ -25,7 +25,6 @@ public class Chunk : MonoBehaviour {
         coll = gameObject.GetComponent<MeshCollider>();
     }
 
-    //Update is called once per frame
     void Update()
     {
         if (update)
