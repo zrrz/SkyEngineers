@@ -42,7 +42,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
-		PlayerData playerData;
+        PlayerData playerData;
+
+        float speed;
+        public bool inputLocked = false;
 
         // Use this for initialization
         private void Start()
@@ -56,19 +59,28 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle/2f;
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
-			m_MouseLook.Init(transform , m_Camera.transform);
-			playerData = GetComponent<PlayerData>();
+            m_MouseLook.Init(transform , m_Camera.transform);
+            playerData = GetComponent<PlayerData>();
         }
 
 
         // Update is called once per frame
         private void Update()
         {
-            RotateView();
-            // the jump state needs to read here to make sure it is not missed
-            if (!m_Jump)
+            if (!inputLocked)
             {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+
+                RotateView();
+                // the jump state needs to read here to make sure it is not missed
+                if (!m_Jump)
+                {
+                    m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                }
+                GetInput();
+            }
+            else
+            {
+                speed = 0;
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -97,8 +109,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void FixedUpdate()
         {
-            float speed;
-            GetInput(out speed);
+            
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
 
@@ -133,7 +144,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
 
-            m_MouseLook.UpdateCursorLock();
+//            m_MouseLook.UpdateCursorLock();
         }
 
 
@@ -210,7 +221,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MoveDir = Vector3.zero;
 		}
 
-        private void GetInput(out float speed)
+        private void GetInput()
         {
             // Read input
             float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
@@ -222,22 +233,22 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
 			m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+            m_Input = new Vector2(horizontal, vertical);
 
-			if(!m_IsWalking) {
-				if(playerData.currentStamina > 50f * Time.deltaTime) {
-					playerData.currentStamina -= 40f * Time.deltaTime;
-					playerData.usingStam = true;
-				} else {
-					m_IsWalking = true;
-//					playerData.usingStam = false;
-				}
-			} else {
-				playerData.usingStam = false;
-			}
+            if(!m_IsWalking && m_Input.sqrMagnitude > 0) {
+                if(playerData.currentStamina > 50f * Time.deltaTime) {
+                    playerData.currentStamina -= 40f * Time.deltaTime;
+                    playerData.usingStam = true;
+                } else {
+                    m_IsWalking = true;
+//                  playerData.usingStam = false;
+                }
+            } else {
+                playerData.usingStam = false;
+            }
 #endif
             // set the desired speed to be walking or running
             speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
-            m_Input = new Vector2(horizontal, vertical);
 
             // normalize input if it exceeds 1 in combined length:
             if (m_Input.sqrMagnitude > 1)

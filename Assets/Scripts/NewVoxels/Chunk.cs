@@ -106,16 +106,16 @@ public class Chunk : MonoBehaviour {
     void RenderMesh(MeshData meshData)
     {
         filter.mesh.Clear();
-        filter.mesh.vertices = meshData.vertices.ToArray();
-        filter.mesh.triangles = meshData.triangles.ToArray();
+        filter.mesh.SetVertices(meshData.vertices);
+        filter.mesh.SetTriangles(meshData.triangles, 0);
 
-        filter.mesh.uv = meshData.uv.ToArray();
+        filter.mesh.SetUVs(0, meshData.uv);
         filter.mesh.RecalculateNormals();
 
         coll.sharedMesh = null;
         Mesh mesh = new Mesh();
-        mesh.vertices = meshData.colVertices.ToArray();
-        mesh.triangles = meshData.colTriangles.ToArray();
+        mesh.SetVertices(meshData.colVertices);
+        mesh.SetTriangles(meshData.colTriangles, 0);
         mesh.RecalculateNormals();
 
         coll.sharedMesh = mesh;

@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour {
 
         playerInventory.inventory.inventoryChangedEvent.AddListener(OnInventoryChanged);
         playerInventory.selectionChangedEvent.AddListener(OnSelectionChanged);
+
+        Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	void Update () {
@@ -36,6 +38,8 @@ public class UIManager : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.E)) {
 			showInventory = !showInventory;
+            Cursor.lockState = showInventory ? CursorLockMode.Confined : CursorLockMode.Locked;
+            playerData.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().inputLocked = showInventory;
 			SetInventoryVisibility(showInventory);
 		}
 
