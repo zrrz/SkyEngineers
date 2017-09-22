@@ -16,6 +16,9 @@ public class BlockPlacer : MonoBehaviour {
 	
     //TODO clean this up to reduce raycasts
 	void Update () {
+        if (GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().inputLocked)
+            return;
+        
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f)), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore))
         {
@@ -72,9 +75,12 @@ public class BlockPlacer : MonoBehaviour {
     //TODO fix. Crazy inneficient super temp. Essentially a memory leak the more I use it on blocks making new mats
     IEnumerator TempFlashRed(Renderer rend) {
         for(float t = 0; t < 1f; t += Time.deltaTime) {
+            if (rend == null)
+                break;
             rend.material.color = Color.Lerp(Color.red, Color.white, t);
             yield return null;
         }
-        rend.material.color = Color.Lerp(Color.red, Color.white, 1f);
+        if(rend)
+            rend.material.color = Color.Lerp(Color.red, Color.white, 1f);
     }
 }
