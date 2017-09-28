@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.E)) {
 			showInventory = !showInventory;
-            Cursor.lockState = showInventory ? CursorLockMode.Confined : CursorLockMode.Locked;
+			Cursor.lockState = showInventory ? CursorLockMode.None : CursorLockMode.Locked;
             playerData.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().inputLocked = showInventory;
 			SetInventoryVisibility(showInventory);
 		}

@@ -131,12 +131,12 @@ public class ItemLoader : MonoBehaviour {
         filter.mesh.uv = meshData.uv.ToArray();
         filter.mesh.RecalculateNormals();
 
-        BoxCollider coll = obj.AddComponent<BoxCollider>();
+        obj.AddComponent<BoxCollider>();
 //        coll.sharedMesh = null;
-        Mesh mesh = new Mesh();
-        mesh.vertices = meshData.colVertices.ToArray();
-        mesh.triangles = meshData.colTriangles.ToArray();
-        mesh.RecalculateNormals();
+//        Mesh mesh = new Mesh();
+//        mesh.vertices = meshData.colVertices.ToArray();
+//        mesh.triangles = meshData.colTriangles.ToArray();
+//        mesh.RecalculateNormals();
 
         return obj;
     }
