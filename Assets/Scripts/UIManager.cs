@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour {
             button.onClick.AddListener(() => ClickSlot(button, playerInventory.inventory));
         }
 
-        for (int i = 10; i < playerInventory.inventory.slots; i++)
+		for (int i = 10; i < PlayerInventory.INVENTORY_SIZE + PlayerInventory.CRAFTING_SIZE; i++)
         {
             Button button = transform.Find("Canvas/Inventory/Bag/Slots/" + i).GetComponent<Button>();
             button.onClick.AddListener(() => ClickSlot(button, playerInventory.inventory));
@@ -55,6 +55,8 @@ public class UIManager : MonoBehaviour {
 			Cursor.lockState = showInventory ? CursorLockMode.None : CursorLockMode.Locked;
             playerData.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().inputLocked = showInventory;
 			SetInventoryVisibility(showInventory);
+
+			//TODO drop items in crafting slot
 		}
 
         if (inventoryDirty)
@@ -104,6 +106,10 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+	public void GrabCraftedItem() {
+		playerInventory.CraftItem();
+	}
+
     void OnInventoryChanged() {
         inventoryDirty = true;
     }
@@ -146,7 +152,7 @@ public class UIManager : MonoBehaviour {
                 transform.Find("Canvas/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
             }
 		}
-        for (int i = 10; i < playerInventory.inventory.slots; i++)
+		for (int i = 10; i < PlayerInventory.INVENTORY_SIZE + PlayerInventory.CRAFTING_SIZE; i++)
         {
             if (playerInventory.inventory.items[i] != null)
             {

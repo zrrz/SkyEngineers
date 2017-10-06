@@ -19,6 +19,7 @@ public class PlayerInventory : MonoBehaviour {
 
     public const int EQUIPMENT_SIZE = 6; //Should correspond to slot size
 	public const int INVENTORY_SIZE = 40; //Should correspond to slot size
+	public const int CRAFTING_SIZE = 4;
     public Inventory inventory;
     public Inventory equipment;
 
@@ -36,12 +37,14 @@ public class PlayerInventory : MonoBehaviour {
 		equipment.items = new Item[EQUIPMENT_SIZE];
 		inventory = new Inventory();
 		inventory.slots = INVENTORY_SIZE;
-		inventory.items = new Item[INVENTORY_SIZE];
+		inventory.items = new Item[INVENTORY_SIZE + CRAFTING_SIZE];
 
         if (grabbedItems == null)
         {
             grabbedItems = new List<ItemPickup>();
         }
+
+		RecipeManager.AddShapedRecipe(new int[] {0, -1, 0, 0}, ItemLoader.GetItemData(1));
 	}
 
     public bool AddItem(int itemID, int amount = 1)
@@ -81,6 +84,20 @@ public class PlayerInventory : MonoBehaviour {
         }
     }
 
+	public void CraftItem() {
+		inventory.RemoveItemAt(40, 1);
+		inventory.RemoveItemAt(41, 1);
+		inventory.RemoveItemAt(42, 1);
+		inventory.RemoveItemAt(43, 1);
+	}
+
+	int GetInventoryItemID(int slot) {
+		if(inventory.items[slot] != null)
+			return inventory.items[slot].ID;
+		else
+			return -1;
+	}
+
     void Update() {
         for (int i = 0; i < grabbedItems.Count; i++)
         {
@@ -100,6 +117,16 @@ public class PlayerInventory : MonoBehaviour {
                 }
             }
         }
+			
+		Item craftedItem = null;
+		if(RecipeManager.CheckRecipe(new int[] {GetInventoryItemID(40), GetInventoryItemID(41), GetInventoryItemID(42), GetInventoryItemID(43)}, out craftedItem)) {
+			GameObject.Find("44").GetComponent<UnityEngine.UI.Image>().sprite = craftedItem.sprite;
+			GameObject.Find("44").transform.Find("Amount").GetComponent<UnityEngine.UI.Text>().text = craftedItem.amount.ToString();
+			GameObject.Find("44").transform.Find("Amount").gameObject.SetActive(true);
+		} else {
+			GameObject.Find("Canvas/Canvas/Inventory/Bag/Slots/44").GetComponent<UnityEngine.UI.Image>().sprite = null;
+			GameObject.Find("44").transform.Find("Amount").gameObject.SetActive(false);
+		}
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
