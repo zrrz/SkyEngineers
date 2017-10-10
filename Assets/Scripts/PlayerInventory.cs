@@ -120,12 +120,12 @@ public class PlayerInventory : MonoBehaviour {
 			
 		Item craftedItem = null;
 		if(RecipeManager.CheckRecipe(new int[] {GetInventoryItemID(40), GetInventoryItemID(41), GetInventoryItemID(42), GetInventoryItemID(43)}, out craftedItem)) {
-			GameObject.Find("44").GetComponent<UnityEngine.UI.Image>().sprite = craftedItem.sprite;
-			GameObject.Find("44").transform.Find("Amount").GetComponent<UnityEngine.UI.Text>().text = craftedItem.amount.ToString();
-			GameObject.Find("44").transform.Find("Amount").gameObject.SetActive(true);
+			GameObject.Find("Canvas/Canvas/Inventory/Bag/Slots/44/").GetComponent<UnityEngine.UI.Image>().sprite = craftedItem.sprite;
+			GameObject.Find("Canvas/Canvas/Inventory/Bag/Slots/44/Amount").GetComponent<UnityEngine.UI.Text>().text = craftedItem.amount.ToString();
+			GameObject.Find("Canvas/Canvas/Inventory/Bag/Slots/44/Amount").gameObject.SetActive(true);
 		} else {
 			GameObject.Find("Canvas/Canvas/Inventory/Bag/Slots/44").GetComponent<UnityEngine.UI.Image>().sprite = null;
-			GameObject.Find("44").transform.Find("Amount").gameObject.SetActive(false);
+			GameObject.Find("Canvas/Canvas/Inventory/Bag/Slots/44/Amount").gameObject.SetActive(false);
 		}
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)

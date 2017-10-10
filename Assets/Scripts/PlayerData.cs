@@ -19,6 +19,8 @@ public class PlayerData : MonoBehaviour {
 //	[System.NonSerialized]
 	public bool usingStam = false;
 
+	public string playerName = "zrrz";
+
 	void Start () {
 		currentHealth = maxHealth;
 		currentStamina = maxStamina;
