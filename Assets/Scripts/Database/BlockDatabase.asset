@@ -121,7 +121,13 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
     - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
     - {fileID: 2800000, guid: 82ed1947a6739403d8ff99a3df1152bb, type: 3}
-    drops: []
+    drops:
+    - itemID: 3
+      amount: 4
+      percentChance: 100
+    - itemID: 4
+      amount: 2
+      percentChance: 50
   - texturePosition:
     - x: 5
       y: 0

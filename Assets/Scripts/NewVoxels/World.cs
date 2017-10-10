@@ -34,7 +34,7 @@ public class World : MonoBehaviour {
 		} else {
 			Debug.LogError("Can't find spawnpoint");
 		}
-		Serialization.LoadPlayer(FindObjectOfType<PlayerData>());
+//		Serialization.LoadPlayer(FindObjectOfType<PlayerData>());
 	}
 
     public void CreateChunk(int x, int y, int z)
@@ -68,7 +68,7 @@ public class World : MonoBehaviour {
     }
 
     public void SaveWorld() {
-		Serialization.SavePlayer(FindObjectOfType<PlayerData>());
+//		Serialization.SavePlayer(FindObjectOfType<PlayerData>());
         foreach (Chunk chunk in chunks.Values)
         {
             Serialization.SaveChunk(chunk);

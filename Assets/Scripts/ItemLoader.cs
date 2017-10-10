@@ -61,10 +61,10 @@ public class ItemLoader : MonoBehaviour {
 		Item item;
 		if(instance.items.TryGetValue(ID, out item)) {
             GameObject itemObj;
-            if (item.model == null)
+            if (item.modelType == Item.ModelType.Cube)
             {
                 itemObj = CreateCube(ItemLoader.GetItemData(ID).blockID);
-                itemObj.transform.localScale = Vector3.one * 0.3f;
+                itemObj.transform.localScale = Vector3.one * 0.4f;
 //                List<Vector2> uvs = new List<Vector2>();
 //                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.Down));
 //                uvs.AddRange(FaceUVs(ID, BlockInstance.Direction.Up));
@@ -76,14 +76,26 @@ public class ItemLoader : MonoBehaviour {
 //                itemObj.GetComponent<MeshFilter>().mesh.RecalculateNormals();
                 //TODO fix. This is really bad. 1 Drawcall per and recreating each time
             }
-            else
+            else if (item.modelType == Item.ModelType.Sprite)
+            {
+                itemObj = CreateSprite(ItemLoader.GetItemData(ID).sprite);
+                itemObj.transform.localScale = Vector3.one * 0.45f;
+            }
+            else if (item.modelType == Item.ModelType.Custom)
             {
                 itemObj = ((GameObject)Instantiate(item.model));
+            }
+            else
+            {
+                itemObj = null;
+                Debug.LogError("Unknown Model Type");
+                return null;
             }
 			ItemPickup itemPickup = itemObj.AddComponent<ItemPickup>();
 			itemPickup.itemID = ID;
 			itemPickup.amount = 1;
-			itemObj.AddComponent<Rigidbody>();
+            itemObj.AddComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+            itemObj.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 			return itemObj;
 		} else {
 			Debug.LogError("Item ID: " + ID + " not found.");
@@ -105,6 +117,29 @@ public class ItemLoader : MonoBehaviour {
         newItem.placeable = item.placeable;
         newItem.blockID = item.blockID;
 		return newItem;
+    }
+
+    static GameObject CreateSprite(Sprite sprite) {
+        MeshData meshData = MeshUtility.CreateMeshFromSprite(sprite);
+
+        GameObject obj = new GameObject("Sprite");
+        obj.AddComponent<MeshRenderer>().material = new Material(instance.cubeMaterial);
+        obj.GetComponent<MeshRenderer>().material.mainTexture = sprite.texture;
+//        instance.cubeMaterial;
+        MeshFilter filter = obj.AddComponent<MeshFilter>();
+
+        filter.mesh.Clear();
+        filter.mesh.vertices = meshData.vertices.ToArray();
+        filter.mesh.triangles = meshData.triangles.ToArray();
+
+        filter.mesh.uv = meshData.uv.ToArray();
+        filter.mesh.RecalculateNormals();
+
+        Vector3 size = obj.AddComponent<BoxCollider>().size;
+        size.z *= 2f;
+        obj.GetComponent<BoxCollider>().size = size;
+
+        return obj;
     }
 
     static GameObject CreateCube(int ID)

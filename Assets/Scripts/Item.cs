@@ -11,8 +11,15 @@ public class Item {
 	public string itemName;
 
 	public Sprite sprite; 
-	public GameObject model; //When on ground
 
+    public ModelType modelType;
+    public GameObject model; //When on ground
+
+    public enum ModelType {
+        Cube = 0,
+        Sprite = 1,
+        Custom = 2,
+    }
     public enum EquipSlot {
         None = 0,
         Head = 1,
