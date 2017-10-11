@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028364, g: 0.22571398, b: 0.30692267, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -715,7 +715,7 @@ MonoBehaviour:
   - ID: 3
     stackSize: 32
     amount: 1
-    itemName: Stick
+    itemName: Twig
     sprite: {fileID: 21300000, guid: ed203f85392193840a165597d76bea9b, type: 3}
     modelType: 1
     model: {fileID: 0}
@@ -727,6 +727,26 @@ MonoBehaviour:
     amount: 1
     itemName: Acorn
     sprite: {fileID: 21300000, guid: b5b12e4072637d04ea9c2b128093f96f, type: 3}
+    modelType: 1
+    model: {fileID: 0}
+    slot: 0
+    placeable: 1
+    blockID: -1
+  - ID: 5
+    stackSize: 32
+    amount: 1
+    itemName: Plank
+    sprite: {fileID: 21300000, guid: 79f598eb1e2135f448b4c0a5dfbee27d, type: 3}
+    modelType: 1
+    model: {fileID: 0}
+    slot: 0
+    placeable: 1
+    blockID: -1
+  - ID: 6
+    stackSize: 64
+    amount: 1
+    itemName: Stick
+    sprite: {fileID: 21300000, guid: f3b30ddbe13318841846851d1a1cfe9e, type: 3}
     modelType: 1
     model: {fileID: 0}
     slot: 0
@@ -7038,8 +7058,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1066014890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 313, y: 176, z: 0}
-  m_LocalScale: {x: 0.39125, y: 0.39125, z: 0.39125}
+  m_LocalPosition: {x: 318, y: 179, z: 0}
+  m_LocalScale: {x: 0.39750004, y: 0.39750004, z: 0.39750004}
   m_Children:
   - {fileID: 297984562}
   - {fileID: 1602559136}

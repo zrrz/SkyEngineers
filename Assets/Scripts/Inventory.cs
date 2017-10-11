@@ -23,9 +23,9 @@ public class Inventory {
                 continue;
             if (items[i].ID == itemID)
             {
-                if (items[i].amount < items[i].stackSize)
+                if (items[i].amount + amount <= items[i].stackSize)
                 {
-                    items[i].amount++;
+					items[i].amount += amount;
                     inventoryChangedEvent.Invoke();
 					return true;
                 }

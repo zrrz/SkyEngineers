@@ -20,6 +20,17 @@ public class RecipeManager : MonoBehaviour {
 		shapelessRecipes = new Dictionary<string, Item>();
 	}
 
+	void Start() {
+		InitRecipes();
+	}
+
+	void InitRecipes() {
+		RecipeManager.AddShapelessRecipe(new int[] {2}, ItemLoader.CreateItem(5), 4); //Log to planks
+		RecipeManager.AddShapelessRecipe(new int[] {5}, ItemLoader.CreateItem(6), 4); //Plank to stick
+		RecipeManager.AddShapelessRecipe(new int[] {3, 3}, ItemLoader.CreateItem(6), 1); //Twig to stick
+//		RecipeManager.AddShapedRecipe(new int[] {0, -1, 0, 0}, ItemLoader.GetItemData(1));
+	}
+
 	static string MakeKey(int[] itemIDs) {
 		string key = "";
 		for(int i = 0; i < itemIDs.Length; i++) {
@@ -34,7 +45,7 @@ public class RecipeManager : MonoBehaviour {
 		return key;
 	}
 
-	public static void AddShapedRecipe(int[] itemIDs, Item item) {
+	public static void AddShapedRecipe(int[] itemIDs, Item item, int amount = 1) {
 		if(!(itemIDs.Length == 9 || itemIDs.Length == 4)) {
 			Debug.LogError("Must be 4 or 9");
 			return;
@@ -42,10 +53,11 @@ public class RecipeManager : MonoBehaviour {
 
 		string key = MakeKey(itemIDs);
 
+		item.amount = amount;
 		instance.shapedRecipes.Add(key, item);
 	}
 
-	public static void AddShapelessRecipe(int[] itemIDs, Item item) {
+	public static void AddShapelessRecipe(int[] itemIDs, Item item, int amount = 1) {
 //		if(!(itemIDs.Length == 9 || itemIDs.Length == 4)) {
 //			Debug.LogError("Must be 4 or 9");
 //			return;
@@ -53,6 +65,7 @@ public class RecipeManager : MonoBehaviour {
 
 		string key = MakeKey(itemIDs);
 
+		item.amount = amount;
 		instance.shapelessRecipes.Add(key, item);
 	}
 
@@ -76,8 +89,11 @@ public class RecipeManager : MonoBehaviour {
 			return true;
 		} 
 
-		key.Replace("X-", "");
-		key.Replace("X", "");
+		key = "";
+		for(int i = 0; i < itemIDs.Length; i++) {
+			if(itemIDs[i] > 0)
+				key += (key.Length > 0 ? "-" : "") + itemIDs[i];
+		}
 
 		if(instance.shapelessRecipes.TryGetValue(key, out item)) {
 			return true;

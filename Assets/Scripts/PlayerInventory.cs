@@ -43,8 +43,6 @@ public class PlayerInventory : MonoBehaviour {
         {
             grabbedItems = new List<ItemPickup>();
         }
-
-		RecipeManager.AddShapedRecipe(new int[] {0, -1, 0, 0}, ItemLoader.GetItemData(1));
 	}
 
     public bool AddItem(int itemID, int amount = 1)
@@ -85,10 +83,21 @@ public class PlayerInventory : MonoBehaviour {
     }
 
 	public void CraftItem() {
-		inventory.RemoveItemAt(40, 1);
-		inventory.RemoveItemAt(41, 1);
-		inventory.RemoveItemAt(42, 1);
-		inventory.RemoveItemAt(43, 1);
+		Item craftedItem = null;
+		if(RecipeManager.CheckRecipe(new int[] {GetInventoryItemID(40), GetInventoryItemID(41), GetInventoryItemID(42), GetInventoryItemID(43)}, out craftedItem)) {
+			if (AddItem(craftedItem.ID, craftedItem.amount))
+			{
+				inventory.RemoveItemAt(40, 1);
+				inventory.RemoveItemAt(41, 1);
+				inventory.RemoveItemAt(42, 1);
+				inventory.RemoveItemAt(43, 1);
+			}
+			else
+			{
+				Debug.LogError("Can't add to inventory");
+			}
+		}
+
 	}
 
 	int GetInventoryItemID(int slot) {
