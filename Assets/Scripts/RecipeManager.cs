@@ -28,7 +28,7 @@ public class RecipeManager : MonoBehaviour {
 		RecipeManager.AddShapelessRecipe(new int[] {2}, ItemLoader.CreateItem(5), 4); //Log to planks
 		RecipeManager.AddShapelessRecipe(new int[] {5}, ItemLoader.CreateItem(6), 4); //Plank to stick
 		RecipeManager.AddShapelessRecipe(new int[] {3, 3}, ItemLoader.CreateItem(6), 1); //Twig to stick
-//		RecipeManager.AddShapedRecipe(new int[] {0, -1, 0, 0}, ItemLoader.GetItemData(1));
+//		RecipeManager.AddShapedRecipe(new int[] {0, -1, 0, 0}, ItemLoader.GetItemData(1)); //Dirt to rock
 	}
 
 	static string MakeKey(int[] itemIDs) {
