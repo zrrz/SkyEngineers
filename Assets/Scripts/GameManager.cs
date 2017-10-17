@@ -29,6 +29,6 @@ public class GameManager : MonoBehaviour {
 		player.transform.position = world.spawnPoint;
 		player.currentHealth = player.maxHealth;
 		player.currentStamina = player.maxHealth;
-		player.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().ResetVelocity();
+		player.GetComponent<FirstPersonControllerCustom>().ResetVelocity();
 	}
 }

@@ -16,7 +16,7 @@ public class BlockPlacer : MonoBehaviour {
 	
     //TODO clean this up to reduce raycasts
 	void Update () {
-        if (GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().inputLocked)
+        if (GetComponent<FirstPersonControllerCustom>().inputLocked)
             return;
         
         RaycastHit hit;

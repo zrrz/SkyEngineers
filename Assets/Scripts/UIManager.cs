@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.E)) {
 			showInventory = !showInventory;
 			Cursor.lockState = showInventory ? CursorLockMode.None : CursorLockMode.Locked;
-            playerData.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonControllerCustom>().inputLocked = showInventory;
+            playerData.GetComponent<FirstPersonControllerCustom>().inputLocked = showInventory;
 			SetInventoryVisibility(showInventory);
 
 			//TODO drop items in crafting slot
