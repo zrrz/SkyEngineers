@@ -77,6 +77,12 @@ public class RecipeManager : MonoBehaviour {
 	/// <param name="itemIDs">Item I ds.</param>
 	/// <param name="item">Item.</param>
 	public static bool CheckRecipe(int[] itemIDs, out Item item) {
+        if (instance == null)
+        {
+            Debug.LogError("No instance of RecipeManager in scene");
+            item = null;
+            return false;
+        }
 		item = null;
 		if(!(itemIDs.Length == 9 || itemIDs.Length == 4)) {
 			Debug.LogError("Must be 4 or 9");

@@ -51,7 +51,7 @@ public class FirstPersonControllerCustom : PlayerBehavior
     private void Start()
     {
         m_CharacterController = GetComponent<CharacterController>();
-        m_Camera = Camera.main;
+        m_Camera = GetComponentInChildren<Camera>();
         m_OriginalCameraPosition = m_Camera.transform.localPosition;
         m_FovKick.Setup(m_Camera);
         m_HeadBob.Setup(m_Camera, m_StepInterval);
@@ -63,6 +63,52 @@ public class FirstPersonControllerCustom : PlayerBehavior
         playerData = GetComponent<PlayerData>();
     }
 
+    protected override void NetworkStart()
+    {
+        base.NetworkStart();
+
+        networkObject.UpdateInterval = 100;
+
+        if (networkObject.IsOwner)
+        {
+            transform.Find("FirstPersonCharacter").gameObject.SetActive(true);
+            m_CharacterController = GetComponent<CharacterController>();
+            m_Camera = GetComponentInChildren<Camera>();
+            m_OriginalCameraPosition = m_Camera.transform.localPosition;
+            m_FovKick.Setup(m_Camera);
+            m_HeadBob.Setup(m_Camera, m_StepInterval);
+            m_StepCycle = 0f;
+            m_NextStep = m_StepCycle/2f;
+            m_Jumping = false;
+            m_AudioSource = GetComponent<AudioSource>();
+            m_MouseLook.Init(transform , m_Camera.transform);
+            playerData = GetComponent<PlayerData>();
+        }
+        // TODO:  Your initialization code that relies on network setup for this object goes here
+    }
+
+//    private void Update()
+//    {
+//        // If we are not the owner of this network object then we should
+//        // move this cube to the position/rotation dictated by the owner
+//        if (!networkObject.IsOwner)
+//        {
+//            transform.position = networkObject.position;
+//            transform.rotation = networkObject.rotation;
+//            return;
+//        }
+//
+//        // Let the owner move the cube around with the arrow keys
+//        transform.position += new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f) * speed * Time.deltaTime;
+//
+//        // If we are the owner of the object we should send the new position
+//        // and rotation across the network for receivers to move to in the above code
+//        networkObject.position = transform.position;
+//        networkObject.rotation = transform.rotation;
+//
+//        // Note: Forge Networking takes care of only sending the delta, so there
+//        // is no need for you to do that manually
+//    }
 
     // Update is called once per frame
     private void Update()
@@ -73,14 +119,34 @@ public class FirstPersonControllerCustom : PlayerBehavior
 				transform.rotation = networkObject.rotation;
 				return;
 			}
+
+//            if (!inputLocked)
+//            {
+//
+//                RotateView();
+//                // the jump state needs to read here to make sure it is not missed
+//                if (!m_Jump && m_CharacterController.isGrounded)
+//                {
+//                    m_Jump = CrossPlatformInputManager.GetButton("Jump");
+//                }
+//                GetInput();
+//            }
+//            else
+//            {
+//                speed = 0;
+//            }
 		}
+//        else
+//        {
+//            return;
+//        }
 
         if (!inputLocked)
         {
 
             RotateView();
             // the jump state needs to read here to make sure it is not missed
-            if (!m_Jump)
+            if (!m_Jump && m_CharacterController.isGrounded)
             {
                 m_Jump = CrossPlatformInputManager.GetButton("Jump");
             }
@@ -122,6 +188,19 @@ public class FirstPersonControllerCustom : PlayerBehavior
 
     private void FixedUpdate()
     {
+        if (networkObject != null)
+        {
+            if (!networkObject.IsOwner)
+            {
+                transform.position = networkObject.position;
+                transform.rotation = networkObject.rotation;
+                return;
+            }
+        }
+        else
+        {
+//            return;
+        }
         
         // always move along the camera forward as it is the direction that it being aimed at
         Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
