@@ -5,34 +5,16 @@ using System.Collections;
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
 
-public class Chunk : MonoBehaviour {
+public class Chunk {
 
     public BlockInstance[, ,] blocks = new BlockInstance[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
 
     public const int CHUNK_SIZE = 16;
-    public bool update = false;
-    public bool rendered;
-
-    MeshFilter filter;
-    MeshCollider coll;
 
     public World world;
     public WorldPos pos;
 
-    void Start()
-    {
-        filter = gameObject.GetComponent<MeshFilter>();
-        coll = gameObject.GetComponent<MeshCollider>();
-    }
-
-    void Update()
-    {
-        if (update)
-        {
-            update = false;
-            UpdateChunk();
-        }
-    }
+    public bool update = false;
 
     public BlockInstance GetBlock(int x, int y, int z)
     {
@@ -50,7 +32,7 @@ public class Chunk : MonoBehaviour {
         return true;
     }
 
-    public void SetBlock(int x, int y, int z, BlockData block)
+    public void SetBlock(int x, int y, int z, BlockData block, bool setChanged = true)
     {
         if (InRange(x) && InRange(y) && InRange(z))
         {
@@ -61,7 +43,7 @@ public class Chunk : MonoBehaviour {
                 newBlock = new BlockInstance();
             }
             newBlock.ID = block.ID;
-            newBlock.changed = true;
+            newBlock.changed = setChanged;
 
             //TODO whatever else I need to do to set the block instance
             blocks[x, y, z] = newBlock;
@@ -72,53 +54,11 @@ public class Chunk : MonoBehaviour {
         }
     }
 
-    public void SetBlocksUnmodified()
-    {
-        foreach (BlockInstance block in blocks)
-        {
-            block.changed = false;
-        }
-    }
-
-    // Updates the chunk based on its contents
-    void UpdateChunk()
-    {
-        rendered = true;
-        MeshData meshData = new MeshData();
-
-        for (int x = 0; x < CHUNK_SIZE; x++)
-        {
-            for (int y = 0; y < CHUNK_SIZE; y++)
-            {
-                for (int z = 0; z < CHUNK_SIZE; z++)
-                {
-                    if(blocks[x, y, z].ID != 0)
-                        meshData = blocks[x, y, z].GetBlockdata(this, x, y, z, meshData);
-                }
-            }
-        }
-
-        RenderMesh(meshData);
-    }
-
-    // Sends the calculated mesh information
-    // to the mesh and collision components
-    void RenderMesh(MeshData meshData)
-    {
-        filter.mesh.Clear();
-        filter.mesh.SetVertices(meshData.vertices);
-        filter.mesh.SetTriangles(meshData.triangles, 0);
-
-        filter.mesh.SetUVs(0, meshData.uv);
-        filter.mesh.RecalculateNormals();
-
-        coll.sharedMesh = null;
-        Mesh mesh = new Mesh();
-        mesh.SetVertices(meshData.colVertices);
-        mesh.SetTriangles(meshData.colTriangles, 0);
-        mesh.RecalculateNormals();
-
-        coll.sharedMesh = mesh;
-    }
-
+//    public void SetBlocksUnmodified()
+//    {
+//        foreach (BlockInstance block in blocks)
+//        {
+//            block.changed = false;
+//        }
+//    }
 }

@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using BeardedManStudios.Forge.Networking.Generated;
+using BeardedManStudios.Forge.Networking;
+using Assets.Scripts.Utilities;
+using System;
+
 public class World : MonoBehaviour {
 
-    public Dictionary<int, Chunk> chunks = new Dictionary<int, Chunk>();
-    public GameObject chunkPrefab;
+    public Dictionary<int, Chunk> chunks;// = new Dictionary<int, Chunk>();
 
     public string worldName = "world";
 
@@ -15,53 +19,94 @@ public class World : MonoBehaviour {
 
 	public Vector3 spawnPoint;
 
-	IEnumerator Start () {
-//		chunks = new OldChunk[WORLD_WIDTH,WORLD_HEIGHT];
-//		for(int i = 0; i < WORLD_WIDTH; i++) {
-//			for(int j = 0; j < WORLD_HEIGHT; j++) {
-//				GameObject chunk = new GameObject("Chunk[" + i + " " + j + "]");
-//				chunk.transform.parent = transform;
-//				chunk.transform.position = new Vector3(i * OldChunk.CHUNK_WIDTH - (WORLD_WIDTH*OldChunk.CHUNK_WIDTH/2), 0f, j * OldChunk.CHUNK_HEIGHT - (WORLD_HEIGHT*OldChunk.CHUNK_HEIGHT/2));
-//				chunk.AddComponent<OldChunk>();
-//				chunk.GetComponent<OldChunk>().fogPrefab = fogPrefab;
-//			}
-//		}
-		yield return new WaitForSeconds(2f);
-		RaycastHit hit;
-		Debug.DrawRay(new Vector3(1f, 300f, 0f), Vector3.down, Color.red, 5f);
-		if(Physics.Raycast(new Vector3(1f, 3000f, 1f), Vector3.down, out hit, 3000f, LayerMask.GetMask("Blocks"))) {
-			spawnPoint = new Vector3Int((int)hit.point.x, (int)hit.point.y, (int)hit.point.z);
-		} else {
-			Debug.LogError("Can't find spawnpoint");
-		}
+    public const int WORLD_WIDTH_IN_CHUNKS = 2;
+
+	void Start () {
+        GenerateWorld();
+//        Debug.LogError(System.mar( BlockInstance));
+
+
+//        yield return new WaitForSeconds(2f);
+//        RaycastHit hit;
+//        Debug.DrawRay(new Vector3(1f, 300f, 0f), Vector3.down, Color.red, 5f);
+//        if(Physics.Raycast(new Vector3(1f, 3000f, 1f), Vector3.down, out hit, 3000f, LayerMask.GetMask("Blocks"))) {
+//            spawnPoint = new Vector3Int((int)hit.point.x, (int)hit.point.y, (int)hit.point.z);
+//        } else {
+//            Debug.LogError("Can't find spawnpoint");
+//        }
 //		Serialization.LoadPlayer(FindObjectOfType<PlayerData>());
 	}
 
-    public void CreateChunk(int x, int y, int z)
-    {
-        WorldPos worldPos = new WorldPos(x, y, z);
+//    public override void DownloadWorld(RpcArgs args)
+//    {
+//        if (networkObject.IsServer)
+//        {
+//            Debug.LogError("I don't think server should be calling this");
+//        }
+//
+//        System.Byte[] bytes = args.GetNext<System.Byte[]>();
+//        chunks = (Dictionary<int, Chunk>)ByteArrayUtils.ByteArrayToObject(bytes);
+//    }
 
-        //Instantiate the chunk at the coordinates using the chunk prefab
-        GameObject newChunkObject = Instantiate(
-                        chunkPrefab, new Vector3(x, y, z),
-                        Quaternion.Euler(Vector3.zero)
-                    ) as GameObject;
+    public void GenerateWorld() {
+        chunks = new Dictionary<int, Chunk>();
+        for (int y = -1; y < 1; y++) {
+            for (int x = 0; x < WORLD_WIDTH_IN_CHUNKS; x++)
+            {
+                for (int z = 0; z < WORLD_WIDTH_IN_CHUNKS; z++)
+                {
+                    WorldPos worldPos = new WorldPos(x*Chunk.CHUNK_SIZE, y*Chunk.CHUNK_SIZE, z*Chunk.CHUNK_SIZE);
 
-        Chunk newChunk = newChunkObject.GetComponent<Chunk>();
-		newChunkObject.layer = LayerMask.NameToLayer("Blocks");
-        newChunk.pos = worldPos;
-        newChunk.world = this;
+                    Chunk newChunk = new Chunk();
+//                    newChunkObject.layer = LayerMask.NameToLayer("Blocks");
+                    newChunk.pos = worldPos;
+                    newChunk.world = this;
 
-        //Add it to the chunks dictionary with the position as the key
-        chunks.Add(worldPos.GetHashCode(), newChunk);
+                    //Add it to the chunks dictionary with the position as the key
+                    chunks.Add(worldPos.GetHashCode(), newChunk);
 
-        var terrainGen = new TerrainGenerator();
-        newChunk = terrainGen.ChunkGen(newChunk);
+                    if (Serialization.LoadChunk(newChunk))
+                    {
+                        //Load instead of gen
+                    }
+                    else
+                    {
+                        var terrainGen = new TerrainGenerator();
+                        newChunk = terrainGen.ChunkGen(newChunk);
+                    }
 
-        newChunk.SetBlocksUnmodified();
+//                    newChunk.SetBlocksUnmodified();
+                }
+            }
+        }
 
-        Serialization.LoadChunk(newChunk);
     }
+
+//    public void CreateChunk(int x, int y, int z)
+//    {
+//        WorldPos worldPos = new WorldPos(x, y, z);
+//
+//        //Instantiate the chunk at the coordinates using the chunk prefab
+//        GameObject newChunkObject = Instantiate(
+//                        chunkPrefab, new Vector3(x, y, z),
+//                        Quaternion.Euler(Vector3.zero)
+//                    ) as GameObject;
+//
+//        Chunk newChunk = newChunkObject.GetComponent<Chunk>();
+//		newChunkObject.layer = LayerMask.NameToLayer("Blocks");
+//        newChunk.pos = worldPos;
+//        newChunk.world = this;
+//
+//        //Add it to the chunks dictionary with the position as the key
+//        chunks.Add(worldPos.GetHashCode(), newChunk);
+//
+//        var terrainGen = new TerrainGenerator();
+//        newChunk = terrainGen.ChunkGen(newChunk);
+//
+//        newChunk.SetBlocksUnmodified();
+//
+//        Serialization.LoadChunk(newChunk);
+//    }
 
     void OnApplicationQuit() {
         SaveWorld();
@@ -75,17 +120,18 @@ public class World : MonoBehaviour {
         }
     }
 
-    public void DestroyChunk(WorldPos pos)
-    {
-        Chunk chunk = null;
-        int hash = pos.GetHashCode();
-        if (chunks.TryGetValue(hash, out chunk))
-        {
-            Serialization.SaveChunk(chunk);
-            Object.Destroy(chunk.gameObject);
-            chunks.Remove(hash);
-        }
-    }
+    //Don't destroy chunks anymore
+//    public void DestroyChunk(WorldPos pos)
+//    {
+//        Chunk chunk = null;
+//        int hash = pos.GetHashCode();
+//        if (chunks.TryGetValue(hash, out chunk))
+//        {
+//            Serialization.SaveChunk(chunk);
+//            Object.Destroy(chunk.gameObject);
+//            chunks.Remove(hash);
+//        }
+//    }
 
     public Chunk GetChunk(int x, int y, int z)
     {

@@ -7,6 +7,7 @@ using System;
 public class ChunkSaveData
 {
     public Dictionary<WorldPos, BlockInstance> blocks = new Dictionary<WorldPos, BlockInstance>();
+//    int[] blocks
 
     public ChunkSaveData(Chunk chunk)
     {
