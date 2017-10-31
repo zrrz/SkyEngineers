@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using MessagePack;
 
-[Serializable]
+[MessagePackObject]
 public class BlockInstance
 {
 	public enum Direction { Up, Down, East, West, North, South,};
 
+    [Key(0)]
     public int ID = 0; //ID of corresponding BlockData this is an instance of
-    public const float tileSize = 1f/64f;
+    [IgnoreMember]
     public bool changed = true;
+
+    public static float tileSize = 1f/64f;
 
     //Base block constructor
     public BlockInstance()

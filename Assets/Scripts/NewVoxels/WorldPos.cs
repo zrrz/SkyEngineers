@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using MessagePack;
 
-[Serializable]
+[MessagePackObject]
 public struct WorldPos
 {
-    public int x, y, z;
+    [Key(0)]
+    public int x;
+    [Key(1)]
+    public int y;
+    [Key(2)]
+    public int z;
 
     public WorldPos(int x, int y, int z)
     {

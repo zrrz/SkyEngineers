@@ -4,45 +4,45 @@ using System.Collections.Generic;
 
 public class RenderNearbyChunks : MonoBehaviour
 {
-    static WorldPos[] chunkPositions = {   new WorldPos( 0, 0,  0), new WorldPos(-1, 0,  0), new WorldPos( 0, 0, -1), new WorldPos( 0, 0,  1), new WorldPos( 1, 0,  0),
-                             new WorldPos(-1, 0, -1), new WorldPos(-1, 0,  1), new WorldPos( 1, 0, -1), new WorldPos( 1, 0,  1), new WorldPos(-2, 0,  0),
-                             new WorldPos( 0, 0, -2), new WorldPos( 0, 0,  2), new WorldPos( 2, 0,  0), new WorldPos(-2, 0, -1), new WorldPos(-2, 0,  1),
-                             new WorldPos(-1, 0, -2), new WorldPos(-1, 0,  2), new WorldPos( 1, 0, -2), new WorldPos( 1, 0,  2), new WorldPos( 2, 0, -1),
-                             new WorldPos( 2, 0,  1), new WorldPos(-2, 0, -2), new WorldPos(-2, 0,  2), new WorldPos( 2, 0, -2), new WorldPos( 2, 0,  2),
-                             new WorldPos(-3, 0,  0), new WorldPos( 0, 0, -3), new WorldPos( 0, 0,  3), new WorldPos( 3, 0,  0), new WorldPos(-3, 0, -1),
-                             new WorldPos(-3, 0,  1), new WorldPos(-1, 0, -3), new WorldPos(-1, 0,  3), new WorldPos( 1, 0, -3), new WorldPos( 1, 0,  3),
-                             new WorldPos( 3, 0, -1), new WorldPos( 3, 0,  1), new WorldPos(-3, 0, -2), new WorldPos(-3, 0,  2), new WorldPos(-2, 0, -3),
-                             new WorldPos(-2, 0,  3), new WorldPos( 2, 0, -3), new WorldPos( 2, 0,  3), new WorldPos( 3, 0, -2), new WorldPos( 3, 0,  2),
-                             new WorldPos(-4, 0,  0), new WorldPos( 0, 0, -4), new WorldPos( 0, 0,  4), new WorldPos( 4, 0,  0), new WorldPos(-4, 0, -1),
-                             new WorldPos(-4, 0,  1), new WorldPos(-1, 0, -4), new WorldPos(-1, 0,  4), new WorldPos( 1, 0, -4), new WorldPos( 1, 0,  4),
-                             new WorldPos( 4, 0, -1), new WorldPos( 4, 0,  1), new WorldPos(-3, 0, -3), new WorldPos(-3, 0,  3), new WorldPos( 3, 0, -3),
-                             new WorldPos( 3, 0,  3), new WorldPos(-4, 0, -2), new WorldPos(-4, 0,  2), new WorldPos(-2, 0, -4), new WorldPos(-2, 0,  4),
-                             new WorldPos( 2, 0, -4), new WorldPos( 2, 0,  4), new WorldPos( 4, 0, -2), new WorldPos( 4, 0,  2), new WorldPos(-5, 0,  0),
-                             new WorldPos(-4, 0, -3), new WorldPos(-4, 0,  3), new WorldPos(-3, 0, -4), new WorldPos(-3, 0,  4), new WorldPos( 0, 0, -5),
-                             new WorldPos( 0, 0,  5), new WorldPos( 3, 0, -4), new WorldPos( 3, 0,  4), new WorldPos( 4, 0, -3), new WorldPos( 4, 0,  3),
-                             new WorldPos( 5, 0,  0), new WorldPos(-5, 0, -1), new WorldPos(-5, 0,  1), new WorldPos(-1, 0, -5), new WorldPos(-1, 0,  5),
-                             new WorldPos( 1, 0, -5), new WorldPos( 1, 0,  5), new WorldPos( 5, 0, -1), new WorldPos( 5, 0,  1), new WorldPos(-5, 0, -2),
-                             new WorldPos(-5, 0,  2), new WorldPos(-2, 0, -5), new WorldPos(-2, 0,  5), new WorldPos( 2, 0, -5), new WorldPos( 2, 0,  5),
-                             new WorldPos( 5, 0, -2), new WorldPos( 5, 0,  2), new WorldPos(-4, 0, -4), new WorldPos(-4, 0,  4), new WorldPos( 4, 0, -4),
-                             new WorldPos( 4, 0,  4), new WorldPos(-5, 0, -3), new WorldPos(-5, 0,  3), new WorldPos(-3, 0, -5), new WorldPos(-3, 0,  5),
-                             new WorldPos( 3, 0, -5), new WorldPos( 3, 0,  5), new WorldPos( 5, 0, -3), new WorldPos( 5, 0,  3), new WorldPos(-6, 0,  0),
-                             new WorldPos( 0, 0, -6), new WorldPos( 0, 0,  6), new WorldPos( 6, 0,  0), new WorldPos(-6, 0, -1), new WorldPos(-6, 0,  1),
-                             new WorldPos(-1, 0, -6), new WorldPos(-1, 0,  6), new WorldPos( 1, 0, -6), new WorldPos( 1, 0,  6), new WorldPos( 6, 0, -1),
-                             new WorldPos( 6, 0,  1), new WorldPos(-6, 0, -2), new WorldPos(-6, 0,  2), new WorldPos(-2, 0, -6), new WorldPos(-2, 0,  6),
-                             new WorldPos( 2, 0, -6), new WorldPos( 2, 0,  6), new WorldPos( 6, 0, -2), new WorldPos( 6, 0,  2), new WorldPos(-5, 0, -4),
-                             new WorldPos(-5, 0,  4), new WorldPos(-4, 0, -5), new WorldPos(-4, 0,  5), new WorldPos( 4, 0, -5), new WorldPos( 4, 0,  5),
-                             new WorldPos( 5, 0, -4), new WorldPos( 5, 0,  4), new WorldPos(-6, 0, -3), new WorldPos(-6, 0,  3), new WorldPos(-3, 0, -6),
-                             new WorldPos(-3, 0,  6), new WorldPos( 3, 0, -6), new WorldPos( 3, 0,  6), new WorldPos( 6, 0, -3), new WorldPos( 6, 0,  3),
-                             new WorldPos(-7, 0,  0), new WorldPos( 0, 0, -7), new WorldPos( 0, 0,  7), new WorldPos( 7, 0,  0), new WorldPos(-7, 0, -1),
-                             new WorldPos(-7, 0,  1), new WorldPos(-5, 0, -5), new WorldPos(-5, 0,  5), new WorldPos(-1, 0, -7), new WorldPos(-1, 0,  7),
-                             new WorldPos( 1, 0, -7), new WorldPos( 1, 0,  7), new WorldPos( 5, 0, -5), new WorldPos( 5, 0,  5), new WorldPos( 7, 0, -1),
-                             new WorldPos( 7, 0,  1), new WorldPos(-6, 0, -4), new WorldPos(-6, 0,  4), new WorldPos(-4, 0, -6), new WorldPos(-4, 0,  6),
-                             new WorldPos( 4, 0, -6), new WorldPos( 4, 0,  6), new WorldPos( 6, 0, -4), new WorldPos( 6, 0,  4), new WorldPos(-7, 0, -2),
-                             new WorldPos(-7, 0,  2), new WorldPos(-2, 0, -7), new WorldPos(-2, 0,  7), new WorldPos( 2, 0, -7), new WorldPos( 2, 0,  7),
-                             new WorldPos( 7, 0, -2), new WorldPos( 7, 0,  2), new WorldPos(-7, 0, -3), new WorldPos(-7, 0,  3), new WorldPos(-3, 0, -7),
-                             new WorldPos(-3, 0,  7), new WorldPos( 3, 0, -7), new WorldPos( 3, 0,  7), new WorldPos( 7, 0, -3), new WorldPos( 7, 0,  3),
-                             new WorldPos(-6, 0, -5), new WorldPos(-6, 0,  5), new WorldPos(-5, 0, -6), new WorldPos(-5, 0,  6), new WorldPos( 5, 0, -6),
-                             new WorldPos( 5, 0,  6), new WorldPos( 6, 0, -5), new WorldPos( 6, 0,  5) };
+//    static WorldPos[] chunkPositions = {   new WorldPos( 0, 0,  0), new WorldPos(-1, 0,  0), new WorldPos( 0, 0, -1), new WorldPos( 0, 0,  1), new WorldPos( 1, 0,  0),
+//                             new WorldPos(-1, 0, -1), new WorldPos(-1, 0,  1), new WorldPos( 1, 0, -1), new WorldPos( 1, 0,  1), new WorldPos(-2, 0,  0),
+//                             new WorldPos( 0, 0, -2), new WorldPos( 0, 0,  2), new WorldPos( 2, 0,  0), new WorldPos(-2, 0, -1), new WorldPos(-2, 0,  1),
+//                             new WorldPos(-1, 0, -2), new WorldPos(-1, 0,  2), new WorldPos( 1, 0, -2), new WorldPos( 1, 0,  2), new WorldPos( 2, 0, -1),
+//                             new WorldPos( 2, 0,  1), new WorldPos(-2, 0, -2), new WorldPos(-2, 0,  2), new WorldPos( 2, 0, -2), new WorldPos( 2, 0,  2),
+//                             new WorldPos(-3, 0,  0), new WorldPos( 0, 0, -3), new WorldPos( 0, 0,  3), new WorldPos( 3, 0,  0), new WorldPos(-3, 0, -1),
+//                             new WorldPos(-3, 0,  1), new WorldPos(-1, 0, -3), new WorldPos(-1, 0,  3), new WorldPos( 1, 0, -3), new WorldPos( 1, 0,  3),
+//                             new WorldPos( 3, 0, -1), new WorldPos( 3, 0,  1), new WorldPos(-3, 0, -2), new WorldPos(-3, 0,  2), new WorldPos(-2, 0, -3),
+//                             new WorldPos(-2, 0,  3), new WorldPos( 2, 0, -3), new WorldPos( 2, 0,  3), new WorldPos( 3, 0, -2), new WorldPos( 3, 0,  2),
+//                             new WorldPos(-4, 0,  0), new WorldPos( 0, 0, -4), new WorldPos( 0, 0,  4), new WorldPos( 4, 0,  0), new WorldPos(-4, 0, -1),
+//                             new WorldPos(-4, 0,  1), new WorldPos(-1, 0, -4), new WorldPos(-1, 0,  4), new WorldPos( 1, 0, -4), new WorldPos( 1, 0,  4),
+//                             new WorldPos( 4, 0, -1), new WorldPos( 4, 0,  1), new WorldPos(-3, 0, -3), new WorldPos(-3, 0,  3), new WorldPos( 3, 0, -3),
+//                             new WorldPos( 3, 0,  3), new WorldPos(-4, 0, -2), new WorldPos(-4, 0,  2), new WorldPos(-2, 0, -4), new WorldPos(-2, 0,  4),
+//                             new WorldPos( 2, 0, -4), new WorldPos( 2, 0,  4), new WorldPos( 4, 0, -2), new WorldPos( 4, 0,  2), new WorldPos(-5, 0,  0),
+//                             new WorldPos(-4, 0, -3), new WorldPos(-4, 0,  3), new WorldPos(-3, 0, -4), new WorldPos(-3, 0,  4), new WorldPos( 0, 0, -5),
+//                             new WorldPos( 0, 0,  5), new WorldPos( 3, 0, -4), new WorldPos( 3, 0,  4), new WorldPos( 4, 0, -3), new WorldPos( 4, 0,  3),
+//                             new WorldPos( 5, 0,  0), new WorldPos(-5, 0, -1), new WorldPos(-5, 0,  1), new WorldPos(-1, 0, -5), new WorldPos(-1, 0,  5),
+//                             new WorldPos( 1, 0, -5), new WorldPos( 1, 0,  5), new WorldPos( 5, 0, -1), new WorldPos( 5, 0,  1), new WorldPos(-5, 0, -2),
+//                             new WorldPos(-5, 0,  2), new WorldPos(-2, 0, -5), new WorldPos(-2, 0,  5), new WorldPos( 2, 0, -5), new WorldPos( 2, 0,  5),
+//                             new WorldPos( 5, 0, -2), new WorldPos( 5, 0,  2), new WorldPos(-4, 0, -4), new WorldPos(-4, 0,  4), new WorldPos( 4, 0, -4),
+//                             new WorldPos( 4, 0,  4), new WorldPos(-5, 0, -3), new WorldPos(-5, 0,  3), new WorldPos(-3, 0, -5), new WorldPos(-3, 0,  5),
+//                             new WorldPos( 3, 0, -5), new WorldPos( 3, 0,  5), new WorldPos( 5, 0, -3), new WorldPos( 5, 0,  3), new WorldPos(-6, 0,  0),
+//                             new WorldPos( 0, 0, -6), new WorldPos( 0, 0,  6), new WorldPos( 6, 0,  0), new WorldPos(-6, 0, -1), new WorldPos(-6, 0,  1),
+//                             new WorldPos(-1, 0, -6), new WorldPos(-1, 0,  6), new WorldPos( 1, 0, -6), new WorldPos( 1, 0,  6), new WorldPos( 6, 0, -1),
+//                             new WorldPos( 6, 0,  1), new WorldPos(-6, 0, -2), new WorldPos(-6, 0,  2), new WorldPos(-2, 0, -6), new WorldPos(-2, 0,  6),
+//                             new WorldPos( 2, 0, -6), new WorldPos( 2, 0,  6), new WorldPos( 6, 0, -2), new WorldPos( 6, 0,  2), new WorldPos(-5, 0, -4),
+//                             new WorldPos(-5, 0,  4), new WorldPos(-4, 0, -5), new WorldPos(-4, 0,  5), new WorldPos( 4, 0, -5), new WorldPos( 4, 0,  5),
+//                             new WorldPos( 5, 0, -4), new WorldPos( 5, 0,  4), new WorldPos(-6, 0, -3), new WorldPos(-6, 0,  3), new WorldPos(-3, 0, -6),
+//                             new WorldPos(-3, 0,  6), new WorldPos( 3, 0, -6), new WorldPos( 3, 0,  6), new WorldPos( 6, 0, -3), new WorldPos( 6, 0,  3),
+//                             new WorldPos(-7, 0,  0), new WorldPos( 0, 0, -7), new WorldPos( 0, 0,  7), new WorldPos( 7, 0,  0), new WorldPos(-7, 0, -1),
+//                             new WorldPos(-7, 0,  1), new WorldPos(-5, 0, -5), new WorldPos(-5, 0,  5), new WorldPos(-1, 0, -7), new WorldPos(-1, 0,  7),
+//                             new WorldPos( 1, 0, -7), new WorldPos( 1, 0,  7), new WorldPos( 5, 0, -5), new WorldPos( 5, 0,  5), new WorldPos( 7, 0, -1),
+//                             new WorldPos( 7, 0,  1), new WorldPos(-6, 0, -4), new WorldPos(-6, 0,  4), new WorldPos(-4, 0, -6), new WorldPos(-4, 0,  6),
+//                             new WorldPos( 4, 0, -6), new WorldPos( 4, 0,  6), new WorldPos( 6, 0, -4), new WorldPos( 6, 0,  4), new WorldPos(-7, 0, -2),
+//                             new WorldPos(-7, 0,  2), new WorldPos(-2, 0, -7), new WorldPos(-2, 0,  7), new WorldPos( 2, 0, -7), new WorldPos( 2, 0,  7),
+//                             new WorldPos( 7, 0, -2), new WorldPos( 7, 0,  2), new WorldPos(-7, 0, -3), new WorldPos(-7, 0,  3), new WorldPos(-3, 0, -7),
+//                             new WorldPos(-3, 0,  7), new WorldPos( 3, 0, -7), new WorldPos( 3, 0,  7), new WorldPos( 7, 0, -3), new WorldPos( 7, 0,  3),
+//                             new WorldPos(-6, 0, -5), new WorldPos(-6, 0,  5), new WorldPos(-5, 0, -6), new WorldPos(-5, 0,  6), new WorldPos( 5, 0, -6),
+//                             new WorldPos( 5, 0,  6), new WorldPos( 6, 0, -5), new WorldPos( 6, 0,  5) };
 
     public World world;
 //
@@ -55,6 +55,8 @@ public class RenderNearbyChunks : MonoBehaviour
 
     [SerializeField]
     GameObject chunkPrefab;
+
+    public int renderDistance = 4;
 
     // Update is called once per frame
     void Update()
@@ -78,57 +80,68 @@ public class RenderNearbyChunks : MonoBehaviour
         //If there aren't already chunks to generate
         if (updateList.Count == 0)
         {
-            //Cycle through the array of positions
-            for (int i = 0; i < chunkPositions.Length; i++)
+
+            for (int x = -renderDistance; x < renderDistance; x++)
             {
-                //translate the player position and array position into chunk position. PlayerPos + each chunkPosition
-                WorldPos newChunkPos = new WorldPos(
-                    chunkPositions[i].x * Chunk.CHUNK_SIZE + playerPos.x,
-                    0,
-                    chunkPositions[i].z * Chunk.CHUNK_SIZE + playerPos.z
-                    );
-
-                //Get the chunk Renderer in the defined position
-                ChunkRenderer newChunk;
-                chunkRenderers.TryGetValue(newChunkPos, out newChunk);
-
-                //If the chunk already exists and it's already
-                //rendered or in queue to be rendered continue
-                if (newChunk != null
-                    && (newChunk.rendered || updateList.Contains(newChunkPos)))
-                    continue;
-
-                //Otherwise let's build it
-                //load a column of chunks in this position
-                for (int y = -4; y < 4; y++)
+                for (int y = -renderDistance; y < renderDistance; y++)
                 {
-                    for (int x = newChunkPos.x - Chunk.CHUNK_SIZE; x <= newChunkPos.x + Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE)
+                    for (int z = -renderDistance; z < renderDistance; z++)
                     {
-                        for (int z = newChunkPos.z - Chunk.CHUNK_SIZE; z <= newChunkPos.z + Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE)
-                        {
-                            if (world.GetChunk(x, y * Chunk.CHUNK_SIZE, z) == null)
-                            {
-//                                Debug.LogError("No chunk. Skipping");
-//                                continue;
-                            }
-                            else
-                            {
-                                buildList.Add(new WorldPos(
-                                        x, y * Chunk.CHUNK_SIZE, z));
-                            }
-                        }
-                    }
-                    if (world.GetChunk(newChunkPos.x, y * Chunk.CHUNK_SIZE, newChunkPos.z) == null)
-                    {
-//                        Debug.LogError("No chunk. Skipping");
-                    }
-                    else
-                    {
-                        updateList.Add(new WorldPos(
-                                newChunkPos.x, y * Chunk.CHUNK_SIZE, newChunkPos.z));
+                        WorldPos newChunkPos = new WorldPos(
+                            x * Chunk.CHUNK_SIZE + playerPos.x,
+                            y * Chunk.CHUNK_SIZE + playerPos.y,
+                            z * Chunk.CHUNK_SIZE + playerPos.z
+                        );
+
+                        //If no chunk data available, ignore.
+                        if (world.GetChunk(newChunkPos.x, newChunkPos.y, newChunkPos.z) == null)
+                            continue;
+
+                        ChunkRenderer newChunk;
+                        chunkRenderers.TryGetValue(newChunkPos, out newChunk);
+
+                        //If the chunk already exists and it's already
+                        //rendered or in queue to be rendered continue
+                        if (newChunk != null
+                            && (newChunk.rendered || updateList.Contains(newChunkPos)))
+                            continue;
+
+
+                        //Otherwise let's build it
+                        buildList.Add(newChunkPos);
+                        updateList.Add(newChunkPos);
+
+//                        return; //This is what is throttling chunk loading
+
+//                        //load a column of chunks in this position
+//                        for (int y = -4; y < 4; y++) {
+//                            for (int x = newChunkPos.x - Chunk.CHUNK_SIZE; x <= newChunkPos.x + Chunk.CHUNK_SIZE; x += Chunk.CHUNK_SIZE) {
+//                                for (int z = newChunkPos.z - Chunk.CHUNK_SIZE; z <= newChunkPos.z + Chunk.CHUNK_SIZE; z += Chunk.CHUNK_SIZE) {
+//                                    if (world.GetChunk(x, y * Chunk.CHUNK_SIZE, z) == null) {
+//                                        //                                Debug.LogError("No chunk. Skipping");
+//                                        //                                continue;
+//                                    }
+//                                    else
+//                                    {
+//                                        buildList.Add(new WorldPos(
+//                                            x, y * Chunk.CHUNK_SIZE, z));
+//                                    }
+//                                    if (world.GetChunk(newChunkPos.x, y * Chunk.CHUNK_SIZE, newChunkPos.z) == null)
+//                                    {
+//                                        Debug.LogError("No chunk. Skipping");
+//                                    }
+//                                    else
+//                                    {
+//                                        updateList.Add(new WorldPos(
+//                                            x, y * Chunk.CHUNK_SIZE, z));
+//                                    }
+//                                }
+//                            }
+//
+//                        }
+
                     }
                 }
-                return; //This is what is throttling chunk loading
             }
         }
     }
@@ -151,9 +164,13 @@ public class RenderNearbyChunks : MonoBehaviour
         {
 			for (int i = 0; i < updateList.Count && i < 64; i++)
 			{
-                ChunkRenderer chunkRenderer = chunkRenderers[updateList[0]];// world.GetChunk(updateList[0].x, updateList[0].y, updateList[0].z);
-                if (chunkRenderer != null)
+                WorldPos pos = updateList[0];
+                ChunkRenderer chunkRenderer;
+                if (chunkRenderers.TryGetValue(pos, out chunkRenderer))
+                {
                     chunkRenderer.chunk.update = true;
+                }
+                    
             	updateList.RemoveAt(0);
 			}
         }
@@ -174,25 +191,30 @@ public class RenderNearbyChunks : MonoBehaviour
             Debug.LogError("No chunk at " + pos.x + " " + pos.y + " " + pos.z);
         }
         chunkRenderers.Add(pos, newChunkObject.GetComponent<ChunkRenderer>());
+        chunkRenderer.rendered = true;
     }
 
     bool DeleteChunkRenderers()
     {
         if (timer == 10)
         {
-            var chunkRenderersToDelete = new List<WorldPos>();
+            List<WorldPos> chunkRenderersToDelete = new List<WorldPos>();
             foreach (var chunkRenderer in chunkRenderers)
             {
                 float distance = Vector3.Distance(
-                    new Vector3(chunkRenderer.Value.chunk.pos.x, 0, chunkRenderer.Value.chunk.pos.z),
-                    new Vector3(transform.position.x, 0, transform.position.z));
+                    new Vector3(chunkRenderer.Value.chunk.pos.x, chunkRenderer.Value.chunk.pos.y, chunkRenderer.Value.chunk.pos.z),
+                    new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
-                if (distance > 256)
+                if (distance > renderDistance * Chunk.CHUNK_SIZE)
                 {
                     chunkRenderersToDelete.Add(chunkRenderer.Key);
                 }
             }
 
+//            for (int i = 0; i < chunkRenderersToDelete.Count; i++)
+//            {
+//                chunkRenderers
+//            }
             foreach (WorldPos chunkKeys in chunkRenderersToDelete) {
                 chunkRenderers.Remove(chunkKeys);
             }

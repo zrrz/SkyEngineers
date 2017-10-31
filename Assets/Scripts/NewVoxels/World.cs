@@ -19,7 +19,7 @@ public class World : MonoBehaviour {
 
 	public Vector3 spawnPoint;
 
-    public const int WORLD_WIDTH_IN_CHUNKS = 2;
+    public const int WORLD_WIDTH_IN_CHUNKS = 8;
 
 	void Start () {
         GenerateWorld();
@@ -50,11 +50,9 @@ public class World : MonoBehaviour {
 
     public void GenerateWorld() {
         chunks = new Dictionary<int, Chunk>();
-        for (int y = -1; y < 1; y++) {
-            for (int x = 0; x < WORLD_WIDTH_IN_CHUNKS; x++)
-            {
-                for (int z = 0; z < WORLD_WIDTH_IN_CHUNKS; z++)
-                {
+        for (int y = -4; y < 4; y++) {
+            for (int x = -WORLD_WIDTH_IN_CHUNKS; x < WORLD_WIDTH_IN_CHUNKS; x++) {
+                for (int z = -WORLD_WIDTH_IN_CHUNKS; z < WORLD_WIDTH_IN_CHUNKS; z++) {
                     WorldPos worldPos = new WorldPos(x*Chunk.CHUNK_SIZE, y*Chunk.CHUNK_SIZE, z*Chunk.CHUNK_SIZE);
 
                     Chunk newChunk = new Chunk();
@@ -74,7 +72,6 @@ public class World : MonoBehaviour {
                         var terrainGen = new TerrainGenerator();
                         newChunk = terrainGen.ChunkGen(newChunk);
                     }
-
 //                    newChunk.SetBlocksUnmodified();
                 }
             }

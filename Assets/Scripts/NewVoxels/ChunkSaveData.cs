@@ -2,15 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using MessagePack;
 
-[Serializable]
+[MessagePackObject]
 public class ChunkSaveData
 {
-    public Dictionary<WorldPos, BlockInstance> blocks = new Dictionary<WorldPos, BlockInstance>();
+    [Key(0)]
+    public Dictionary<WorldPos, BlockInstance> blocks;
 //    int[] blocks
+
+    public ChunkSaveData() {
+        blocks = new Dictionary<WorldPos, BlockInstance>();
+    }
 
     public ChunkSaveData(Chunk chunk)
     {
+        blocks = new Dictionary<WorldPos, BlockInstance>();
         for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
         {
             for (int y = 0; y < Chunk.CHUNK_SIZE; y++)

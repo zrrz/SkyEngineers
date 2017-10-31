@@ -2,8 +2,9 @@
 using System.Collections;
 using System.IO;
 using System;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
+//using System.Runtime.Serialization.Formatters.Binary;
+//using System.Runtime.Serialization;
+using MessagePack;
 
 public static class Serialization
 {
@@ -33,10 +34,10 @@ public static class Serialization
 		string saveFile = SaveLocation(player.playerName) + ".bin";
 //		saveFile += FileName(chunk.pos);
 
-		IFormatter formatter = new BinaryFormatter();
-		Stream stream = new FileStream(saveFile, FileMode.Create, FileAccess.Write, FileShare.None);
-		formatter.Serialize(stream, save);
-		stream.Close();
+//		IFormatter formatter = new BinaryFormatter();
+//		Stream stream = new FileStream(saveFile, FileMode.Create, FileAccess.Write, FileShare.None);
+//		formatter.Serialize(stream, save);
+//		stream.Close();
 	}
 
 	public static bool LoadPlayer(PlayerData player) {
@@ -45,16 +46,16 @@ public static class Serialization
 		if (!File.Exists(saveFile))
 			return false;
 
-		IFormatter formatter = new BinaryFormatter();
-		FileStream stream = new FileStream(saveFile, FileMode.Open);
-
-		PlayerSaveData save = (PlayerSaveData)formatter.Deserialize(stream);
-
-		player.transform.position = save.position;
-		player.GetComponent<PlayerInventory>().inventory.items = save.inventory;
-		player.GetComponent<PlayerInventory>().equipment.items = save.equipment;
-
-		stream.Close();
+//		IFormatter formatter = new BinaryFormatter();
+//		FileStream stream = new FileStream(saveFile, FileMode.Open);
+//
+//		PlayerSaveData save = (PlayerSaveData)formatter.Deserialize(stream);
+//
+//		player.transform.position = save.position;
+//		player.GetComponent<PlayerInventory>().inventory.items = save.inventory;
+//		player.GetComponent<PlayerInventory>().equipment.items = save.equipment;
+//
+//		stream.Close();
 		return true;
 	}
 
@@ -67,9 +68,9 @@ public static class Serialization
         string saveFile = SaveLocation(chunk.world.worldName);
         saveFile += FileName(chunk.pos);
 
-        IFormatter formatter = new BinaryFormatter();
+//        IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(saveFile, FileMode.Create, FileAccess.Write, FileShare.None);
-        formatter.Serialize(stream, save);
+        LZ4MessagePackSerializer.Serialize<ChunkSaveData>(stream, save);
         stream.Close();
     }
 
@@ -81,11 +82,11 @@ public static class Serialization
         if (!File.Exists(saveFile))
             return false;
 
-        IFormatter formatter = new BinaryFormatter();
+//        IFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(saveFile, FileMode.Open);
 
-        ChunkSaveData save = (ChunkSaveData)formatter.Deserialize(stream);
-
+        ChunkSaveData save = LZ4MessagePackSerializer.Deserialize<ChunkSaveData>(stream);
+       
         foreach (var block in save.blocks)
         {
             chunk.blocks[block.Key.x, block.Key.y, block.Key.z] = block.Value;
