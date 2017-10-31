@@ -205,17 +205,14 @@ public class RenderNearbyChunks : MonoBehaviour
                     new Vector3(chunkRenderer.Value.chunk.pos.x, chunkRenderer.Value.chunk.pos.y, chunkRenderer.Value.chunk.pos.z),
                     new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
-                if (distance > renderDistance * Chunk.CHUNK_SIZE)
+                if (distance > (Mathf.CeilToInt(1.74f * (renderDistance)) + 1) * Chunk.CHUNK_SIZE)
                 {
                     chunkRenderersToDelete.Add(chunkRenderer.Key);
                 }
             }
 
-//            for (int i = 0; i < chunkRenderersToDelete.Count; i++)
-//            {
-//                chunkRenderers
-//            }
             foreach (WorldPos chunkKeys in chunkRenderersToDelete) {
+                Destroy(chunkRenderers[chunkKeys].gameObject);
                 chunkRenderers.Remove(chunkKeys);
             }
 
