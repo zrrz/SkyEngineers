@@ -47,9 +47,9 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new TestNetworkObject(networker, id, frame);
 						break;
-					case WorldNetworkObject.IDENTITY:
+					case WorldDataSyncNetworkObject.IDENTITY:
 						availableCallback = true;
-						obj = new WorldNetworkObject(networker, id, frame);
+						obj = new WorldDataSyncNetworkObject(networker, id, frame);
 						break;
 				}
 

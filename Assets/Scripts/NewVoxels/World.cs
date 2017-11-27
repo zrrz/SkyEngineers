@@ -9,6 +9,8 @@ using System;
 
 public class World : MonoBehaviour {
 
+    public List<Anchor> anchors = new List<Anchor>();
+
     public Dictionary<int, Chunk> chunks;// = new Dictionary<int, Chunk>();
 
     public string worldName = "world";
@@ -19,7 +21,9 @@ public class World : MonoBehaviour {
 
 	public Vector3 spawnPoint;
 
-    public const int WORLD_WIDTH_IN_CHUNKS = 8;
+//    public const int WORLD_WIDTH_IN_CHUNKS = 8;
+
+    public int CHUNK_LOAD_DISTANCE = 32; //-half to +half
 
 	void Start () {
         GenerateWorld();
@@ -51,32 +55,75 @@ public class World : MonoBehaviour {
     public void GenerateWorld() {
         chunks = new Dictionary<int, Chunk>();
         for (int y = -4; y < 4; y++) {
-            for (int x = -WORLD_WIDTH_IN_CHUNKS; x < WORLD_WIDTH_IN_CHUNKS; x++) {
-                for (int z = -WORLD_WIDTH_IN_CHUNKS; z < WORLD_WIDTH_IN_CHUNKS; z++) {
-                    WorldPos worldPos = new WorldPos(x*Chunk.CHUNK_SIZE, y*Chunk.CHUNK_SIZE, z*Chunk.CHUNK_SIZE);
-
-                    Chunk newChunk = new Chunk();
-//                    newChunkObject.layer = LayerMask.NameToLayer("Blocks");
-                    newChunk.pos = worldPos;
-                    newChunk.world = this;
-
-                    //Add it to the chunks dictionary with the position as the key
-                    chunks.Add(worldPos.GetHashCode(), newChunk);
-
-                    if (Serialization.LoadChunk(newChunk))
-                    {
-                        //Load instead of gen
-                    }
-                    else
-                    {
-                        var terrainGen = new TerrainGenerator();
-                        newChunk = terrainGen.ChunkGen(newChunk);
-                    }
-//                    newChunk.SetBlocksUnmodified();
+            for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
+                for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
+                    GenerateChunk(x * Chunk.CHUNK_SIZE, y * Chunk.CHUNK_SIZE, z * Chunk.CHUNK_SIZE);
                 }
             }
         }
+    }
 
+    void Update() {
+        UpdateWorld();
+    }
+
+    void UpdateWorld() {
+        foreach (Anchor anchor in anchors)
+        {
+            WorldPos pos = new WorldPos(
+                Mathf.FloorToInt(anchor.position.x / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
+                Mathf.FloorToInt(anchor.position.y / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
+                Mathf.FloorToInt(anchor.position.z / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE
+            );
+            for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
+                for (int y = -CHUNK_LOAD_DISTANCE/2; y < CHUNK_LOAD_DISTANCE/2; y++) {
+                    for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
+                        //TODO dont update a chunk twice in a frame. Just send.
+                        int xPos = pos.x + (x*Chunk.CHUNK_SIZE);
+                        int yPos = pos.y + (y*Chunk.CHUNK_SIZE);
+                        int zPos = pos.z + (z*Chunk.CHUNK_SIZE);
+                        Chunk chunk = GetChunk(xPos, yPos, zPos);
+                        if (chunk != null)
+                        {
+                            chunk.Update(); 
+                        }
+                        else
+                        {
+                            GenerateChunk(xPos, yPos, zPos);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Load from disk or create chunk.
+    /// </summary>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="z">The z coordinate.</param>
+    void GenerateChunk(int x, int y, int z) {
+        WorldPos worldPos = new WorldPos(x, y, z);
+        Chunk newChunk = new Chunk();
+//        newChunkObject.layer = LayerMask.NameToLayer("Blocks");
+        newChunk.pos = worldPos;
+        newChunk.world = this;
+
+        //Add it to the chunks dictionary with the position as the key
+        chunks.Add(worldPos.GetHashCode(), newChunk);
+
+        if (Serialization.LoadChunk(newChunk))
+        {
+            //Load instead of gen
+        }
+        else
+        {
+            var terrainGen = new TerrainGenerator();
+            newChunk = terrainGen.ChunkGen(newChunk);
+        }
+//        newChunk.SetBlocksUnmodified();
     }
 
 //    public void CreateChunk(int x, int y, int z)

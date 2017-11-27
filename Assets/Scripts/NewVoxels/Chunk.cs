@@ -16,6 +16,10 @@ public class Chunk {
 
     public bool update = false;
 
+    public void Update() {
+        //TODO implement
+    }
+
     public BlockInstance GetBlock(int x, int y, int z)
     {
         //TODO check how expensive this is and only do in debug depending

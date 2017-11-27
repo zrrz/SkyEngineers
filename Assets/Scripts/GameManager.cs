@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour {
 			if(world == null) {
 				Debug.LogError("No instance of world in scene.");
 			}
+            Application.targetFrameRate = 60;
+
 		}
 	}
 	

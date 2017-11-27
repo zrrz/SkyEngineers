@@ -16,7 +16,7 @@ namespace BeardedManStudios.Forge.Networking.Unity
 		public GameObject[] NetworkCameraNetworkObject = null;
 		public GameObject[] PlayerNetworkObject = null;
 		public GameObject[] TestNetworkObject = null;
-		public GameObject[] WorldNetworkObject = null;
+		public GameObject[] WorldDataSyncNetworkObject = null;
 
 		private void SetupObjectCreatedEvent()
 		{
@@ -172,16 +172,16 @@ namespace BeardedManStudios.Forge.Networking.Unity
 						objectInitialized(newObj, obj);
 				});
 			}
-			else if (obj is WorldNetworkObject)
+			else if (obj is WorldDataSyncNetworkObject)
 			{
 				MainThreadManager.Run(() =>
 				{
 					NetworkBehavior newObj = null;
 					if (!NetworkBehavior.skipAttachIds.TryGetValue(obj.NetworkId, out newObj))
 					{
-						if (WorldNetworkObject.Length > 0 && WorldNetworkObject[obj.CreateCode] != null)
+						if (WorldDataSyncNetworkObject.Length > 0 && WorldDataSyncNetworkObject[obj.CreateCode] != null)
 						{
-							var go = Instantiate(WorldNetworkObject[obj.CreateCode]);
+							var go = Instantiate(WorldDataSyncNetworkObject[obj.CreateCode]);
 							newObj = go.GetComponent<NetworkBehavior>();
 						}
 					}
@@ -277,13 +277,13 @@ namespace BeardedManStudios.Forge.Networking.Unity
 			
 			return netBehavior;
 		}
-		[Obsolete("Use InstantiateWorld instead, its shorter and easier to type out ;)")]
-		public WorldBehavior InstantiateWorldNetworkObject(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
+		[Obsolete("Use InstantiateWorldDataSync instead, its shorter and easier to type out ;)")]
+		public WorldDataSyncBehavior InstantiateWorldDataSyncNetworkObject(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
 		{
-			var go = Instantiate(WorldNetworkObject[index]);
-			var netBehavior = go.GetComponent<WorldBehavior>();
+			var go = Instantiate(WorldDataSyncNetworkObject[index]);
+			var netBehavior = go.GetComponent<WorldDataSyncBehavior>();
 			var obj = netBehavior.CreateNetworkObject(Networker, index);
-			go.GetComponent<WorldBehavior>().networkObject = (WorldNetworkObject)obj;
+			go.GetComponent<WorldDataSyncBehavior>().networkObject = (WorldDataSyncNetworkObject)obj;
 
 			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
 			
@@ -542,10 +542,10 @@ namespace BeardedManStudios.Forge.Networking.Unity
 			
 			return netBehavior;
 		}
-		public WorldBehavior InstantiateWorld(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
+		public WorldDataSyncBehavior InstantiateWorldDataSync(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
 		{
-			var go = Instantiate(WorldNetworkObject[index]);
-			var netBehavior = go.GetComponent<WorldBehavior>();
+			var go = Instantiate(WorldDataSyncNetworkObject[index]);
+			var netBehavior = go.GetComponent<WorldDataSyncBehavior>();
 
 			NetworkObject obj = null;
 			if (!sendTransform && position == null && rotation == null)
@@ -578,7 +578,7 @@ namespace BeardedManStudios.Forge.Networking.Unity
 				obj = netBehavior.CreateNetworkObject(Networker, index, metadata.CompressBytes());
 			}
 
-			go.GetComponent<WorldBehavior>().networkObject = (WorldNetworkObject)obj;
+			go.GetComponent<WorldDataSyncBehavior>().networkObject = (WorldDataSyncNetworkObject)obj;
 
 			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
 			
