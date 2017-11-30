@@ -2856,6 +2856,7 @@ GameObject:
   - component: {fileID: 580356250}
   - component: {fileID: 580356251}
   - component: {fileID: 580356253}
+  - component: {fileID: 580356252}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3144,7 +3145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 1274361945}
   chunkPrefab: {fileID: 100000, guid: d3e0916bbad4b82458f3fea875e6e685, type: 2}
-  renderDistance: 2
+  renderDistance: 16
 --- !u!114 &580356251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3162,6 +3163,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &580356252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 580356242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb2c60c3c07c4f24946ab29c509016e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &580356253
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7058,8 +7070,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1066014890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 182, y: 102.5, z: 0}
-  m_LocalScale: {x: 0.22750002, y: 0.22750002, z: 0.22750002}
+  m_LocalPosition: {x: 335, y: 188.5, z: 0}
+  m_LocalScale: {x: 0.41875, y: 0.41875, z: 0.41875}
   m_Children:
   - {fileID: 297984562}
   - {fileID: 1602559136}

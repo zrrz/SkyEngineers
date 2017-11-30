@@ -14,21 +14,20 @@ public class Player : PlayerBehavior {
     public PlayerData playerData { get { return m_playerData; } }
 
     void Awake() {
-        m_anchor = new Anchor();
         m_inventory = GetComponent<PlayerInventory>();
         if (m_inventory == null)
         {
             Debug.LogError("No PlayerInventory on object", this);
         }
         m_playerData = GetComponent<PlayerData>();
-        if (m_playerData)
+        if (m_playerData == null)
         {
             Debug.LogError("No PlayerData on object", this);
         }
     }
 
-	void Start () {
-		
+    void Start () {
+        m_anchor = new Anchor();
 	}
 	
 	void Update () {

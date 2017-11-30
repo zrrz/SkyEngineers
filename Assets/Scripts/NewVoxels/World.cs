@@ -6,6 +6,7 @@ using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking;
 using Assets.Scripts.Utilities;
 using System;
+using System.Threading;
 
 public class World : MonoBehaviour {
 
@@ -15,7 +16,7 @@ public class World : MonoBehaviour {
 
     public string worldName = "world";
 
-	public static GameManager instance;
+    public static World instance;
 
 	public GameObject fogPrefab;
 
@@ -23,10 +24,22 @@ public class World : MonoBehaviour {
 
 //    public const int WORLD_WIDTH_IN_CHUNKS = 8;
 
-    public int CHUNK_LOAD_DISTANCE = 32; //-half to +half
+    [NonSerialized]
+    public int CHUNK_LOAD_DISTANCE = 16; //-half to +half
+
+    void Awake() {
+        if (instance != null)
+        {
+            Debug.LogError("Instance of World already exists in scene. Disabling", this);
+            this.enabled = false;
+            return;
+        }
+        instance = this;
+    }
 
 	void Start () {
-        GenerateWorld();
+        chunks = new Dictionary<int, Chunk>();
+//        GenerateWorld();
 //        Debug.LogError(System.mar( BlockInstance));
 
 
@@ -53,7 +66,6 @@ public class World : MonoBehaviour {
 //    }
 
     public void GenerateWorld() {
-        chunks = new Dictionary<int, Chunk>();
         for (int y = -4; y < 4; y++) {
             for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
                 for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
@@ -65,9 +77,19 @@ public class World : MonoBehaviour {
 
     void Update() {
         UpdateWorld();
+
+        for(int i = 0; i < 6 && chunksToLoad.Count > 0; i++)
+        {
+            Dictionary<int, Vector3Int>.Enumerator enumerator = chunksToLoad.GetEnumerator();
+            enumerator.MoveNext();
+            Vector3Int pos = enumerator.Current.Value;
+            chunksToLoad.Remove(enumerator.Current.Key);
+            ChunkLoad(pos);
+        }
     }
 
     void UpdateWorld() {
+        //TODO switch to go through all chunks and update, load, or unload if near Anchor
         foreach (Anchor anchor in anchors)
         {
             WorldPos pos = new WorldPos(
@@ -97,6 +119,7 @@ public class World : MonoBehaviour {
         }
     }
 
+    Dictionary<int, Vector3Int> chunksToLoad = new Dictionary<int, Vector3Int>();
 
     /// <summary>
     /// Load from disk or create chunk.
@@ -105,14 +128,26 @@ public class World : MonoBehaviour {
     /// <param name="y">The y coordinate.</param>
     /// <param name="z">The z coordinate.</param>
     void GenerateChunk(int x, int y, int z) {
-        WorldPos worldPos = new WorldPos(x, y, z);
+//        Thread thread = new Thread(() => ChunkLoad(new Vector3Int(x, y, z)));// new Thread(new ThreadStart(delegate { ChunkLoad(new Vector3Int(x, y, z));}));
+//        thread.Start();
+        Vector3Int pos = new Vector3Int(x, y, z);
+        if(!chunksToLoad.ContainsKey(pos.GetHashCode()))
+            chunksToLoad.Add(pos.GetHashCode(), pos);
+//        ChunkLoad(new Vector3Int(x, y, z));
+    }
+
+    void ChunkLoad(Vector3Int pos) {
+        WorldPos worldPos = new WorldPos(pos.x, pos.y, pos.z);
         Chunk newChunk = new Chunk();
 //        newChunkObject.layer = LayerMask.NameToLayer("Blocks");
         newChunk.pos = worldPos;
         newChunk.world = this;
 
         //Add it to the chunks dictionary with the position as the key
-        chunks.Add(worldPos.GetHashCode(), newChunk);
+        lock (chunks)
+        {
+            chunks.Add(worldPos.GetHashCode(), newChunk);
+        }
 
         if (Serialization.LoadChunk(newChunk))
         {
@@ -123,7 +158,7 @@ public class World : MonoBehaviour {
             var terrainGen = new TerrainGenerator();
             newChunk = terrainGen.ChunkGen(newChunk);
         }
-//        newChunk.SetBlocksUnmodified();
+        //        newChunk.SetBlocksUnmodified();
     }
 
 //    public void CreateChunk(int x, int y, int z)
