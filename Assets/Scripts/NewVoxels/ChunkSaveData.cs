@@ -15,14 +15,14 @@ public class ChunkSaveData
         blocks = new Dictionary<WorldPos, BlockInstance>();
     }
 
-    public ChunkSaveData(Chunk chunk)
+    public ChunkSaveData(ChunkInstance chunk)
     {
         blocks = new Dictionary<WorldPos, BlockInstance>();
-        for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+        for (int x = 0; x < ChunkInstance.CHUNK_SIZE; x++)
         {
-            for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+            for (int y = 0; y < ChunkInstance.CHUNK_SIZE; y++)
             {
-                for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                for (int z = 0; z < ChunkInstance.CHUNK_SIZE; z++)
                 {
                     if (!chunk.blocks[x, y, z].changed)
                         continue;

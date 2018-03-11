@@ -1,20 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-[RequireComponent(typeof(MeshCollider))]
+//[RequireComponent(typeof(MeshFilter))]
+//[RequireComponent(typeof(MeshRenderer))]
+//[RequireComponent(typeof(MeshCollider))]
 
-public class Chunk {
+public class ChunkInstance {
 
     public BlockInstance[, ,] blocks = new BlockInstance[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
 
     public const int CHUNK_SIZE = 16;
 
     public World world;
-    public WorldPos pos;
+    public WorldPos position;
 
     public bool update = false;
+
+    public System.DateTime Time;
+
+    //TODO this is an optimization step to only iterate from min to max. Implement this
+    //public WorldPos min = new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE);
+    //public WorldPos max = new WorldPos(-1, -1, -1);
+
+    public ChunkInstance(World world, WorldPos position)
+    {
+        this.world = world;
+        this.position = position;
+
+        Time = System.DateTime.Now;
+    }
+
+    internal ChunkInstance(CachedChunk cachedChunk) : this(cachedChunk.world, cachedChunk.position)
+    {
+        //blocks = cachedChunk.blockIds;
+        //_lightLevels = cachedChunk.LightLevels;
+        //_blockDatas = cachedChunk.blockDatas;
+        //min = cachedChunk.min;
+        //max = cachedChunk.max;
+    }
 
     public void Update() {
         //TODO implement
@@ -25,7 +48,7 @@ public class Chunk {
         //TODO check how expensive this is and only do in debug depending
         if (InRange(x) && InRange(y) && InRange(z))
             return blocks[x, y, z];
-        return world.GetBlock(pos.x + x, pos.y + y, pos.z + z);
+        return world.GetBlock(position.x + x, position.y + y, position.z + z);
     }
 
     public static bool InRange(int index)
@@ -51,10 +74,12 @@ public class Chunk {
 
             //TODO whatever else I need to do to set the block instance
             blocks[x, y, z] = newBlock;
+
+            //TODO metadata
         }
         else
         {
-            world.SetBlock(pos.x + x, pos.y + y, pos.z + z, block);
+            world.SetBlock(position.x + x, position.y + y, position.z + z, block);
         }
     }
 

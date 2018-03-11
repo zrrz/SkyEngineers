@@ -43,21 +43,21 @@ public static class EditTerrain
     }
 
 	public static bool BreakBlock(RaycastHit hit, bool adjacent = false) {
-		Chunk chunk = hit.collider.GetComponent<Chunk>();
+		ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
 		if (chunk == null)
 			return false;
 
 		WorldPos pos = GetBlockPos(hit, adjacent);
 
 		BlockInstance block = chunk.world.GetBlock(pos.x, pos.y, pos.z);
-		BlockLoader.GetBlock(block.ID).Break(new Vector3(pos.x, pos.y, pos.z));
+		//BlockLoader.GetBlock(block.ID).Break(new Vector3(pos.x, pos.y, pos.z));
 		chunk.world.SetBlock(pos.x, pos.y, pos.z, BlockLoader.GetBlock(0));
 
 		return true;
 	}
 
     public static bool PlaceBlock(RaycastHit hit, BlockData block, bool adjacent = false) {
-        Chunk chunk = hit.collider.GetComponent<Chunk>();
+        ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
         if (chunk == null)
             return false;
 
@@ -71,7 +71,7 @@ public static class EditTerrain
 
     public static bool SetBlock(RaycastHit hit, BlockData block, bool adjacent = false)
     {
-        Chunk chunk = hit.collider.GetComponent<Chunk>();
+        ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
         if (chunk == null)
             return false;
 
@@ -84,7 +84,7 @@ public static class EditTerrain
 
     public static BlockInstance GetBlock(RaycastHit hit, bool adjacent = false)
     {
-        Chunk chunk = hit.collider.GetComponent<Chunk>();
+        ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
         if (chunk == null)
             return null;
 

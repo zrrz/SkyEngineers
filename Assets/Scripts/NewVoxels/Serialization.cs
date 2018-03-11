@@ -59,14 +59,14 @@ public static class Serialization
 		return true;
 	}
 
-    public static void SaveChunk(Chunk chunk)
+    public static void SaveChunk(ChunkInstance chunk)
     {
         ChunkSaveData save = new ChunkSaveData(chunk);
         if (save.blocks.Count == 0)
             return;
 
         string saveFile = SaveLocation(chunk.world.worldName);
-        saveFile += FileName(chunk.pos);
+        saveFile += FileName(chunk.position);
 
 //        IFormatter formatter = new BinaryFormatter();
         Stream stream = new FileStream(saveFile, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -74,10 +74,10 @@ public static class Serialization
         stream.Close();
     }
 
-    public static bool LoadChunk(Chunk chunk)
+    public static bool LoadChunk(ChunkInstance chunk)
     {
         string saveFile = SaveLocation(chunk.world.worldName);
-        saveFile += FileName(chunk.pos);
+        saveFile += FileName(chunk.position);
 
         if (!File.Exists(saveFile))
             return false;

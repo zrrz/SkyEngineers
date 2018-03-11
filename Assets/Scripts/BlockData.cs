@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 [System.Serializable]
 public class BlockData {
@@ -86,22 +87,64 @@ public class BlockData {
     }
     public DropData[] drops;
 
-	public void Break(Vector3 pos) {
-		for(int i = 0; i < drops.Length; i++) {
-            float roll = Random.Range(0f, 100f);
-            if (roll <= drops[i].percentChance) //Is this right?
-            {
-                for (int j = 0; j < drops[i].amount; j++)
-                {
-                    Vector2 xyDir = Random.insideUnitCircle.normalized * 0.25f;
-                    Vector3 direction = new Vector3(xyDir.x, 0f, xyDir.y);
-                    GameObject obj = ItemLoader.CreateModel(drops[i].itemID);
-                    obj.transform.position = pos + direction;
-                    obj.GetComponent<Rigidbody>().AddForce(direction * Random.Range(40f, 60f) + Vector3.up * Random.Range(80f, 110f));
-                }
-            }
-		}
-	}
+    internal static void WriteToStream(BlockData blockData, BinaryWriter writer)
+    {
+        //byte[] bytes;
+        //using (var ms = new MemoryStream())
+        //{
+        //    using (var bw = new BinaryWriter(ms))
+        //        try
+        //        {
+        //            blockData.Serialize(bw);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Logger.Error("Error during serialization of " + blockData);
+        //            Logger.Exception(e);
+        //        }
+
+        //    bytes = ms.ToArray();
+        //}
+
+        //writer.Write(GameRegistry.GetBlockDataRegistryKey(blockData));
+        //writer.Write((ushort)bytes.Length);
+        //writer.Write(bytes);
+    }
+
+    internal static BlockData ReadFromStream(BinaryReader reader)
+    {
+        //var blockDataRegistryKey = reader.ReadString();
+        //var bytesLength = reader.ReadUInt16();
+        //var bytes = reader.ReadBytes(bytesLength);
+
+        //var entry = GameRegistry.BlockDataRegistry[blockDataRegistryKey];
+        //var blockData = (BlockData)Activator.CreateInstance(entry.Type);
+
+        //using (var ms = new MemoryStream(bytes))
+        //using (var br = new BinaryReader(ms))
+        //    blockData.Deserialize(br);
+
+        //return blockData;
+
+        return null;
+    }
+
+	//public void Break(Vector3 pos) {
+	//	for(int i = 0; i < drops.Length; i++) {
+ //           float roll = Random.Range(0f, 100f);
+ //           if (roll <= drops[i].percentChance) //Is this right?
+ //           {
+ //               for (int j = 0; j < drops[i].amount; j++)
+ //               {
+ //                   Vector2 xyDir = Random.insideUnitCircle.normalized * 0.25f;
+ //                   Vector3 direction = new Vector3(xyDir.x, 0f, xyDir.y);
+ //                   GameObject obj = ItemLoader.CreateModel(drops[i].itemID);
+ //                   obj.transform.position = pos + direction;
+ //                   obj.GetComponent<Rigidbody>().AddForce(direction * Random.Range(40f, 60f) + Vector3.up * Random.Range(80f, 110f));
+ //               }
+ //           }
+	//	}
+	//}
 
 
     //TODO move to chunk.cs

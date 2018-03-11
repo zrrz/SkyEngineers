@@ -72,9 +72,9 @@ public class RenderNearbyChunks : MonoBehaviour
     {
         //Get the position of this gameobject to generate around
         WorldPos playerPos = new WorldPos(
-            Mathf.FloorToInt(transform.position.x / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
-            Mathf.FloorToInt(transform.position.y / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
-            Mathf.FloorToInt(transform.position.z / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE
+            Mathf.FloorToInt(transform.position.x / ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
+            Mathf.FloorToInt(transform.position.y / ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
+            Mathf.FloorToInt(transform.position.z / ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE
             );
 
         //If there aren't already chunks to generate
@@ -88,9 +88,9 @@ public class RenderNearbyChunks : MonoBehaviour
                     for (int z = -renderDistance; z < renderDistance; z++)
                     {
                         WorldPos newChunkPos = new WorldPos(
-                            x * Chunk.CHUNK_SIZE + playerPos.x,
-                            y * Chunk.CHUNK_SIZE + playerPos.y,
-                            z * Chunk.CHUNK_SIZE + playerPos.z
+                            x * ChunkInstance.CHUNK_SIZE + playerPos.x,
+                            y * ChunkInstance.CHUNK_SIZE + playerPos.y,
+                            z * ChunkInstance.CHUNK_SIZE + playerPos.z
                         );
 
                         //If no chunk data available, ignore.
@@ -202,10 +202,10 @@ public class RenderNearbyChunks : MonoBehaviour
             foreach (var chunkRenderer in chunkRenderers)
             {
                 float distance = Vector3.Distance(
-                    new Vector3(chunkRenderer.Value.chunk.pos.x, chunkRenderer.Value.chunk.pos.y, chunkRenderer.Value.chunk.pos.z),
+                    new Vector3(chunkRenderer.Value.chunk.position.x, chunkRenderer.Value.chunk.position.y, chunkRenderer.Value.chunk.position.z),
                     new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
-                if (distance > (Mathf.CeilToInt(1.74f * (renderDistance)) + 1) * Chunk.CHUNK_SIZE)
+                if (distance > (Mathf.CeilToInt(1.74f * (renderDistance)) + 1) * ChunkInstance.CHUNK_SIZE)
                 {
                     chunkRenderersToDelete.Add(chunkRenderer.Key);
                 }

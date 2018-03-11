@@ -13,6 +13,13 @@ public struct WorldPos
     [Key(2)]
     public int z;
 
+    public WorldPos(Vector3 pos)
+    {
+        this.x = (int)pos.x;
+        this.y = (int)pos.y;
+        this.z = (int)pos.z;
+    }
+
     public WorldPos(int x, int y, int z)
     {
         this.x = x;
@@ -52,6 +59,10 @@ public struct WorldPos
         if (GetHashCode() == obj.GetHashCode())
             return true;
         return false;
+    }
+
+    public static WorldPos operator+(WorldPos pos1, WorldPos pos2) {
+        return new WorldPos(pos1.x + pos2.x, pos1.y + pos2.y, pos1.z + pos2.z);
     }
 
     public Vector3 ToVector3() {

@@ -23,11 +23,11 @@ public class TerrainGenerator
     float treeFrequency = 0.2f;
     int treeDensity = 3;
 
-    public Chunk ChunkGen(Chunk chunk)
+    public ChunkInstance ChunkGen(ChunkInstance chunk)
     {
-        for (int x = chunk.pos.x - 3; x < chunk.pos.x + Chunk.CHUNK_SIZE + 3; x++) //Change this line
+        for (int x = chunk.position.x - 3; x < chunk.position.x + ChunkInstance.CHUNK_SIZE + 3; x++) //Change this line
         {
-            for (int z = chunk.pos.z - 3; z < chunk.pos.z + Chunk.CHUNK_SIZE + 3; z++)//and this line
+            for (int z = chunk.position.z - 3; z < chunk.position.z + ChunkInstance.CHUNK_SIZE + 3; z++)//and this line
             {
                 chunk = ChunkColumnGen(chunk, x, z);
             }
@@ -35,7 +35,7 @@ public class TerrainGenerator
         return chunk;
     }
 
-    public Chunk ChunkColumnGen(Chunk chunk, int x, int z)
+    public ChunkInstance ChunkColumnGen(ChunkInstance chunk, int x, int z)
     {
         int stoneHeight = Mathf.FloorToInt(stoneBaseHeight);
         stoneHeight += GetNoise(x, 0, z, stoneMountainFrequency, Mathf.FloorToInt(stoneMountainHeight));
@@ -48,7 +48,7 @@ public class TerrainGenerator
         int dirtHeight = stoneHeight + Mathf.FloorToInt(dirtBaseHeight);
         dirtHeight += GetNoise(x, 100, z, dirtNoise, Mathf.FloorToInt(dirtNoiseHeight));
 
-        for (int y = chunk.pos.y - 8; y < chunk.pos.y + Chunk.CHUNK_SIZE; y++)
+        for (int y = chunk.position.y - 8; y < chunk.position.y + ChunkInstance.CHUNK_SIZE; y++)
         {
             //Get a value to base cave generation on
             int caveChance = GetNoise(x, y, z, caveFrequency, 100);
@@ -74,7 +74,7 @@ public class TerrainGenerator
         return chunk;
     }
 
-    void CreateTree(int x, int y, int z, Chunk chunk)
+    void CreateTree(int x, int y, int z, ChunkInstance chunk)
     {
         //create leaves
         for (int xi = -2; xi <= 2; xi++)
@@ -95,13 +95,13 @@ public class TerrainGenerator
         }
     }
 
-    public static void SetBlock(int x, int y, int z, BlockData block, Chunk chunk, bool replaceBlocks = false)
+    public static void SetBlock(int x, int y, int z, BlockData block, ChunkInstance chunk, bool replaceBlocks = false)
     {
-        x -= chunk.pos.x;
-        y -= chunk.pos.y;
-        z -= chunk.pos.z;
+        x -= chunk.position.x;
+        y -= chunk.position.y;
+        z -= chunk.position.z;
 
-        if (Chunk.InRange(x) && Chunk.InRange(y) && Chunk.InRange(z))
+        if (ChunkInstance.InRange(x) && ChunkInstance.InRange(y) && ChunkInstance.InRange(z))
         {
             if (replaceBlocks || chunk.blocks[x, y, z] == null)
             {

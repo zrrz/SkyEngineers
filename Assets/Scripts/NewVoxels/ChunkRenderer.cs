@@ -10,7 +10,7 @@ public class ChunkRenderer : MonoBehaviour {
     MeshFilter filter;
     MeshCollider coll;
 
-    public Chunk chunk;
+    public ChunkInstance chunk;
 
     void Start()
     {
@@ -35,11 +35,11 @@ public class ChunkRenderer : MonoBehaviour {
         rendered = true;
         MeshData meshData = new MeshData();
 
-        for (int x = 0; x < Chunk.CHUNK_SIZE; x++)
+        for (int x = 0; x < ChunkInstance.CHUNK_SIZE; x++)
         {
-            for (int y = 0; y < Chunk.CHUNK_SIZE; y++)
+            for (int y = 0; y < ChunkInstance.CHUNK_SIZE; y++)
             {
-                for (int z = 0; z < Chunk.CHUNK_SIZE; z++)
+                for (int z = 0; z < ChunkInstance.CHUNK_SIZE; z++)
                 {
                     if(chunk.blocks[x, y, z].ID != 0)
                         meshData = chunk.blocks[x, y, z].GetBlockdata(chunk, x, y, z, meshData);
