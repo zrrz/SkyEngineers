@@ -50,8 +50,7 @@ public class RenderNearbyChunks : MonoBehaviour
     List<WorldPos> buildList = new List<WorldPos>();
 
     int timer = 0;
-
-    Dictionary<WorldPos, ChunkRenderer> chunkRenderers = new Dictionary<WorldPos, ChunkRenderer>();
+    readonly Dictionary<WorldPos, ChunkRenderer> chunkRenderers = new Dictionary<WorldPos, ChunkRenderer>();
 
     [SerializeField]
     GameObject chunkPrefab;
@@ -95,7 +94,10 @@ public class RenderNearbyChunks : MonoBehaviour
 
                         //If no chunk data available, ignore.
                         if (world.GetChunk(newChunkPos.x, newChunkPos.y, newChunkPos.z) == null)
+                        {
+                            Debug.LogError("No world data at " + newChunkPos.ToString());
                             continue;
+                        }
 
                         ChunkRenderer newChunk;
                         chunkRenderers.TryGetValue(newChunkPos, out newChunk);

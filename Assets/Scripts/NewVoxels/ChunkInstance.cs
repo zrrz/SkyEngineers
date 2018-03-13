@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //[RequireComponent(typeof(MeshFilter))]
 //[RequireComponent(typeof(MeshRenderer))]
@@ -8,6 +9,7 @@ using System.Collections;
 public class ChunkInstance {
 
     public BlockInstance[, ,] blocks = new BlockInstance[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
+    public readonly Dictionary<Vector3iChunk, BlockData> blockDatas = new Dictionary<Vector3iChunk, BlockData>();
 
     public const int CHUNK_SIZE = 16;
 
@@ -16,11 +18,12 @@ public class ChunkInstance {
 
     public bool update = false;
 
+    public bool needsSaving = false;
+
     public System.DateTime Time;
 
-    //TODO this is an optimization step to only iterate from min to max. Implement this
-    //public WorldPos min = new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE);
-    //public WorldPos max = new WorldPos(-1, -1, -1);
+    public WorldPos min = new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE);
+    public WorldPos max = new WorldPos(-1, -1, -1);
 
     public ChunkInstance(World world, WorldPos position)
     {
@@ -32,11 +35,23 @@ public class ChunkInstance {
 
     internal ChunkInstance(CachedChunk cachedChunk) : this(cachedChunk.world, cachedChunk.position)
     {
-        //blocks = cachedChunk.blockIds;
+        //TODO fix
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+            for (int y = 0; y < CHUNK_SIZE; y++)
+            {
+                for (int z = 0; z < CHUNK_SIZE; z++)
+                {
+                    SetBlock(x, y, z, BlockLoader.GetBlock(cachedChunk.blockIds[x, y, z]));
+                }
+            }
+        }
+
         //_lightLevels = cachedChunk.LightLevels;
-        //_blockDatas = cachedChunk.blockDatas;
-        //min = cachedChunk.min;
-        //max = cachedChunk.max;
+        //blockDatas = cachedChunk.blockDatas;
+		world = cachedChunk.world;
+        position = cachedChunk.position;
+        min = cachedChunk.min;
+        max = cachedChunk.max;
     }
 
     public void Update() {

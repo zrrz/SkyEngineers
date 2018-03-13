@@ -23,7 +23,7 @@ public class TerrainGenerator
     float treeFrequency = 0.2f;
     int treeDensity = 3;
 
-    public ChunkInstance ChunkGen(ChunkInstance chunk)
+    public CachedChunk ChunkGen(CachedChunk chunk)
     {
         for (int x = chunk.position.x - 3; x < chunk.position.x + ChunkInstance.CHUNK_SIZE + 3; x++) //Change this line
         {
@@ -35,7 +35,7 @@ public class TerrainGenerator
         return chunk;
     }
 
-    public ChunkInstance ChunkColumnGen(ChunkInstance chunk, int x, int z)
+    public CachedChunk ChunkColumnGen(CachedChunk chunk, int x, int z)
     {
         int stoneHeight = Mathf.FloorToInt(stoneBaseHeight);
         stoneHeight += GetNoise(x, 0, z, stoneMountainFrequency, Mathf.FloorToInt(stoneMountainHeight));
@@ -74,7 +74,7 @@ public class TerrainGenerator
         return chunk;
     }
 
-    void CreateTree(int x, int y, int z, ChunkInstance chunk)
+    void CreateTree(int x, int y, int z, CachedChunk chunk)
     {
         //create leaves
         for (int xi = -2; xi <= 2; xi++)
@@ -95,7 +95,7 @@ public class TerrainGenerator
         }
     }
 
-    public static void SetBlock(int x, int y, int z, BlockData block, ChunkInstance chunk, bool replaceBlocks = false)
+    public static void SetBlock(int x, int y, int z, BlockData block, CachedChunk chunk, bool replaceBlocks = false)
     {
         x -= chunk.position.x;
         y -= chunk.position.y;
@@ -103,7 +103,7 @@ public class TerrainGenerator
 
         if (ChunkInstance.InRange(x) && ChunkInstance.InRange(y) && ChunkInstance.InRange(z))
         {
-            if (replaceBlocks || chunk.blocks[x, y, z] == null)
+            if (replaceBlocks || chunk.blockIds[x, y, z] == null)
             {
                 chunk.SetBlock(x, y, z, block);
             }

@@ -20,7 +20,7 @@ public class CachedChunk {
 
     internal CachedChunk(World world, WorldPos position)
     {
-        //this.world = world;
+        this.world = world;
         this.position = position;
     }
 

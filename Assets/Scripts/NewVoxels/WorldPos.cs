@@ -4,7 +4,7 @@ using System;
 using MessagePack;
 
 [MessagePackObject]
-public struct WorldPos
+public struct WorldPos : IEquatable<WorldPos>
 {
     [Key(0)]
     public int x;
@@ -61,12 +61,26 @@ public struct WorldPos
         return false;
     }
 
+    public static bool operator ==(WorldPos v0, WorldPos v1) => v0.Equals(v1);
+    public static bool operator !=(WorldPos v0, WorldPos v1) => !v0.Equals(v1);
+
+    public bool Equals(WorldPos other) => x == other.x && y == other.y && z == other.z;
+
     public static WorldPos operator+(WorldPos pos1, WorldPos pos2) {
         return new WorldPos(pos1.x + pos2.x, pos1.y + pos2.y, pos1.z + pos2.z);
+    }
+    public static WorldPos operator *(WorldPos pos1, int constant)
+    {
+        return new WorldPos(pos1.x * constant, pos1.y * constant, pos1.z * constant);
     }
 
     public Vector3 ToVector3() {
         Vector3 vec3 = new Vector3(x, y, z);
         return vec3;
+    }
+
+    public override string ToString()
+    {
+        return "[" + x + ", " + y + ", " + z + "]";
     }
 }
