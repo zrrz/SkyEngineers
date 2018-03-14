@@ -49,14 +49,14 @@ public static class EditTerrain
 
 		WorldPos pos = GetBlockPos(hit, adjacent);
 
-		BlockInstance block = chunk.world.GetBlock(pos.x, pos.y, pos.z);
+		BlockInstance block = chunk.world.GetBlockInstance(pos.x, pos.y, pos.z);
 		//BlockLoader.GetBlock(block.ID).Break(new Vector3(pos.x, pos.y, pos.z));
-		chunk.world.SetBlock(pos.x, pos.y, pos.z, BlockLoader.GetBlock(0));
+		chunk.world.SetBlock(pos.x, pos.y, pos.z, 0);
 
 		return true;
 	}
 
-    public static bool PlaceBlock(RaycastHit hit, BlockData block, bool adjacent = false) {
+    public static bool PlaceBlock(RaycastHit hit, int blockID, bool adjacent = false) {
         ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
         if (chunk == null)
             return false;
@@ -64,7 +64,7 @@ public static class EditTerrain
 //        hit.point += hit.normal;
         WorldPos pos = GetBlockPos(hit, adjacent);
 
-        chunk.world.SetBlock(pos.x, pos.y, pos.z, block);
+        chunk.world.SetBlock(pos.x, pos.y, pos.z, blockID);
 
         return true;
     }

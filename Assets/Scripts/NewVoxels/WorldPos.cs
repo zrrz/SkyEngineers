@@ -37,8 +37,12 @@ public struct WorldPos : IEquatable<WorldPos>
             hash = hash * 227 + z.GetHashCode();
 
             return hash;
+
+            //return ((23 + x) * 37 + y) * 37 + z;
         }
     }
+
+    //public override int GetHashCode() => ((23 + x) * 37 + y) * 37 + z;
 
     public override int GetHashCode()
     {

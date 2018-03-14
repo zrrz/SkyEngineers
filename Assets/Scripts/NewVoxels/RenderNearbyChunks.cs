@@ -95,7 +95,7 @@ public class RenderNearbyChunks : MonoBehaviour
                         //If no chunk data available, ignore.
                         if (world.GetChunk(newChunkPos.x, newChunkPos.y, newChunkPos.z) == null)
                         {
-                            Debug.LogError("No world data at " + newChunkPos.ToString());
+                            //Debug.LogError("No world data at " + newChunkPos.ToString());
                             continue;
                         }
 

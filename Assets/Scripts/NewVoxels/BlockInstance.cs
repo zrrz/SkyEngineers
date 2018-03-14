@@ -26,32 +26,32 @@ public class BlockInstance
     {
         meshData.useRenderDataForCol = true;
 
-        if (!chunk.GetBlock(x, y + 1, z).IsSolid(Direction.Down))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z)).IsSolid(Direction.Down))
         {
             meshData = FaceDataUp(chunk, x, y, z, meshData);
         }
 
-        if (!chunk.GetBlock(x, y - 1, z).IsSolid(Direction.Up))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y - 1, z)).IsSolid(Direction.Up))
         {
             meshData = FaceDataDown(chunk, x, y, z, meshData);
         }
 
-        if (!chunk.GetBlock(x, y, z + 1).IsSolid(Direction.South))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z + 1)).IsSolid(Direction.South))
         {
             meshData = FaceDataNorth(chunk, x, y, z, meshData);
         }
 
-        if (!chunk.GetBlock(x, y, z - 1).IsSolid(Direction.North))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z - 1)).IsSolid(Direction.North))
         {
             meshData = FaceDataSouth(chunk, x, y, z, meshData);
         }
 
-        if (!chunk.GetBlock(x + 1, y, z).IsSolid(Direction.West))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x + 1, y, z)).IsSolid(Direction.West))
         {
             meshData = FaceDataEast(chunk, x, y, z, meshData);
         }
 
-        if (!chunk.GetBlock(x - 1, y, z).IsSolid(Direction.East))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x - 1, y, z)).IsSolid(Direction.East))
         {
             meshData = FaceDataWest(chunk, x, y, z, meshData);
         }

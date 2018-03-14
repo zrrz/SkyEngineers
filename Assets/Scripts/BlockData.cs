@@ -129,6 +129,31 @@ public class BlockData {
         return null;
     }
 
+    public bool IsSolid(BlockInstance.Direction direction)
+    {
+        return solid[(int)direction];
+        //        switch (direction)
+        //        {
+        //            case Direction.north:
+        //                return true;
+        //            case Direction.east:
+        //                return true;
+        //            case Direction.south:
+        //                return true;
+        //            case Direction.west:
+        //                return true;
+        //            case Direction.up:
+        //                return true;
+        //            case Direction.down:
+        //                return true;
+        //            default:
+        //                Debug.LogError("No case");
+        //                return false;
+        //        }
+
+        //        return false;
+    }
+
 	//public void Break(Vector3 pos) {
 	//	for(int i = 0; i < drops.Length; i++) {
  //           float roll = Random.Range(0f, 100f);

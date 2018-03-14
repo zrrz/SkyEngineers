@@ -8,8 +8,8 @@ using System.Collections.Generic;
 
 public class ChunkInstance {
 
-    public BlockInstance[, ,] blocks = new BlockInstance[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
-    public readonly Dictionary<Vector3iChunk, BlockData> blockDatas = new Dictionary<Vector3iChunk, BlockData>();
+    public int[, ,] blocks = new int[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
+    public readonly Dictionary<Vector3iChunk, BlockInstance> blockDatas = new Dictionary<Vector3iChunk, BlockInstance>();
 
     public const int CHUNK_SIZE = 16;
 
@@ -41,7 +41,7 @@ public class ChunkInstance {
             {
                 for (int z = 0; z < CHUNK_SIZE; z++)
                 {
-                    SetBlock(x, y, z, BlockLoader.GetBlock(cachedChunk.blockIds[x, y, z]));
+                    SetBlock(x, y, z, cachedChunk.blockIds[x, y, z]);
                 }
             }
         }
@@ -58,7 +58,7 @@ public class ChunkInstance {
         //TODO implement
     }
 
-    public BlockInstance GetBlock(int x, int y, int z)
+    public int GetBlock(int x, int y, int z)
     {
         //TODO check how expensive this is and only do in debug depending
         if (InRange(x) && InRange(y) && InRange(z))
@@ -74,27 +74,27 @@ public class ChunkInstance {
         return true;
     }
 
-    public void SetBlock(int x, int y, int z, BlockData block, bool setChanged = true)
+    public void SetBlock(int x, int y, int z, int blockID, bool setChanged = true)
     {
         if (InRange(x) && InRange(y) && InRange(z))
         {
-            BlockInstance newBlock;
-            newBlock = blocks[x, y, z];
-            if (newBlock == null)
-            {
-                newBlock = new BlockInstance();
-            }
-            newBlock.ID = block.ID;
-            newBlock.changed = setChanged;
+            //BlockInstance newBlock;
+            //newBlock = blocks[x, y, z];
+            //if (newBlock == null)
+            //{
+            //    newBlock = new BlockInstance();
+            //}
+            //newBlock.ID = block.ID;
+            //newBlock.changed = setChanged;
 
             //TODO whatever else I need to do to set the block instance
-            blocks[x, y, z] = newBlock;
+            blocks[x, y, z] = blockID;
 
             //TODO metadata
         }
         else
         {
-            world.SetBlock(position.x + x, position.y + y, position.z + z, block);
+            world.SetBlock(position.x + x, position.y + y, position.z + z, blockID);
         }
     }
 

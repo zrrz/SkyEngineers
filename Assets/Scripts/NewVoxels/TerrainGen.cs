@@ -103,7 +103,7 @@ public class TerrainGenerator
 
         if (ChunkInstance.InRange(x) && ChunkInstance.InRange(y) && ChunkInstance.InRange(z))
         {
-            if (replaceBlocks || chunk.blockIds[x, y, z] == null)
+            if (replaceBlocks || chunk.blockIds[x, y, z] == 0)
             {
                 chunk.SetBlock(x, y, z, block);
             }
