@@ -49,7 +49,7 @@ public class BlockDatabaseEditorWindow : EditorWindow {
 			block.textures = new Texture2D[6];
 			block.texturePosition = new BlockData.TexturePosition[6];
 			block.solid = new bool[6];
-			block.ID = blockDatabase.blocks.Count;
+			block.ID = (ushort)blockDatabase.blocks.Count;
 			blockDatabase.blocks.Add(block);
 		}
 
@@ -86,7 +86,7 @@ public class BlockDatabaseEditorWindow : EditorWindow {
                     else
                     {
                         addedTextures.Add(block.textures[j], new Vector2Int(x, y));
-                        AddTexture(texture, block, (BlockInstance.Direction)j, ref x, ref y);
+                        AddTexture(texture, block, (BlockData.Direction)j, ref x, ref y);
                     }
                 }
 			}
@@ -104,7 +104,7 @@ public class BlockDatabaseEditorWindow : EditorWindow {
 		AssetDatabase.LoadAssetAtPath<Material>("Assets/Scripts/NewVoxels/Materials/tiles 2.mat").mainTexture = AssetDatabase.LoadAssetAtPath<Texture>(filePath);
     }
 
-	void AddTexture(Texture2D atlas, BlockData block, BlockInstance.Direction direction, ref int x, ref int y) {
+    void AddTexture(Texture2D atlas, BlockData block, BlockData.Direction direction, ref int x, ref int y) {
 		atlas.SetPixels(x*32, y*32, 32, 32, block.textures[(int)direction].GetPixels());
 		block.texturePosition[(int)direction] = new BlockData.TexturePosition(x,y);
 		x++;

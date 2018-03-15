@@ -8,8 +8,8 @@ using System.Collections.Generic;
 
 public class ChunkInstance {
 
-    public int[, ,] blocks = new int[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
-    public readonly Dictionary<Vector3iChunk, BlockInstance> blockDatas = new Dictionary<Vector3iChunk, BlockInstance>();
+    public ushort[, ,] blockIds = new ushort[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE];
+    public readonly Dictionary<Vector3iChunk, BlockInstanceData> blockInstanceData = new Dictionary<Vector3iChunk, BlockInstanceData>();
 
     public const int CHUNK_SIZE = 16;
 
@@ -58,12 +58,20 @@ public class ChunkInstance {
         //TODO implement
     }
 
-    public int GetBlock(int x, int y, int z)
+    public ushort GetBlock(int x, int y, int z)
     {
         //TODO check how expensive this is and only do in debug depending
         if (InRange(x) && InRange(y) && InRange(z))
-            return blocks[x, y, z];
+            return blockIds[x, y, z];
         return world.GetBlock(position.x + x, position.y + y, position.z + z);
+    }
+
+    public BlockInstanceData GetBlockInstanceData(int x, int y, int z)
+    {
+        //TODO check how expensive this is and only do in debug depending
+        if (InRange(x) && InRange(y) && InRange(z))
+            return blockInstanceData[new Vector3iChunk(x, y, z)];
+        return world.GetBlockInstanceData(position.x + x, position.y + y, position.z + z);
     }
 
     public static bool InRange(int index)
@@ -74,7 +82,7 @@ public class ChunkInstance {
         return true;
     }
 
-    public void SetBlock(int x, int y, int z, int blockID, bool setChanged = true)
+    public void SetBlock(int x, int y, int z, ushort blockID, bool setChanged = true)
     {
         if (InRange(x) && InRange(y) && InRange(z))
         {
@@ -88,13 +96,13 @@ public class ChunkInstance {
             //newBlock.changed = setChanged;
 
             //TODO whatever else I need to do to set the block instance
-            blocks[x, y, z] = blockID;
+            blockIds[x, y, z] = blockID;
 
             //TODO metadata
         }
         else
         {
-            world.SetBlock(position.x + x, position.y + y, position.z + z, blockID);
+            world.SetBlockID(position.x + x, position.y + y, position.z + z, blockID);
         }
     }
 

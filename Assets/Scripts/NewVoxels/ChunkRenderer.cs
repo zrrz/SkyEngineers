@@ -41,8 +41,8 @@ public class ChunkRenderer : MonoBehaviour {
             {
                 for (int z = 0; z < ChunkInstance.CHUNK_SIZE; z++)
                 {
-                    if(chunk.blocks[x, y, z] != 0)
-                        meshData = chunk.blockDatas[new WorldPos(x, y, z)].GetBlockdata(chunk, x, y, z, meshData);
+                    if(chunk.blockIds[x, y, z] != 0)
+                        meshData = BlockLoader.GetBlock(chunk.blockIds[x,y,z]).GetBlockdata(chunk, x, y, z, meshData);
                 }
             }
         }

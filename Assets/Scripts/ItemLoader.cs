@@ -148,12 +148,12 @@ public class ItemLoader : MonoBehaviour {
 
         meshData.useRenderDataForCol = true;
 
-        meshData = FaceData(ID, BlockInstance.Direction.Down, meshData);
-        meshData = FaceData(ID, BlockInstance.Direction.Up, meshData);
-        meshData = FaceData(ID, BlockInstance.Direction.South, meshData);
-        meshData = FaceData(ID, BlockInstance.Direction.North, meshData);
-        meshData = FaceData(ID, BlockInstance.Direction.West, meshData);
-        meshData = FaceData(ID, BlockInstance.Direction.East, meshData);
+        meshData = FaceData(ID, BlockData.Direction.Down, meshData);
+        meshData = FaceData(ID, BlockData.Direction.Up, meshData);
+        meshData = FaceData(ID, BlockData.Direction.South, meshData);
+        meshData = FaceData(ID, BlockData.Direction.North, meshData);
+        meshData = FaceData(ID, BlockData.Direction.West, meshData);
+        meshData = FaceData(ID, BlockData.Direction.East, meshData);
 
         GameObject obj = new GameObject("Cube");
         obj.AddComponent<MeshRenderer>().material = instance.cubeMaterial;
@@ -176,41 +176,41 @@ public class ItemLoader : MonoBehaviour {
         return obj;
     }
 
-    static MeshData FaceData(int ID, BlockInstance.Direction direction, MeshData meshData)
+    static MeshData FaceData(int ID, BlockData.Direction direction, MeshData meshData)
     {
         switch (direction)
         {
-            case BlockInstance.Direction.Up:
+            case BlockData.Direction.Up:
                 meshData.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(0.5f, 0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(0.5f, 0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f));
                 break;
-            case BlockInstance.Direction.Down:
+            case BlockData.Direction.Down:
                 meshData.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(0.5f, -0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(0.5f, -0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f));
                 break;
-            case BlockInstance.Direction.North:
+            case BlockData.Direction.North:
                 meshData.AddVertex(new Vector3(0.5f, -0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(0.5f, 0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f));
                 break;
-            case BlockInstance.Direction.South:
+            case BlockData.Direction.South:
                 meshData.AddVertex(new Vector3(-0.5f, -0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(0.5f, 0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(0.5f, -0.5f, -0.5f));
                 break;
-            case BlockInstance.Direction.East:
+            case BlockData.Direction.East:
                 meshData.AddVertex(new Vector3(0.5f, -0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(0.5f, 0.5f, -0.5f));
                 meshData.AddVertex(new Vector3(0.5f, 0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(0.5f, -0.5f, 0.5f));
                 break;
-            case BlockInstance.Direction.West:
+            case BlockData.Direction.West:
                 meshData.AddVertex(new Vector3(-0.5f, -0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, 0.5f, 0.5f));
                 meshData.AddVertex(new Vector3(-0.5f, 0.5f, -0.5f));
@@ -225,7 +225,7 @@ public class ItemLoader : MonoBehaviour {
         return meshData;
     }
 
-    static Vector2[] FaceUVs(int ID, BlockInstance.Direction direction)
+    static Vector2[] FaceUVs(int ID, BlockData.Direction direction)
     {
         Vector2[] UVs = new Vector2[4];
 
@@ -239,14 +239,14 @@ public class ItemLoader : MonoBehaviour {
             tilePos = new BlockData.TexturePosition(0, 0);
         }
 
-        UVs[0] = new Vector2(BlockInstance.tileSize * tilePos.x + BlockInstance.tileSize,
-            BlockInstance.tileSize * tilePos.y);
-        UVs[1] = new Vector2(BlockInstance.tileSize * tilePos.x + BlockInstance.tileSize,
-            BlockInstance.tileSize * tilePos.y + BlockInstance.tileSize);
-        UVs[2] = new Vector2(BlockInstance.tileSize * tilePos.x,
-            BlockInstance.tileSize * tilePos.y + BlockInstance.tileSize);
-        UVs[3] = new Vector2(BlockInstance.tileSize * tilePos.x,
-            BlockInstance.tileSize * tilePos.y);
+        UVs[0] = new Vector2(BlockData.TILE_SIZE * tilePos.x + BlockData.TILE_SIZE,
+             BlockData.TILE_SIZE * tilePos.y);
+        UVs[1] = new Vector2(BlockData.TILE_SIZE * tilePos.x + BlockData.TILE_SIZE,
+             BlockData.TILE_SIZE * tilePos.y + BlockData.TILE_SIZE);
+        UVs[2] = new Vector2(BlockData.TILE_SIZE * tilePos.x,
+             BlockData.TILE_SIZE * tilePos.y + BlockData.TILE_SIZE);
+        UVs[3] = new Vector2(BlockData.TILE_SIZE * tilePos.x,
+             BlockData.TILE_SIZE * tilePos.y);
 
         return UVs;
     }

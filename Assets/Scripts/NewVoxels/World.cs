@@ -55,7 +55,7 @@ public class World : MonoBehaviour
     /// <summary>
     //To instantiate the graphics object
     /// </summary>
-    private readonly Queue<ChunkInstance> _chunksReadyToCreateGraphics = new Queue<ChunkInstance>();
+    //private readonly Queue<ChunkInstance> _chunksReadyToCreateGraphics = new Queue<ChunkInstance>();
 
     /// <summary>
     ///Chunks that are populated by anchors. Might be unnecessary?
@@ -64,8 +64,6 @@ public class World : MonoBehaviour
 
     //Threaded
     private readonly Queue<ChunkInstance> _queuedChunkUpdates = new Queue<ChunkInstance>();
-
-    //    public const int WORLD_WIDTH_IN_CHUNKS = 8;
 
     [NonSerialized]
     public int CHUNK_LOAD_DISTANCE = 16; //-half to +half
@@ -340,7 +338,7 @@ public class World : MonoBehaviour
                     chunkPos =>
                     !_populatedChunks.Contains(chunkPos.GetHashCode()) && !_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()) ||
                     _populatedChunks.Contains(chunkPos.GetHashCode()) && !loadedChunks.ContainsKey(chunkPos.GetHashCode())).ToList();
-            chunksToRemove.ForEach(chunksWaitingForNeighbours, chunkPos => chunksWaitingForNeighbours.Remove(chunkPos));
+            chunksToRemove.ForEach(chunkPos => chunksWaitingForNeighbours.Remove(chunkPos));
 
             //Update chunks waiting for neighbours
             //TODO fix closure
@@ -676,13 +674,13 @@ public class World : MonoBehaviour
         return containerChunk;
     }
 
-    public int GetBlock(int x, int y, int z)
+    public ushort GetBlock(int x, int y, int z)
     {
         ChunkInstance containerChunk = GetChunk(x, y, z);
 
         if (containerChunk != null)
         {
-            int blockID = containerChunk.GetBlock(
+            ushort blockID = containerChunk.GetBlock(
                 x - containerChunk.position.x,
                 y - containerChunk.position.y,
                 z - containerChunk.position.z);
@@ -698,13 +696,13 @@ public class World : MonoBehaviour
 
     }
 
-    public BlockInstance GetBlockInstance(int x, int y, int z)
+    public BlockInstanceData GetBlockInstanceData(int x, int y, int z)
     {
         ChunkInstance containerChunk = GetChunk(x, y, z);
 
         if (containerChunk != null)
         {
-            BlockInstance blockInstance = containerChunk.GetBlock(
+            BlockInstanceData blockInstance = containerChunk.GetBlockInstanceData(
                 x - containerChunk.position.x,
                 y - containerChunk.position.y,
                 z - containerChunk.position.z);
@@ -715,12 +713,12 @@ public class World : MonoBehaviour
         {
             //            Debug.LogError("Block isn't in containerChunk", this);
             //return 0;
-            return BlockLoader.GetBlock(0);
+            return null;
         }
 
     }
 
-    public void SetBlock(int x, int y, int z, int blockID)
+    public void SetBlockID(int x, int y, int z, ushort blockID)
     {
         ChunkInstance chunk = GetChunk(x, y, z);
 

@@ -9,7 +9,7 @@ public class CachedChunk {
 
     public readonly World world;
     public readonly WorldPos position;
-    public readonly int[,,] blockIds = new int[ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE];
+    public readonly ushort[,,] blockIds = new ushort[ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE];
     //public readonly LightLevel[,,] LightLevels = new LightLevel[Chunk.Size, Chunk.Size, Chunk.Size];
     public readonly Dictionary<WorldPos, BlockData> blockDatas = new Dictionary<WorldPos, BlockData>();
 

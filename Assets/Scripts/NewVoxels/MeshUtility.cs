@@ -42,7 +42,7 @@ public class MeshUtility : MonoBehaviour {
 			if(texture.GetPixel(x, y+1).a > 0) {
 
 			} else {
-                meshData = GetFaceData(texture, BlockInstance.Direction.Up, x, y, meshData);
+                meshData = GetFaceData(texture, BlockData.Direction.Up, x, y, meshData);
 			}
 		}
 
@@ -50,19 +50,19 @@ public class MeshUtility : MonoBehaviour {
             if(texture.GetPixel(x, y-1).a > 0) {
 
             } else {
-                meshData = GetFaceData(texture, BlockInstance.Direction.Down, x, y, meshData);
+                meshData = GetFaceData(texture, BlockData.Direction.Down, x, y, meshData);
             }
         }
 
-        meshData = GetFaceData(texture, BlockInstance.Direction.South, x, y, meshData);
+        meshData = GetFaceData(texture, BlockData.Direction.South, x, y, meshData);
 
-        meshData = GetFaceData(texture, BlockInstance.Direction.North, x, y, meshData);
+        meshData = GetFaceData(texture, BlockData.Direction.North, x, y, meshData);
 
         if(x < texture.width - 1) {
             if(texture.GetPixel(x + 1, y).a > 0) {
 
             } else {
-                meshData = GetFaceData(texture, BlockInstance.Direction.East, x, y, meshData);
+                meshData = GetFaceData(texture, BlockData.Direction.East, x, y, meshData);
             }
         }
 
@@ -70,7 +70,7 @@ public class MeshUtility : MonoBehaviour {
             if(texture.GetPixel(x - 1, y).a > 0) {
 
             } else {
-                meshData = GetFaceData(texture, BlockInstance.Direction.West, x, y, meshData);
+                meshData = GetFaceData(texture, BlockData.Direction.West, x, y, meshData);
             }
         }
 
@@ -108,7 +108,7 @@ public class MeshUtility : MonoBehaviour {
 //		return meshData;
 	}
 
-	static MeshData GetFaceData (Texture2D texture, BlockInstance.Direction direction, int x, int y, MeshData meshData)
+    static MeshData GetFaceData (Texture2D texture, BlockData.Direction direction, int x, int y, MeshData meshData)
 	{
         float size = 1f / 32f;
         switch (direction)
@@ -150,37 +150,37 @@ public class MeshUtility : MonoBehaviour {
 //                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, -0.5f));
 //                break;
 
-            case BlockInstance.Direction.Up:
+            case BlockData.Direction.Up:
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size + size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size + size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size + size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size + size/2f, -size/2f));
                 break;
-            case BlockInstance.Direction.Down:
+            case BlockData.Direction.Down:
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size - size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size - size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size - size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size - size/2f, size/2f));
                 break;
-            case BlockInstance.Direction.North:
+            case BlockData.Direction.North:
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size - size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size + size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size + size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size - size/2f, size/2f));
                 break;
-            case BlockInstance.Direction.East:
+            case BlockData.Direction.East:
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size - size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size + size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size + size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size - size/2f, size/2f));
                 break;
-            case BlockInstance.Direction.South:
+            case BlockData.Direction.South:
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size - size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size + size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size + size/2f, -size/2f));
                 meshData.AddVertex(new Vector3(x*size + size/2f, y*size - size/2f, -size/2f));
                 break;
-            case BlockInstance.Direction.West:
+            case BlockData.Direction.West:
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size - size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size + size/2f, size/2f));
                 meshData.AddVertex(new Vector3(x*size - size/2f, y*size + size/2f, -size/2f));

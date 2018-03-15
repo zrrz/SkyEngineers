@@ -64,8 +64,10 @@ public class BlockPlacer : MonoBehaviour {
 //                        Debug.LogError(pos.ToVector3() + " - " + hit2.collider.gameObject.name + " - " + hit2.distance);
 //                        ExtDebug.DrawBoxCastOnHit(pos.ToVector3(), Vector3.one * 0.35f, Quaternion.identity, Vector3.up * 0.001f, 0f, Color.red);
 //                    }
-                        EditTerrain.PlaceBlock(hit, BlockLoader.GetBlock(FindObjectOfType<PlayerInventory>().CurrentActiveItem.blockID));
-                        GetComponent<PlayerInventory>().ConsumeCurrentItem();
+
+                        //TODO fix
+                        //EditTerrain.PlaceBlock(hit, BlockLoader.GetBlock(FindObjectOfType<PlayerInventory>().CurrentActiveItem.blockID));
+                        //GetComponent<PlayerInventory>().ConsumeCurrentItem();
                     }
                 }
             }

@@ -117,12 +117,12 @@ public static class Serialization
             for (var y = chunkInstance.min.y; y <= chunkInstance.max.y; y++)
                 for (var z = chunkInstance.min.z; z <= chunkInstance.max.z; z++)
                 {
-                    writer.Write(chunkInstance.blocks[x, y, z].ID);
+                    writer.Write(chunkInstance.blockIds[x, y, z]);
                     //writer.Write(_lightLevels[x, y, z].Binary);
                 }
 
-        writer.Write(chunkInstance.blocks.Length);
-        foreach (var data in chunkInstance.blockDatas)
+        writer.Write(chunkInstance.blockIds.Length);
+        foreach (var data in chunkInstance.blockInstanceData)
         {
             writer.Write(data.Key.Binary);
             BlockData.WriteToStream(data.Value, writer);
