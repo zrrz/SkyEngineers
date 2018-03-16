@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028364, g: 0.22571398, b: 0.30692267, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -723,7 +723,7 @@ MonoBehaviour:
     model: {fileID: 0}
     slot: 0
     placeable: 1
-    blockID: -1
+    blockID: 65535
   - ID: 4
     stackSize: 32
     amount: 1
@@ -733,7 +733,7 @@ MonoBehaviour:
     model: {fileID: 0}
     slot: 0
     placeable: 1
-    blockID: -1
+    blockID: 65535
   - ID: 5
     stackSize: 32
     amount: 1
@@ -743,7 +743,7 @@ MonoBehaviour:
     model: {fileID: 0}
     slot: 0
     placeable: 1
-    blockID: -1
+    blockID: 65535
   - ID: 6
     stackSize: 64
     amount: 1
@@ -753,7 +753,7 @@ MonoBehaviour:
     model: {fileID: 0}
     slot: 0
     placeable: 1
-    blockID: -1
+    blockID: 65535
   cubeMaterial: {fileID: 2100000, guid: 56d58eecd2e93af4ea355ad1741cf39e, type: 2}
 --- !u!114 &127794957
 MonoBehaviour:
@@ -3187,7 +3187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 1274361945}
   chunkPrefab: {fileID: 100000, guid: d3e0916bbad4b82458f3fea875e6e685, type: 2}
-  renderDistance: 5
+  renderDistance: 8
 --- !u!114 &580356251
 MonoBehaviour:
   m_ObjectHideFlags: 0

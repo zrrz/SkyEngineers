@@ -39,32 +39,32 @@ public static class EditTerrain
             }
         }
 
-        return (float)pos;
+        return pos;
     }
 
 	public static bool BreakBlock(RaycastHit hit, bool adjacent = false) {
-		ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
-		if (chunk == null)
+        ChunkRenderer chunkRenderer = hit.collider.GetComponent<ChunkRenderer>();
+		if (chunkRenderer == null)
 			return false;
 
 		WorldPos pos = GetBlockPos(hit, adjacent);
 
-		//BlockInstanceData block = chunk.world.GetBlockInstanceData(pos.x, pos.y, pos.z);
-		//BlockLoader.GetBlock(block.ID).Break(new Vector3(pos.x, pos.y, pos.z));
-		chunk.world.SetBlockID(pos.x, pos.y, pos.z, 0);
+        ushort blockID = chunkRenderer.chunk.world.GetBlock(pos.x, pos.y, pos.z);
+        BlockLoader.GetBlock(blockID).Break(new Vector3(pos.x, pos.y, pos.z));
+        chunkRenderer.chunk.world.SetBlockID(pos.x, pos.y, pos.z, 0);
 
 		return true;
 	}
 
     public static bool PlaceBlock(RaycastHit hit, ushort blockID, bool adjacent = false) {
-        ChunkInstance chunk = hit.collider.GetComponent<ChunkInstance>();
-        if (chunk == null)
+        ChunkRenderer chunkRenderer = hit.collider.GetComponent<ChunkRenderer>();
+        if (chunkRenderer == null)
             return false;
 
 //        hit.point += hit.normal;
         WorldPos pos = GetBlockPos(hit, adjacent);
 
-        chunk.world.SetBlockID(pos.x, pos.y, pos.z, blockID);
+        chunkRenderer.chunk.world.SetBlockID(pos.x, pos.y, pos.z, blockID);
 
         return true;
     }

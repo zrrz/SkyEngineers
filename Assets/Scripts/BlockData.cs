@@ -288,55 +288,57 @@ public class BlockData {
         return UVs;
     }
 
-	//public void Break(Vector3 pos) {
-	//	for(int i = 0; i < drops.Length; i++) {
- //           float roll = Random.Range(0f, 100f);
- //           if (roll <= drops[i].percentChance) //Is this right?
- //           {
- //               for (int j = 0; j < drops[i].amount; j++)
- //               {
- //                   Vector2 xyDir = Random.insideUnitCircle.normalized * 0.25f;
- //                   Vector3 direction = new Vector3(xyDir.x, 0f, xyDir.y);
- //                   GameObject obj = ItemLoader.CreateModel(drops[i].itemID);
- //                   obj.transform.position = pos + direction;
- //                   obj.GetComponent<Rigidbody>().AddForce(direction * Random.Range(40f, 60f) + Vector3.up * Random.Range(80f, 110f));
- //               }
- //           }
-	//	}
-	//}
+    public void Break(Vector3 pos)
+    {
+        for (int i = 0; i < drops.Length; i++)
+        {
+            float roll = Random.Range(0f, 100f);
+            if (roll <= drops[i].percentChance) //Is this right?
+            {
+                for (int j = 0; j < drops[i].amount; j++)
+                {
+                    Vector2 xyDir = Random.insideUnitCircle.normalized * 0.25f;
+                    Vector3 direction = new Vector3(xyDir.x, 0f, xyDir.y);
+                    GameObject obj = ItemLoader.CreateModel(drops[i].itemID);
+                    obj.transform.position = pos + direction;
+                    obj.GetComponent<Rigidbody>().AddForce(direction * Random.Range(40f, 60f) + Vector3.up * Random.Range(80f, 110f));
+                }
+            }
+        }
+    }
 
 
     //TODO move to chunk.cs
-//	public float maxHealth = 100f;
-//	[System.NonSerialized]
-//	public float currentHealth;
-//
-//	float healTimer = 0f;
-//
-//
-//	void Start () {
-//		currentHealth = maxHealth;
-//	}
-//	
-//	public void BlockUpdate () {
-//		if(healTimer > 0) {
-//			healTimer -= Time.deltaTime;
-//			if(healTimer <= 0f) {
-//				currentHealth = maxHealth;
-//			}
-//			foreach(Renderer rend in GetComponentsInChildren<Renderer>()) {
-//				rend.material.color = Color.Lerp(Color.red, Color.white, currentHealth/maxHealth);
-//			}
-//		}
-//	}
-//
-//	/// <summary>
-//	/// Damages block. Returns true if broken.
-//	/// </summary>
-//	/// <param name="damage">Damage.</param>
-//	public bool Damage(float damage) {
-//		healTimer = 1f;
-//		currentHealth -= damage;
-//		return (currentHealth <= 0f);
-//	}
+    //	public float maxHealth = 100f;
+    //	[System.NonSerialized]
+    //	public float currentHealth;
+    //
+    //	float healTimer = 0f;
+    //
+    //
+    //	void Start () {
+    //		currentHealth = maxHealth;
+    //	}
+    //	
+    //	public void BlockUpdate () {
+    //		if(healTimer > 0) {
+    //			healTimer -= Time.deltaTime;
+    //			if(healTimer <= 0f) {
+    //				currentHealth = maxHealth;
+    //			}
+    //			foreach(Renderer rend in GetComponentsInChildren<Renderer>()) {
+    //				rend.material.color = Color.Lerp(Color.red, Color.white, currentHealth/maxHealth);
+    //			}
+    //		}
+    //	}
+    //
+    //	/// <summary>
+    //	/// Damages block. Returns true if broken.
+    //	/// </summary>
+    //	/// <param name="damage">Damage.</param>
+    //	public bool Damage(float damage) {
+    //		healTimer = 1f;
+    //		currentHealth -= damage;
+    //		return (currentHealth <= 0f);
+    //	}
 }

@@ -327,11 +327,43 @@ public class World : MonoBehaviour
 
     HashSet<WorldPos> chunksWaitingForNeighbours = new HashSet<WorldPos>();
 
+    //WorldPos[] chunkLoadingOrder = new WorldPos[] {
+    //    new WorldPos(0, 0, 0),
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, 0, 0), //Left
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, 0, 0), //Right
+    //    new WorldPos(0, 0, ChunkInstance.CHUNK_SIZE), //Front
+    //    new WorldPos(0, 0, -ChunkInstance.CHUNK_SIZE), //Back
+    //    new WorldPos(0, ChunkInstance.CHUNK_SIZE, 0), //Up
+    //    new WorldPos(0, -ChunkInstance.CHUNK_SIZE, 0), //Down
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, 0, -ChunkInstance.CHUNK_SIZE), //Left back
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, 0, ChunkInstance.CHUNK_SIZE), //Left front
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, 0, -ChunkInstance.CHUNK_SIZE), //Right back
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, 0, ChunkInstance.CHUNK_SIZE), //Right front
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, 0), //Left up
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, 0), //Left down
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, 0), //Right up
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, 0), //Right down
+    //    new WorldPos(0, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Front up
+    //    new WorldPos(0, -ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Front down
+    //    new WorldPos(0, ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Back up
+    //    new WorldPos(0, -ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Back down
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Left back up
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Left front up
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Right back up
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Right front up
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Left back down
+    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Left front down
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Right back down
+    //    new WorldPos(ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Right front down
+    //};
+
     private void LoadThread()
     {
 
         while (!_unloaded)
         {
+            if (_chunksReadyToAdd.Count > 0)
+                continue;
             //Remove chunks waiting that have been unloaded
             //TODO fix closure
             var chunksToRemove =
@@ -361,51 +393,85 @@ public class World : MonoBehaviour
                 var anchorChunk = ChunkInWorld(new WorldPos(anchor.position));
 
 
-            //for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
-            //    for (int y = -CHUNK_LOAD_DISTANCE/2; y < CHUNK_LOAD_DISTANCE/2; y++) {
-            //        for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
-            //            //TODO dont update a chunk twice in a frame. Just send.
-            //            int xPos = pos.x + (x*Chunk.CHUNK_SIZE);
-            //            int yPos = pos.y + (y*Chunk.CHUNK_SIZE);
-            //            int zPos = pos.z + (z*Chunk.CHUNK_SIZE);
-            //            Chunk chunk = GetChunk(xPos, yPos, zPos);
-            //            if (chunk != null)
-            //            {
-            //                chunk.Update();
-            //            }
-            //            else
-            //            {
-            //                GenerateChunk(xPos, yPos, zPos);
-            //            }
-            //        }
-            //    }
-            //}
+                //for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
+                //    for (int y = -CHUNK_LOAD_DISTANCE/2; y < CHUNK_LOAD_DISTANCE/2; y++) {
+                //        for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
+                //            //TODO dont update a chunk twice in a frame. Just send.
+                //            int xPos = pos.x + (x*Chunk.CHUNK_SIZE);
+                //            int yPos = pos.y + (y*Chunk.CHUNK_SIZE);
+                //            int zPos = pos.z + (z*Chunk.CHUNK_SIZE);
+                //            Chunk chunk = GetChunk(xPos, yPos, zPos);
+                //            if (chunk != null)
+                //            {
+                //                chunk.Update();
+                //            }
+                //            else
+                //            {
+                //                GenerateChunk(xPos, yPos, zPos);
+                //            }
+                //        }
+                //    }
+                //}
 
                 //TODO switch from top left to bottom right to outward spiral
 
-                //Load 7x7x7 around player
-                for (var x = -CHUNK_LOAD_DISTANCE; x <= CHUNK_LOAD_DISTANCE; x++)
-                    for (var y = -CHUNK_LOAD_DISTANCE; y <= CHUNK_LOAD_DISTANCE; y++)
-                        for (var z = -CHUNK_LOAD_DISTANCE; z <= CHUNK_LOAD_DISTANCE; z++)
+                for(int i = 0; i <= CHUNK_LOAD_DISTANCE; i++)
+                {
+                    for (var x = -i; x <= i; x++)
+                    {
+                        for (var y = -i; y <= i; y++)
                         {
-                            var chunkPos = anchorChunk + (new WorldPos(x, y, z) * ChunkInstance.CHUNK_SIZE);
-                            if (anchorChunksToLoad.Contains(chunkPos))
-                                continue;
-                            if (_populatedChunks.Contains(chunkPos.GetHashCode()) || _chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
+                            for (var z = -i; z <= i; z++)
                             {
-                                //Reset chunk time so it will not be unloaded
-                                ChunkInstance chunk;
-                                if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
-                                    chunk.Time = DateTime.Now;
-                                continue;
-                            }
+                                var chunkPos = anchorChunk + (new WorldPos(x, y, z) * ChunkInstance.CHUNK_SIZE);
+                                if (anchorChunksToLoad.Contains(chunkPos))
+                                    continue;
+                                if (_populatedChunks.Contains(chunkPos.GetHashCode()) || _chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
+                                {
+                                    //Reset chunk time so it will not be unloaded
+                                    ChunkInstance chunk;
+                                    if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
+                                        chunk.Time = DateTime.Now;
+                                    continue;
+                                }
 
-                            anchorChunksToLoad.Add(chunkPos);
-                            if (anchorChunksToLoad.Count >= 9)
-                            {
-                                x = y = z = CHUNK_LOAD_DISTANCE + 1;
+                                anchorChunksToLoad.Add(chunkPos);
+                                if (anchorChunksToLoad.Count >= 9)
+                                {
+                                    x = y = z = CHUNK_LOAD_DISTANCE + 1;
+                                }
                             }
                         }
+                    }
+                }
+
+                ////Load 7x7x7 around player
+                //for (var x = -CHUNK_LOAD_DISTANCE; x <= CHUNK_LOAD_DISTANCE; x++)
+                //{
+                //    for (var y = -CHUNK_LOAD_DISTANCE; y <= CHUNK_LOAD_DISTANCE; y++)
+                //    {
+                //        for (var z = -CHUNK_LOAD_DISTANCE; z <= CHUNK_LOAD_DISTANCE; z++)
+                //        {
+                //            var chunkPos = anchorChunk + (new WorldPos(x, y, z) * ChunkInstance.CHUNK_SIZE);
+                //            if (anchorChunksToLoad.Contains(chunkPos))
+                //                continue;
+                //            if (_populatedChunks.Contains(chunkPos.GetHashCode()) || _chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
+                //            {
+                //                //Reset chunk time so it will not be unloaded
+                //                ChunkInstance chunk;
+                //                if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
+                //                    chunk.Time = DateTime.Now;
+                //                continue;
+                //            }
+
+                //            anchorChunksToLoad.Add(chunkPos);
+                //            if (anchorChunksToLoad.Count >= 9)
+                //            {
+                //                x = y = z = CHUNK_LOAD_DISTANCE + 1;
+                //            }
+                //        }
+                //    }
+                //}
 
 
                 //Load 61x3x61 terrain if overworld

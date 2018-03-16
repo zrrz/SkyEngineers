@@ -58,16 +58,16 @@ public class BlockPlacer : MonoBehaviour {
                     }
                     else
                     {
-//                    RaycastHit hit2;
-//                    if (Physics.BoxCast(pos.ToVector3(), Vector3.one * 0.35f, Vector3.up * 0.001f, out hit2))
-//                    {
-//                        Debug.LogError(pos.ToVector3() + " - " + hit2.collider.gameObject.name + " - " + hit2.distance);
-//                        ExtDebug.DrawBoxCastOnHit(pos.ToVector3(), Vector3.one * 0.35f, Quaternion.identity, Vector3.up * 0.001f, 0f, Color.red);
-//                    }
+                        //                    RaycastHit hit2;
+                        //                    if (Physics.BoxCast(pos.ToVector3(), Vector3.one * 0.35f, Vector3.up * 0.001f, out hit2))
+                        //                    {
+                        //                        Debug.LogError(pos.ToVector3() + " - " + hit2.collider.gameObject.name + " - " + hit2.distance);
+                        //                        ExtDebug.DrawBoxCastOnHit(pos.ToVector3(), Vector3.one * 0.35f, Quaternion.identity, Vector3.up * 0.001f, 0f, Color.red);
+                        //                    }
 
                         //TODO fix
-                        //EditTerrain.PlaceBlock(hit, BlockLoader.GetBlock(FindObjectOfType<PlayerInventory>().CurrentActiveItem.blockID));
-                        //GetComponent<PlayerInventory>().ConsumeCurrentItem();
+                        EditTerrain.PlaceBlock(hit, FindObjectOfType<PlayerInventory>().CurrentActiveItem.blockID);
+                        GetComponent<PlayerInventory>().ConsumeCurrentItem();
                     }
                 }
             }

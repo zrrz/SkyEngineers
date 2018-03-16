@@ -36,7 +36,7 @@ public class Item {
 	//TODO usable/equipable/consumable
 
 	public bool placeable;
-	public int blockID;
+	public ushort blockID;
 
 	//TODO recipe
 
