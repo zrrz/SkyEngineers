@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Jobs;
+using Unity.Collections;
 
 public class RenderNearbyChunks : MonoBehaviour
 {
@@ -150,6 +152,8 @@ public class RenderNearbyChunks : MonoBehaviour
 
     void LoadAndRenderChunks()
     {
+        chunkUpdateJobHandle.Complete();
+
         if (buildList.Count != 0)
         {
             for (int i = 0; i < buildList.Count && i < 64; i++)
@@ -164,17 +168,59 @@ public class RenderNearbyChunks : MonoBehaviour
 
         if (updateList.Count != 0)
         {
-			for (int i = 0; i < updateList.Count && i < 64; i++)
-			{
-                WorldPos pos = updateList[0];
-                ChunkRenderer chunkRenderer;
-                if (chunkRenderers.TryGetValue(pos, out chunkRenderer))
-                {
-                    chunkRenderer.chunk.update = true;
-                }
-                    
-            	updateList.RemoveAt(0);
-			}
+            meshDatas = new NativeArray<MeshData>(updateList.Count, Allocator.Temp);
+
+            for (int i = 0; i < updateList.Count; i++)
+            {
+                meshDatas[i] = chunkRenderers[updateList[i]].meshData;
+            }
+
+            //for (int i = 0; i < updateList.Count && i < 64; i++)
+            //{
+            //             WorldPos pos = updateList[0];
+            //             ChunkRenderer chunkRenderer;
+            //             if (chunkRenderers.TryGetValue(pos, out chunkRenderer))
+            //             {
+            //                 chunkRenderer.chunk.update = true;
+            //             }
+
+            //         	updateList.RemoveAt(0);
+            //}
+            chunkUpdateJob = new ChunkUpdateJob
+            {
+                meshData = meshDatas
+            };
+            chunkUpdateJobHandle = chunkUpdateJob.Schedule(updateList.Count, updateList.Count);
+
+            updateList.Clear();
+        }
+    }
+
+    ChunkUpdateJob chunkUpdateJob;
+
+    JobHandle chunkUpdateJobHandle;
+
+    NativeArray<MeshData> meshDatas;
+
+    struct ChunkUpdateJob : IJobParallelFor
+    {
+        public NativeArray<MeshData> meshData;
+
+        public void Execute(int i)
+        {
+            //meshData
+            //var vertex = vertices[i];
+
+            //var perlin = Mathf.PerlinNoise(vertex.z, vertex.y * vertex.x);
+            //perlin *= strength * 2;
+            //var noise = normals[i] * perlin;
+            //var sine = normals[i] * sinTime * strength;
+
+            //vertex = vertex - sine + noise;
+
+            //vertices[i] = vertex;
+
+            //normals[i] += Vector3.one * cosTime * perlin;
         }
     }
 

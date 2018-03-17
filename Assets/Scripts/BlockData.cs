@@ -133,42 +133,42 @@ public class BlockData {
         return null;
     }
 
-    public bool IsSolid(Direction direction)
-    {
-        return solid[(int)direction];
-    }
+    //public bool IsSolid(Direction direction)
+    //{
+    //    return solid[(int)direction];
+    //}
 
     public virtual MeshData GetBlockdata
      (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.useRenderDataForCol = true;
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z)).IsSolid(Direction.Down))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z)).solid[(int)Direction.Down])
         {
             meshData = FaceDataUp(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y - 1, z)).IsSolid(Direction.Up))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y - 1, z)).solid[(int)Direction.Up])
         {
             meshData = FaceDataDown(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z + 1)).IsSolid(Direction.South))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z + 1)).solid[(int)Direction.South])
         {
             meshData = FaceDataNorth(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z - 1)).IsSolid(Direction.North))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z - 1)).solid[(int)Direction.North])
         {
             meshData = FaceDataSouth(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x + 1, y, z)).IsSolid(Direction.West))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x + 1, y, z)).solid[(int)Direction.West])
         {
             meshData = FaceDataEast(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x - 1, y, z)).IsSolid(Direction.East))
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x - 1, y, z)).solid[(int)Direction.East])
         {
             meshData = FaceDataWest(chunk, x, y, z, meshData);
         }

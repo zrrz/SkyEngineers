@@ -12,28 +12,30 @@ public class ChunkRenderer : MonoBehaviour {
 
     public ChunkInstance chunk;
 
+    public MeshData meshData = new MeshData();
+
     void Start()
     {
         filter = gameObject.GetComponent<MeshFilter>();
         coll = gameObject.GetComponent<MeshCollider>();
     }
 
-    void Update()
-    {
-        if (chunk == null)
-            return;
-        if (chunk.update)
-        {
-            chunk.update = false;
-            UpdateChunk();
-        }
-    }
+    //void Update()
+    //{
+    //    if (chunk == null)
+    //        return;
+    //    if (chunk.update)
+    //    {
+    //        chunk.update = false;
+    //        UpdateChunk();
+    //    }
+    //}
 
     // Updates the chunk based on its contents
     void UpdateChunk()
     {
         rendered = true;
-        MeshData meshData = new MeshData();
+        meshData.Clear();
 
         for (int x = 0; x < ChunkInstance.CHUNK_SIZE; x++)
         {
@@ -47,12 +49,12 @@ public class ChunkRenderer : MonoBehaviour {
             }
         }
 
-        RenderMesh(meshData);
+        RenderMesh();
     }
 
     // Sends the calculated mesh information
     // to the mesh and collision components
-    void RenderMesh(MeshData meshData)
+    void RenderMesh()
     {
         filter.mesh.Clear();
         filter.mesh.SetVertices(meshData.vertices);

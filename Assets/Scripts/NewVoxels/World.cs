@@ -595,13 +595,7 @@ public class World : MonoBehaviour
     {
         WorldPos worldPos = new WorldPos(pos.x, pos.y, pos.z);
 		CachedChunk cachedChunk = Serialization.LoadChunk(this, worldPos);
-        ChunkInstance newChunk = null;
-        if(cachedChunk == null) {
-            newChunk = new ChunkInstance(this, worldPos);
-        } else {
-            newChunk = new ChunkInstance(cachedChunk);
-            //        newChunkObject.layer = LayerMask.NameToLayer("Blocks");
-        }
+        ChunkInstance newChunk = new ChunkInstance(cachedChunk);
 		lock (loadedChunks)
 		{
 			loadedChunks.Add(worldPos.GetHashCode(), newChunk);

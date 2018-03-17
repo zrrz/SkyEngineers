@@ -22,29 +22,31 @@ public class ChunkInstance {
 
     public System.DateTime Time;
 
-    public WorldPos min = new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE);
+    public WorldPos min = new WorldPos(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
     public WorldPos max = new WorldPos(-1, -1, -1);
 
-    public ChunkInstance(World world, WorldPos position)
-    {
-        this.world = world;
-        this.position = position;
+    //public ChunkInstance(World world, WorldPos position)
+    //{
+    //    this.world = world;
+    //    this.position = position;
 
-        Time = System.DateTime.Now;
-    }
+    //    Time = System.DateTime.Now;
+    //}
 
-    internal ChunkInstance(CachedChunk cachedChunk) : this(cachedChunk.world, cachedChunk.position)
+    public ChunkInstance(CachedChunk cachedChunk)/* : this(cachedChunk.world, cachedChunk.position)*/
     {
         //TODO fix
-        for (int x = 0; x < CHUNK_SIZE; x++) {
-            for (int y = 0; y < CHUNK_SIZE; y++)
-            {
-                for (int z = 0; z < CHUNK_SIZE; z++)
-                {
-                    SetBlock(x, y, z, cachedChunk.blockIds[x, y, z]);
-                }
-            }
-        }
+        //for (int x = 0; x < CHUNK_SIZE; x++) {
+        //    for (int y = 0; y < CHUNK_SIZE; y++)
+        //    {
+        //        for (int z = 0; z < CHUNK_SIZE; z++)
+        //        {
+        //            blockIds[x, y, z] = cachedChunk.blockIds[x, y, z];
+        //            //SetBlock(x, y, z, cachedChunk.blockIds[x, y, z]);
+        //        }
+        //    }
+        //}
+        blockIds = cachedChunk.blockIds;
 
         //_lightLevels = cachedChunk.LightLevels;
         //blockDatas = cachedChunk.blockDatas;
@@ -52,6 +54,8 @@ public class ChunkInstance {
         position = cachedChunk.position;
         min = cachedChunk.min;
         max = cachedChunk.max;
+
+        Time = System.DateTime.Now;
     }
 
     public void Update() {

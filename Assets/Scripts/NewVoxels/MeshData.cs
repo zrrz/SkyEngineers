@@ -2,18 +2,33 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MeshData
+public struct MeshData
 {
-    public List<Vector3> vertices = new List<Vector3>();
-    public List<int> triangles = new List<int>();
-    public List<Vector2> uv = new List<Vector2>();
+    public List<Vector3> vertices;
+    public List<int> triangles;
+    public List<Vector2> uv;
 
-    public List<Vector3> colVertices = new List<Vector3>();
-    public List<int> colTriangles = new List<int>();
+    public List<Vector3> colVertices;
+    public List<int> colTriangles;
 
     public bool useRenderDataForCol;
 
-    public MeshData() { }
+    //public MeshData() {
+    //    vertices = new List<Vector3>();
+    //    triangles = new List<int>();
+    //    uv = new List<Vector2>();
+    //    colVertices = new List<Vector3>();
+    //    colTriangles = new List<int>();
+    //    useRenderDataForCol = true;
+    //}
+
+    public void Clear() {
+        vertices.Clear();
+        triangles.Clear();
+        uv.Clear();
+        colVertices.Clear();
+        colTriangles.Clear();
+    }
 
     public void AddQuadTriangles()
     {
