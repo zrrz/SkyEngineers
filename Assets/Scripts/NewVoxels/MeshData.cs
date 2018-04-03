@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public struct MeshData
+public class MeshData
 {
     public List<Vector3> vertices;
     public List<int> triangles;
@@ -13,14 +13,14 @@ public struct MeshData
 
     public bool useRenderDataForCol;
 
-    //public MeshData() {
-    //    vertices = new List<Vector3>();
-    //    triangles = new List<int>();
-    //    uv = new List<Vector2>();
-    //    colVertices = new List<Vector3>();
-    //    colTriangles = new List<int>();
-    //    useRenderDataForCol = true;
-    //}
+    public MeshData() {
+        vertices = new List<Vector3>();
+        triangles = new List<int>();
+        uv = new List<Vector2>();
+        colVertices = new List<Vector3>();
+        colTriangles = new List<int>();
+        useRenderDataForCol = true;
+    }
 
     public void Clear() {
         vertices.Clear();

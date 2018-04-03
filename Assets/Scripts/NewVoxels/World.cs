@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
-using BeardedManStudios.Forge.Networking.Generated;
-using BeardedManStudios.Forge.Networking;
+//using BeardedManStudios.Forge.Networking.Generated;
+//using BeardedManStudios.Forge.Networking;
 using Assets.Scripts.Utilities;
 using System;
 using System.Threading;

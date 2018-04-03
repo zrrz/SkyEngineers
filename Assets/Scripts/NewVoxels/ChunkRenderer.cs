@@ -20,16 +20,16 @@ public class ChunkRenderer : MonoBehaviour {
         coll = gameObject.GetComponent<MeshCollider>();
     }
 
-    //void Update()
-    //{
-    //    if (chunk == null)
-    //        return;
-    //    if (chunk.update)
-    //    {
-    //        chunk.update = false;
-    //        UpdateChunk();
-    //    }
-    //}
+    void Update()
+    {
+        if (chunk == null)
+            return;
+        if (chunk.update)
+        {
+            chunk.update = false;
+            UpdateChunk();
+        }
+    }
 
     // Updates the chunk based on its contents
     void UpdateChunk()
