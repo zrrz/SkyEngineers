@@ -9,9 +9,9 @@ public class CachedChunk {
 
     public readonly World world;
     public readonly WorldPos position;
-    public readonly ushort[,,] blockIds = new ushort[ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE];
+    public readonly ushort[] blockIds = new ushort[ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
     //public readonly LightLevel[,,] LightLevels = new LightLevel[Chunk.Size, Chunk.Size, Chunk.Size];
-    public readonly Dictionary<WorldPos, BlockData> blockDatas = new Dictionary<WorldPos, BlockData>();
+    //public readonly Dictionary<WorldPos, BlockData> blockDatas = new Dictionary<WorldPos, BlockData>();
 
     public bool IsEmpty => min.x == ChunkInstance.CHUNK_SIZE;
 
@@ -33,25 +33,25 @@ public class CachedChunk {
             for (var y = min.y; y <= max.y; y++)
                 for (var z = min.z; z <= max.z; z++)
                 {
-                    blockIds[x, y, z] = reader.ReadUInt16();
+                    blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] = reader.ReadUInt16();
                     //LightLevels[x, y, z] = LightLevel.FromBinary(reader.ReadUInt16());
                 }
 
-        var blockDataCount = reader.ReadInt32();
-        for (var i = 0; i < blockDataCount; i++)
-        {
-            WorldPos blockDataPos = Vector3iChunk.FromBinary(reader.ReadUInt16());
-            var blockData = BlockData.ReadFromStream(reader);
+        //var blockDataCount = reader.ReadInt32();
+        //for (var i = 0; i < blockDataCount; i++)
+        //{
+        //    WorldPos blockDataPos = Vector3iChunk.FromBinary(reader.ReadUInt16());
+        //    var blockData = BlockData.ReadFromStream(reader);
 
-            blockDatas.Add(blockDataPos, blockData);
-        }
+        //    blockDatas.Add(blockDataPos, blockData);
+        //}
     }
 
     public void SetBlock(int x, int y, int z, BlockData block)
     {
-        if (blockIds[x, y, z] == block.ID) return;
+        if (blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] == block.ID) return;
 
-        blockIds[x, y, z] = block.ID;
+        blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] = block.ID;
 
         if (x < min.x) min.x = x;
         if (y < min.y) min.y = y;

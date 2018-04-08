@@ -11,6 +11,7 @@ using System.Linq;
 
 public class World : MonoBehaviour
 {
+	public static World instance;
 
     public List<Anchor> anchors = new List<Anchor>();
 
@@ -20,8 +21,6 @@ public class World : MonoBehaviour
     public Dictionary<int, ChunkInstance> loadedChunks;
 
     public string worldName = "world"; //Maybe move to some IO file handling place?
-
-    public static World instance;
 
     //public GameObject fogPrefab;
 
@@ -242,7 +241,7 @@ public class World : MonoBehaviour
 
         Debug.Log("Saving world...");
         foreach (var entry in loadedChunks)
-            Serialization.SaveChunk(entry.Value);
+            Serialization.SaveChunkInstance(entry.Value);
         Debug.Log("World saved");
     }
 
@@ -313,7 +312,7 @@ public class World : MonoBehaviour
 
             foreach (var chunk in chunksToUnload)
             {
-                Serialization.SaveChunk(chunk);
+                Serialization.SaveChunkInstance(chunk);
                 lock (_chunksReadyToRemove)
                 {
                     _chunksReadyToRemove.Add(chunk.position.GetHashCode());
@@ -358,7 +357,6 @@ public class World : MonoBehaviour
 
     private void LoadThread()
     {
-
         while (!_unloaded)
         {
             if (_chunksReadyToAdd.Count > 0)
@@ -412,7 +410,8 @@ public class World : MonoBehaviour
                 //    }
                 //}
 
-                //TODO switch from top left to bottom right to outward spiral
+
+                //TODO switch to not reiterate over insides and do edges only.
 
                 for(int i = 0; i <= CHUNK_LOAD_DISTANCE; i++)
                 {
@@ -422,6 +421,10 @@ public class World : MonoBehaviour
                         {
                             for (var z = -i; z <= i; z++)
                             {
+                                //TODO skip these iterations
+                                if (x > 0 && x < CHUNK_LOAD_DISTANCE && y > 0 && y < CHUNK_LOAD_DISTANCE && z > 0 && z < CHUNK_LOAD_DISTANCE)
+                                    continue;
+                                
                                 var chunkPos = anchorChunk + (new WorldPos(x, y, z) * ChunkInstance.CHUNK_SIZE);
                                 if (anchorChunksToLoad.Contains(chunkPos))
                                     continue;
@@ -435,9 +438,9 @@ public class World : MonoBehaviour
                                 }
 
                                 anchorChunksToLoad.Add(chunkPos);
-                                if (anchorChunksToLoad.Count >= 9)
+                                if (anchorChunksToLoad.Count >= 16)
                                 {
-                                    x = y = z = CHUNK_LOAD_DISTANCE + 1;
+                                    x = y = z = i = CHUNK_LOAD_DISTANCE + 1;
                                 }
                             }
                         }
@@ -501,15 +504,15 @@ public class World : MonoBehaviour
                         //}
 
 
-                //TODO fix closure
-                anchorChunksToLoad.Sort(
-                    (v0, v1) =>
-                    (int)(v0.ToVector3() - anchorChunk.ToVector3()).sqrMagnitude -
-                    (int)(v1.ToVector3() - anchorChunk.ToVector3()).sqrMagnitude);
+                ////TODO fix closure
+                //anchorChunksToLoad.Sort(
+                    //(v0, v1) =>
+                    //(int)(v0.ToVector3() - anchorChunk.ToVector3()).sqrMagnitude -
+                    //(int)(v1.ToVector3() - anchorChunk.ToVector3()).sqrMagnitude);
 
                 //Cap player chunk load tasks to 16
-                if (anchorChunksToLoad.Count > 16)
-                    anchorChunksToLoad.RemoveRange(16, anchorChunksToLoad.Count - 16);
+                //if (anchorChunksToLoad.Count > 16)
+                    //anchorChunksToLoad.RemoveRange(16, anchorChunksToLoad.Count - 16);
 
                 playerChunksLists.Add(anchorChunksToLoad);
             }
@@ -615,14 +618,14 @@ public class World : MonoBehaviour
 
     private CachedChunk LoadChunk(WorldPos position)
     {
-        //return null;
-        var chunk = Serialization.LoadChunk(this, position);
+        CachedChunk chunk = Serialization.LoadChunk(this, position);
         if (chunk != null) 
             return chunk;
 
         chunk = new CachedChunk(this, position);
         var terrainGen = new TerrainGenerator();
         chunk = terrainGen.ChunkGen(chunk);
+        Serialization.SaveChunk(chunk);
 
         return chunk;
 
@@ -708,10 +711,10 @@ public class World : MonoBehaviour
     public void SaveWorld()
     {
         //		Serialization.SavePlayer(FindObjectOfType<PlayerData>());
-        foreach (ChunkInstance chunk in loadedChunks.Values)
-        {
-            Serialization.SaveChunk(chunk);
-        }
+        //foreach (ChunkInstance chunk in loadedChunks.Values)
+        //{
+        //    Serialization.SaveChunk(chunk);
+        //}
     }
 
     //Don't destroy chunks anymore
@@ -793,7 +796,7 @@ public class World : MonoBehaviour
         if (chunk != null)
         {
             chunk.SetBlock(x - chunk.position.x, y - chunk.position.y, z - chunk.position.z, blockID);
-            chunk.update = true;
+            //chunk.update = true;
 
             UpdateIfEqual(x - chunk.position.x, 0, new WorldPos(x - 1, y, z));
             UpdateIfEqual(x - chunk.position.x, ChunkInstance.CHUNK_SIZE - 1, new WorldPos(x + 1, y, z));

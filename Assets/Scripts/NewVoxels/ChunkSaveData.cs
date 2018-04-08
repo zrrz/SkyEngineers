@@ -24,8 +24,8 @@ public class ChunkSaveData
             {
                 for (int z = 0; z < ChunkInstance.CHUNK_SIZE; z++)
                 {
-                    if (!chunk.blockInstanceData[new WorldPos(x, y, z)].changed)
-                        continue;
+                    //if (!chunk.blockInstanceData[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE].changed)
+                        //continue;
 
                     //WorldPos pos = new WorldPos(x, y, z);
                     //blocks.Add(pos, chunk.blocks[x, y, z]);

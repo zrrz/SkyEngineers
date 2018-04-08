@@ -101,9 +101,10 @@ public class TerrainGenerator
         y -= chunk.position.y;
         z -= chunk.position.z;
 
-        if (ChunkInstance.InRange(x) && ChunkInstance.InRange(y) && ChunkInstance.InRange(z))
+        if (x >= 0 && x < ChunkInstance.CHUNK_SIZE && y >= 0 && y < ChunkInstance.CHUNK_SIZE && z >= 0 && z < ChunkInstance.CHUNK_SIZE)
         {
-            if (replaceBlocks || chunk.blockIds[x, y, z] == 0)
+            int index = x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE;
+            if (replaceBlocks || chunk.blockIds[index] == 0)
             {
                 chunk.SetBlock(x, y, z, block);
             }

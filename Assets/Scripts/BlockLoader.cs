@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 public class BlockLoader : MonoBehaviour {
 
@@ -33,6 +34,7 @@ public class BlockLoader : MonoBehaviour {
 		}
 	}
 
+    [MethodImpl(256)]
 	public static BlockData GetBlock(int ID) {
         return instance.blocks[ID];
 		//BlockData block;

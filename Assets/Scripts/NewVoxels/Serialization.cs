@@ -6,7 +6,7 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 //using System.Runtime.Serialization.Formatters.Binary;
 //using System.Runtime.Serialization;
-using MessagePack;
+//using MessagePack;
 
 public static class Serialization
 {
@@ -39,11 +39,16 @@ public static class Serialization
     private static readonly object IndexLockObject = new object();
     private static readonly object DataLockObject = new object();
 
-    public static void SaveChunk(ChunkInstance chunk)
-    {
-        if (!chunk.needsSaving) return;
+    public static void SaveChunkInstance(ChunkInstance chunkInstance) {
+        if (!chunkInstance.needsSaving) return;
+        //TODO Save blockInstanceData to chunkData blockData
+        SaveChunk(chunkInstance.chunkData);
+		chunkInstance.needsSaving = false;
+    }
 
-        var region = ChunkToRegion(chunk.position);
+    public static void SaveChunk(CachedChunk chunkData)
+    {
+        var region = ChunkToRegion(chunkData.position);
         var regionFilename = Path.Combine(WorldFolder, RegionsFolder, GetRegionFilename(region));
         var indexFile = new FileInfo(regionFilename + RegionIndexExt);
         var dataFile = new FileInfo(regionFilename + RegionDataExt);
@@ -70,7 +75,7 @@ public static class Serialization
         {
             using (var writer = new BinaryWriter(memoryStream))
             {
-                WriteChunk(writer, chunk);
+                WriteChunk(writer, chunkData);
             }
 
             compressedChunkData = CompressionHelper.CompressBytes(memoryStream.ToArray());
@@ -89,7 +94,7 @@ public static class Serialization
         }
 
         //Update chunk index
-        var chunkIndexPosition = GetChunkIndexPosition(chunk.position);
+        var chunkIndexPosition = GetChunkIndexPosition(chunkData.position);
 
         lock (IndexLockObject)
         {
@@ -100,41 +105,44 @@ public static class Serialization
             File.WriteAllBytes(indexFile.FullName, CompressionHelper.CompressBytes(chunkIndexData));
         }
 
-        chunk.needsSaving = false;
     }
 
-    public static void WriteChunk(BinaryWriter writer, ChunkInstance chunkInstance)
+    public static void WriteChunk(BinaryWriter writer, CachedChunk chunkData)
     {
-        writer.Write(chunkInstance.min.x);
-        writer.Write(chunkInstance.min.y);
-        writer.Write(chunkInstance.min.z);
+        writer.Write(chunkData.min.x);
+        writer.Write(chunkData.min.y);
+        writer.Write(chunkData.min.z);
 
-        writer.Write(chunkInstance.max.x);
-        writer.Write(chunkInstance.max.y);
-        writer.Write(chunkInstance.max.z);
+        writer.Write(chunkData.max.x);
+        writer.Write(chunkData.max.y);
+        writer.Write(chunkData.max.z);
 
-        for (var x = chunkInstance.min.x; x <= chunkInstance.max.x; x++)
-            for (var y = chunkInstance.min.y; y <= chunkInstance.max.y; y++)
-                for (var z = chunkInstance.min.z; z <= chunkInstance.max.z; z++)
+        for (int x = chunkData.min.x, n1 = chunkData.max.x; x <= n1; x++)
+            for (int y = chunkData.min.y, n2 = chunkData.max.y; y <= n2; y++)
+                for (int z = chunkData.min.z, n3 = chunkData.max.z; z <= n3; z++)
                 {
-                    writer.Write(chunkInstance.blockIds[x, y, z]);
+                    int index = x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE;
+                    writer.Write(chunkData.blockIds[index]);
                     //writer.Write(_lightLevels[x, y, z].Binary);
                 }
 
-        writer.Write(chunkInstance.blockIds.Length);
-        foreach (var data in chunkInstance.blockInstanceData)
-        {
-            writer.Write(data.Key.Binary);
-            BlockData.WriteToStream(data.Value, writer);
-        }
+        //writer.Write(chunkInstance.blockIds.Length);
+        //foreach (var data in chunkInstance.blockInstanceData)
+        //{
+        //    writer.Write(data.Key.Binary);
+        //    BlockData.WriteToStream(data.Value, writer);
+        //}
     }
 
     public static CachedChunk LoadChunk(World world, WorldPos chunkPos)
     {
-        var region = ChunkToRegion(chunkPos);
-        var regionFilename = Path.Combine(WorldFolder, RegionsFolder, GetRegionFilename(region));
-        var indexFile = new FileInfo(regionFilename + RegionIndexExt);
-        var dataFile = new FileInfo(regionFilename + RegionDataExt);
+        //var stringBuilder = new System.Text.StringBuilder();
+        //stringBuilder. 
+        //TODO maybe change to stringbuilder
+        WorldPos region = ChunkToRegion(chunkPos);
+        string regionFilename = Path.Combine(WorldFolder, RegionsFolder, GetRegionFilename(region));
+        FileInfo indexFile = new FileInfo( regionFilename + RegionIndexExt);
+        FileInfo dataFile = new FileInfo(regionFilename + RegionDataExt);
 
         if (!indexFile.Exists || !dataFile.Exists) return null;
 

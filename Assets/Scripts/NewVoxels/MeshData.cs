@@ -63,16 +63,15 @@ public class MeshData
         {
             colVertices.Add(vertex);
         }
-
     }
 
-    public void AddTriangle(int tri)
-    {
-        triangles.Add(tri);
+    //public void AddTriangle(int tri)
+    //{
+        //triangles.Add(tri);
 
-        if (useRenderDataForCol)
-        {
-            colTriangles.Add(tri - (vertices.Count - colVertices.Count));
-        }
-    }
+        //if (useRenderDataForCol)
+        //{
+        //    colTriangles.Add(tri - (vertices.Count - colVertices.Count));
+        //}
+    //}
 }

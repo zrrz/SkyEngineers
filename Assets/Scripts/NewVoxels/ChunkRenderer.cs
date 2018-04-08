@@ -14,56 +14,64 @@ public class ChunkRenderer : MonoBehaviour {
 
     public MeshData meshData = new MeshData();
 
-    void Start()
+    void Awake()
     {
         filter = gameObject.GetComponent<MeshFilter>();
         coll = gameObject.GetComponent<MeshCollider>();
-    }
-
-    void Update()
-    {
-        if (chunk == null)
-            return;
-        if (chunk.update)
-        {
-            chunk.update = false;
-            UpdateChunk();
-        }
+        //ChunksLoadedVisualizer.SetChunkLoadedState(chunk.position, true, transform);
     }
 
     // Updates the chunk based on its contents
-    void UpdateChunk()
+    public void UpdateChunk()
     {
-        rendered = true;
-        meshData.Clear();
+        if (chunk == null)
+        {
+            Debug.LogError("Chunk is null");
+            return;
+        }
 
+        chunk.update = false;
+
+        rendered = true;
+
+        UnityEngine.Profiling.Profiler.BeginSample("Clear meshData");
+        meshData.Clear();
+        UnityEngine.Profiling.Profiler.EndSample();
+
+        UnityEngine.Profiling.Profiler.BeginSample("Iterate block mesh data");
         for (int x = 0; x < ChunkInstance.CHUNK_SIZE; x++)
         {
             for (int y = 0; y < ChunkInstance.CHUNK_SIZE; y++)
             {
                 for (int z = 0; z < ChunkInstance.CHUNK_SIZE; z++)
                 {
-                    if(chunk.blockIds[x, y, z] != 0)
-                        meshData = BlockLoader.GetBlock(chunk.blockIds[x,y,z]).GetBlockdata(chunk, x, y, z, meshData);
+                    int index = x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE;
+                    if (chunk.chunkData.blockIds[index] != 0)
+                    {
+                        meshData = BlockLoader.GetBlock(chunk.chunkData.blockIds[index]).GetBlockdata(chunk, x, y, z, meshData);
+                    }
                 }
             }
         }
+        UnityEngine.Profiling.Profiler.EndSample();
 
+        UnityEngine.Profiling.Profiler.BeginSample("RenderMesh");
         RenderMesh();
+        UnityEngine.Profiling.Profiler.EndSample();
     }
 
     // Sends the calculated mesh information
     // to the mesh and collision components
     void RenderMesh()
     {
-        filter.mesh.Clear();
+        //filter.mesh.Clear();
         filter.mesh.SetVertices(meshData.vertices);
         filter.mesh.SetTriangles(meshData.triangles, 0);
 
         filter.mesh.SetUVs(0, meshData.uv);
         filter.mesh.RecalculateNormals();
 
-        coll.sharedMesh = null;
+        //coll.sharedMesh = null;
         Mesh mesh = new Mesh();
         mesh.SetVertices(meshData.colVertices);
         mesh.SetTriangles(meshData.colTriangles, 0);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 [System.Serializable]
 public class BlockData {
@@ -138,10 +139,14 @@ public class BlockData {
     //    return solid[(int)direction];
     //}
 
-    public virtual MeshData GetBlockdata
+    //[MethodImpl(256)]
+    public MeshData GetBlockdata
      (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.useRenderDataForCol = true;
+
+        //if (x >= 1 && x < ChunkInstance.CHUNK_SIZE - 1 && y >= 1 && y < ChunkInstance.CHUNK_SIZE - 1 && z >= 1 && z < ChunkInstance.CHUNK_SIZE - 1)
+        //TODO
 
         if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z)).solid[(int)Direction.Down])
         {
@@ -176,7 +181,8 @@ public class BlockData {
         return meshData;
     }
 
-    protected virtual MeshData FaceDataUp
+    [MethodImpl(256)]
+    protected MeshData FaceDataUp
         (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
@@ -189,7 +195,8 @@ public class BlockData {
         return meshData;
     }
 
-    protected virtual MeshData FaceDataDown
+    [MethodImpl(256)]
+    protected MeshData FaceDataDown
         (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
@@ -202,7 +209,8 @@ public class BlockData {
         return meshData;
     }
 
-    protected virtual MeshData FaceDataNorth
+    [MethodImpl(256)]
+    protected MeshData FaceDataNorth
         (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
@@ -215,7 +223,8 @@ public class BlockData {
         return meshData;
     }
 
-    protected virtual MeshData FaceDataEast
+    [MethodImpl(256)]
+    protected MeshData FaceDataEast
         (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
@@ -228,7 +237,8 @@ public class BlockData {
         return meshData;
     }
 
-    protected virtual MeshData FaceDataSouth
+    [MethodImpl(256)]
+    protected MeshData FaceDataSouth
         (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
@@ -241,7 +251,8 @@ public class BlockData {
         return meshData;
     }
 
-    protected virtual MeshData FaceDataWest
+    [MethodImpl(256)]
+    protected MeshData FaceDataWest
         (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
@@ -255,7 +266,8 @@ public class BlockData {
         return meshData;
     }
 
-    public virtual TexturePosition GetTexturePosition(Direction direction)
+    [MethodImpl(256)]
+    public TexturePosition GetTexturePosition(Direction direction)
     {
         //        Tile tile = new Tile();
         //        tile.x = 0;
@@ -271,7 +283,8 @@ public class BlockData {
         //        return BlockDatabase.GetBlock(ID).texturePosition[(int)direction];
     }
 
-    public virtual Vector2[] FaceUVs(Direction direction)
+    [MethodImpl(256)]
+    public Vector2[] FaceUVs(Direction direction)
     {
         Vector2[] UVs = new Vector2[4];
         BlockData.TexturePosition tilePos = GetTexturePosition(direction);
