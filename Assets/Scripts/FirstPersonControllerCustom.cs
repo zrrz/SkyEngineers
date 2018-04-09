@@ -188,20 +188,20 @@ public class FirstPersonControllerCustom : PlayerBehavior
 
     private void FixedUpdate()
     {
-        if (networkObject != null)
-        {
-            if (!networkObject.IsOwner)
-            {
-                transform.position = networkObject.position;
-                transform.rotation = networkObject.rotation;
-                return;
-            }
-        }
-        else
-        {
-//            return;
-        }
-        
+        //        if (networkObject != null)
+        //        {
+        //            if (!networkObject.IsOwner)
+        //            {
+        //                transform.position = networkObject.position;
+        //                transform.rotation = networkObject.rotation;
+        //                return;
+        //            }
+        //        }
+        //        else
+        //        {
+        ////            return;
+        //        }
+
         // always move along the camera forward as it is the direction that it being aimed at
         Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
 
@@ -229,14 +229,21 @@ public class FirstPersonControllerCustom : PlayerBehavior
         }
         else
         {
-            m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+            UnityEngine.Profiling.Profiler.BeginSample("Not grounded");
+            m_MoveDir.x += Physics.gravity.x * m_GravityMultiplier * Time.fixedDeltaTime;
+            m_MoveDir.y += Physics.gravity.y * m_GravityMultiplier * Time.fixedDeltaTime;
+            m_MoveDir.z += Physics.gravity.z * m_GravityMultiplier * Time.fixedDeltaTime;
+            UnityEngine.Profiling.Profiler.EndSample();
         }
-        m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
+
+        UnityEngine.Profiling.Profiler.BeginSample("Actual Move");
+        m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.deltaTime);
+        UnityEngine.Profiling.Profiler.EndSample();
 
         ProgressStepCycle(speed);
         UpdateCameraPosition(speed);
 
-//            m_MouseLook.UpdateCursorLock();
+        //            m_MouseLook.UpdateCursorLock();
     }
 
 

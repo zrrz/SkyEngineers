@@ -17,6 +17,21 @@ public class ChunksLoadedVisualizer : MonoBehaviour {
 
     Transform parent;
 
+    class DelayedChunkLoadedState
+    {
+        public WorldPos pos;
+        public bool loaded;
+        public Transform newParent;
+        public DelayedChunkLoadedState(WorldPos pos, bool loaded, Transform newParent)
+        {
+            this.pos = pos;
+            this.loaded = loaded;
+            this.newParent = newParent;
+        }
+    }
+
+    Queue<DelayedChunkLoadedState> delayedChunkLoadedStates = new Queue<DelayedChunkLoadedState>();
+
 	void Start () {
         if(instance != null) {
             Debug.LogError("ChunksLoadedVisualizer instance already filled");
@@ -34,16 +49,39 @@ public class ChunksLoadedVisualizer : MonoBehaviour {
         //    } 
         //}
 	}
-	
-    public static void SetChunkLoadedState(WorldPos pos, bool loaded, Transform newParent = null) {
-        DebugChunkVisualizerObject visualizerObj = instance.GetOrCreateDebugVisualizerObject(pos);
-        if(visualizerObj.loaded != loaded) {
-            visualizerObj.objRenderer.material.color = loaded ? Color.black : Color.red;
+
+    private void Update()
+    {
+        if(delayedChunkLoadedStates.Count > 0)
+        {
+            DelayedChunkLoadedState delayedChunkLoadedState = delayedChunkLoadedStates.Dequeue();
+            if(delayedChunkLoadedState != null)
+            {
+                SetChunkLoadedState(delayedChunkLoadedState.pos, delayedChunkLoadedState.loaded, newParent: delayedChunkLoadedState.newParent);
+            }
         }
-        if(newParent != null) {
-            visualizerObj.objRenderer.transform.parent = newParent;
-        } else {
-            visualizerObj.objRenderer.transform.parent = instance.parent;
+    }
+
+    public static void SetChunkLoadedState(WorldPos pos, bool loaded, bool delayToMainThread = false, Transform newParent = null) {
+        if (delayToMainThread)
+        {
+            instance.delayedChunkLoadedStates.Enqueue(new DelayedChunkLoadedState(pos, loaded, newParent));
+        }
+        else
+        {
+            DebugChunkVisualizerObject visualizerObj = instance.GetOrCreateDebugVisualizerObject(pos);
+            if (visualizerObj.loaded != loaded)
+            {
+                visualizerObj.objRenderer.material.color = loaded ? Color.black : Color.red;
+            }
+            if (newParent != null)
+            {
+                visualizerObj.objRenderer.transform.parent = newParent;
+            }
+            else
+            {
+                visualizerObj.objRenderer.transform.parent = instance.parent;
+            }
         }
     }
 
