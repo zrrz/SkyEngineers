@@ -39,7 +39,7 @@ public class BlockPlacer : MonoBehaviour {
 				EditTerrain.BreakBlock(hit);
 			}
  		}
-        if(Input.GetButton("Fire2")) {
+        if(Input.GetButtonDown("Fire2")) {
 //            RaycastHit hit;
             if(Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f, 0f)), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore)) {//, int.MaxValue, QueryTriggerInteraction.Ignore)) {
                 if (GetComponent<PlayerInventory>().CurrentActiveItem != null && GetComponent<PlayerInventory>().CurrentActiveItem.placeable)

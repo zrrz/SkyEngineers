@@ -192,12 +192,6 @@ public class BlockData {
 
         meshData.AddQuadTriangles();
         meshData.AddUVs(FaceUVs(Direction.Up));
-
-        //Debug.LogError("meshData.vertices.Count: " + meshData.vertices.Count + " meshData.triangles.Count: " + meshData.triangles.Count);
-
-        //if (meshData.vertices.Count != (int)((float)meshData.triangles.Count * .5f))
-        //    Debug.LogError("Mismatched number");
-
         return meshData;
     }
 

@@ -65,24 +65,18 @@ public class ChunkRenderer : MonoBehaviour {
     void RenderMesh()
     {
         //filter.mesh.Clear();
-        //filter.mesh.SetVertices(meshData.vertices);
-        //filter.mesh.SetTriangles(meshData.triangles, 0);
+        filter.mesh.SetVertices(meshData.vertices);
+        filter.mesh.SetTriangles(meshData.triangles, 0);
 
-        //filter.mesh.SetUVs(0, meshData.uv);
-        //filter.mesh.RecalculateNormals();
+        filter.mesh.SetUVs(0, meshData.uv);
+        filter.mesh.RecalculateNormals();
 
         //coll.sharedMesh = null;
-        Mesh mesh = filter.sharedMesh;
-        if (mesh == null)
-            mesh = new Mesh();
-        mesh.Clear(false);
-        mesh.SetVertices(meshData.vertices);
-        mesh.SetTriangles(meshData.triangles, 0);
-        mesh.SetUVs(0, meshData.uv);
+        Mesh mesh = new Mesh();
+        mesh.SetVertices(meshData.colVertices);
+        mesh.SetTriangles(meshData.colTriangles, 0);
         mesh.RecalculateNormals();
 
-        if(meshData.useRenderDataForCol)
-            filter.sharedMesh = mesh;
         coll.sharedMesh = mesh;
     }
 	

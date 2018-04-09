@@ -186,42 +186,42 @@ public class World : MonoBehaviour
         //    entity.Update();
         //}
 
-        //lock (_chunksReadyToRemove)
-        //{
-        //    while (_chunksReadyToRemove.Count > 0)
-        //    {
-        //        var chunkPos = _chunksReadyToRemove.First();
+        lock (_chunksReadyToRemove)
+        {
+            while (_chunksReadyToRemove.Count > 0)
+            {
+                var chunkPos = _chunksReadyToRemove.First();
 
-        //        ChunkInstance chunk;
-        //        if (loadedChunks.TryGetValue(chunkPos, out chunk))
-        //        {
-        //            lock (loadedChunks)
-        //            {
-        //                loadedChunks.Remove(chunkPos);
-        //            }
-        //            _populatedChunks.Remove(chunkPos);
-        //            //chunk.Dispose();
-        //        }
+                ChunkInstance chunk;
+                if (loadedChunks.TryGetValue(chunkPos, out chunk))
+                {
+                    lock (loadedChunks)
+                    {
+                        loadedChunks.Remove(chunkPos);
+                    }
+                    _populatedChunks.Remove(chunkPos);
+                    //chunk.Dispose();
+                }
 
-        //        _chunksReadyToRemove.Remove(chunkPos);
-        //    }
-        //}
+                _chunksReadyToRemove.Remove(chunkPos);
+            }
+        }
 
-        //lock (_chunksReadyToAdd)
-        //{
-        //    while (_chunksReadyToAdd.Count > 0)
-        //    {
-        //        var entry = _chunksReadyToAdd.First();
-        //        lock (loadedChunks)
-        //        {
-        //            if (!loadedChunks.ContainsKey(entry.Key))
-        //                loadedChunks.Add(entry.Key, new ChunkInstance(entry.Value));
-        //            else Debug.Log("Chunk has already been loaded! " + entry.Key);
-        //        }
-        //        _populatedChunks.Add(entry.Key);
-        //        _chunksReadyToAdd.Remove(entry.Key);
-        //    }
-        //}
+        lock (_chunksReadyToAdd)
+        {
+            while (_chunksReadyToAdd.Count > 0)
+            {
+                var entry = _chunksReadyToAdd.First();
+                lock (loadedChunks)
+                {
+                    if (!loadedChunks.ContainsKey(entry.Key))
+                        loadedChunks.Add(entry.Key, new ChunkInstance(entry.Value));
+                    else Debug.Log("Chunk has already been loaded! " + entry.Key);
+                }
+                _populatedChunks.Add(entry.Key);
+                _chunksReadyToAdd.Remove(entry.Key);
+            }
+        }
 
         //while (_chunksReadyToCreateGraphics.Count > 0)
             //lock (_chunksReadyToCreateGraphics)
@@ -300,33 +300,23 @@ public class World : MonoBehaviour
         {
             List<ChunkInstance> chunksToUnload;
 
-            //lock (loadedChunks)
-            //{
+            lock (loadedChunks)
+            {
                 //TODO fix closure
                 chunksToUnload =
                     loadedChunks.Where(
                         pair =>
                             DateTime.Now - pair.Value.Time > ChunkLifetime &&
                         !_chunksReadyToRemove.Contains(pair.Key.GetHashCode())).Select(pair => pair.Value).ToList();
-            //}
+            }
 
             foreach (var chunk in chunksToUnload)
             {
                 Serialization.SaveChunkInstance(chunk);
-
-                int hash = chunk.position.GetHashCode();
-
-                lock (loadedChunks)
+                lock (_chunksReadyToRemove)
                 {
-                    loadedChunks.Remove(hash);
+                    _chunksReadyToRemove.Add(chunk.position.GetHashCode());
                 }
-                _populatedChunks.Remove(hash);
-                 //chunk.Dispose();
-
-                //lock (_chunksReadyToRemove)
-                //{
-                //    _chunksReadyToRemove.Add(chunk.position.GetHashCode());
-                //}
             }
 
             Thread.Sleep(1000);
@@ -532,48 +522,36 @@ public class World : MonoBehaviour
             {
                 var cachedChunk = LoadChunk(chunkPos);
 
-                //if (cachedChunk.IsEmpty)
-                //{
-                //    //Empty chunks dont need to be added to LoadedChunks
-                //    lock (_populatedChunks)
-                //    {
-                //        if (_populatedChunks.Contains(chunkPos.GetHashCode()))
-                //        {
-                //            Debug.LogError("_populatedChunks ALREADY CONTAINS KEY");
-                //        }
-                //        else
-                //        {
-                //            _populatedChunks.Add(chunkPos.GetHashCode());
-                //        }
-                //    }
-                //}
-                //else
-                //{
-
-                //var entry = _chunksReadyToAdd.First();
-                int hashCode = chunkPos.GetHashCode();
-                lock (loadedChunks)
+                if (cachedChunk.IsEmpty)
                 {
-                    if (!loadedChunks.ContainsKey(hashCode))
-                        loadedChunks.Add(hashCode, new ChunkInstance(cachedChunk));
-                    else Debug.Log("Chunk has already been loaded! " + hashCode);
+                    //Empty chunks dont need to be added to LoadedChunks
+                    lock (_populatedChunks)
+                    {
+                        if (_populatedChunks.Contains(chunkPos.GetHashCode()))
+                        {
+                            Debug.LogError("_populatedChunks ALREADY CONTAINS KEY");
+                        }
+                        else
+                        {
+                            _populatedChunks.Add(chunkPos.GetHashCode());
+                        }
+                    }
                 }
-                _populatedChunks.Add(hashCode);
-                //_chunksReadyToAdd.Remove(entry.Key);
-
-                //lock (_chunksReadyToAdd)
-                    //{
-                    //    if (_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
-                    //    {
-                    //        Debug.LogError("_chunksReadyToAdd ALREADY CONTAINS KEY");
-                    //    }
-                    //    else
-                    //    {
-                    //        _chunksReadyToAdd.Add(chunkPos.GetHashCode(), cachedChunk);
-                    //    }
-                    //}
-                    //chunksWaitingForNeighbours.Add(chunkPos);
-                //}
+                else
+                {
+                    lock (_chunksReadyToAdd)
+                    {
+                        if (_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
+                        {
+                            Debug.LogError("_chunksReadyToAdd ALREADY CONTAINS KEY");
+                        }
+                        else
+                        {
+                            _chunksReadyToAdd.Add(chunkPos.GetHashCode(), cachedChunk);
+                        }
+                    }
+                    chunksWaitingForNeighbours.Add(chunkPos);
+                }
             }
 
             Thread.Sleep(10);
@@ -615,28 +593,28 @@ public class World : MonoBehaviour
         //        ChunkLoad(new Vector3Int(x, y, z));
     }
 
-  //  void ChunkLoad(Vector3Int pos)
-  //  {
-  //      WorldPos worldPos = new WorldPos(pos.x, pos.y, pos.z);
-		//CachedChunk cachedChunk = Serialization.LoadChunk(this, worldPos);
-  //      ChunkInstance newChunk = new ChunkInstance(cachedChunk);
-		//lock (loadedChunks)
-		//{
-		//	loadedChunks.Add(worldPos.GetHashCode(), newChunk);
-		//}
+    void ChunkLoad(Vector3Int pos)
+    {
+        WorldPos worldPos = new WorldPos(pos.x, pos.y, pos.z);
+		CachedChunk cachedChunk = Serialization.LoadChunk(this, worldPos);
+        ChunkInstance newChunk = new ChunkInstance(cachedChunk);
+		lock (loadedChunks)
+		{
+			loadedChunks.Add(worldPos.GetHashCode(), newChunk);
+		}
 
 
-  //      //if ()
-  //      //{
-  //      //    //Load instead of gen
-  //      //}
-  //      //else
-  //      //{
-  //      //    var terrainGen = new TerrainGenerator();
-  //      //    newChunk = terrainGen.ChunkGen(newChunk);
-  //      //}
-  //      //        newChunk.SetBlocksUnmodified();
-  //  }
+        //if ()
+        //{
+        //    //Load instead of gen
+        //}
+        //else
+        //{
+        //    var terrainGen = new TerrainGenerator();
+        //    newChunk = terrainGen.ChunkGen(newChunk);
+        //}
+        //        newChunk.SetBlocksUnmodified();
+    }
 
     private CachedChunk LoadChunk(WorldPos position)
     {

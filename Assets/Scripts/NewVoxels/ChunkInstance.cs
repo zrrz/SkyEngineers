@@ -60,7 +60,7 @@ public class ChunkInstance {
 
         Time = System.DateTime.Now;
 
-        ChunksLoadedVisualizer.SetChunkLoadedState(position, true, true);
+        //ChunksLoadedVisualizer.SetChunkLoadedState(position, true);
     }
 
     //~ChunkInstance() {
