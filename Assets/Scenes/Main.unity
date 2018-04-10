@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.59564584, g: 0.8679984, b: 0.9764422, a: 1}
+  m_IndirectSpecularColor: {r: 0.5950342, g: 0.8679984, b: 0.9716935, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1001,7 +1001,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &213670021
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3204,7 +3204,8 @@ MonoBehaviour:
   world: {fileID: 1274361945}
   chunkPrefab: {fileID: 100000, guid: d3e0916bbad4b82458f3fea875e6e685, type: 2}
   renderDistance: 32
-  chunkToBuildPerFrame: 8
+  highPriorityChunksPerFrame: 1
+  lowPriorityChunksPerFrame: 1
 --- !u!114 &580356251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8651,6 +8652,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldName: world
   spawnPoint: {x: 0, y: 0, z: 0}
+  stopLoading: 0
 --- !u!4 &1274361946
 Transform:
   m_ObjectHideFlags: 0

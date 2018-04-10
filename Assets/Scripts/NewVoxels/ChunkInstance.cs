@@ -46,9 +46,9 @@ public class ChunkInstance {
         world = cachedChunk.world;
         position = cachedChunk.position;
         //TODO fix
-        for (int i = 0, n = CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE; i < n; i++) {
-            blockInstanceData[i] = new BlockInstanceData(cachedChunk.blockIds[i], cachedChunk.blockIds[i] != 0);
-        }
+        //for (int i = 0, n = CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE; i < n; i++) {
+        //    blockInstanceData[i] = new BlockInstanceData(cachedChunk.blockIds[i], cachedChunk.blockIds[i] != 0);
+        //}
         //blockIds = cachedChunk.blockIds;
 
         //_lightLevels = cachedChunk.LightLevels;
@@ -60,7 +60,7 @@ public class ChunkInstance {
 
         Time = System.DateTime.Now;
 
-        ChunksLoadedVisualizer.SetChunkLoadedState(position, true, true);
+        //ChunksLoadedVisualizer.SetChunkLoadedState(position, true, true);
     }
 
     //~ChunkInstance() {

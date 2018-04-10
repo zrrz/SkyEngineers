@@ -18,7 +18,8 @@ public class World : MonoBehaviour
     /// <summary>
     /// The loaded chunk instances.
     /// </summary>
-    public Dictionary<int, ChunkInstance> loadedChunks;
+    public Dictionary<int, ChunkInstance> loadedChunksMap;
+    //public List<int> loadedChunksList; //TODO later for better iteration
 
     public string worldName = "world"; //Maybe move to some IO file handling place?
 
@@ -79,7 +80,8 @@ public class World : MonoBehaviour
 
     void Start()
     {
-        loadedChunks = new Dictionary<int, ChunkInstance>();
+        loadedChunksMap = new Dictionary<int, ChunkInstance>();
+        //loadedChunksList = new List<int>();
 
         _unloadThread = new Thread(UnloadThread) { Name = "Unload Thread" };
         _loadThread = new Thread(LoadThread) { Name = "Load Thread" };
@@ -128,49 +130,7 @@ public class World : MonoBehaviour
     //    }
     //}
 
-    //void Update() {
-    //    UpdateWorld();
-
-    //    for(int i = 0; i < 6 && chunksToLoad.Count > 0; i++)
-    //    {
-    //        Dictionary<int, Vector3Int>.Enumerator enumerator = chunksToLoad.GetEnumerator();
-    //        enumerator.MoveNext();
-    //        Vector3Int pos = enumerator.Current.Value;
-    //        chunksToLoad.Remove(enumerator.Current.Key);
-    //        ChunkLoad(pos);
-    //    }
-    //}
-
-    //void UpdateWorld() {
-    //    //TODO switch to go through all chunks and update, load, or unload if near Anchor
-    //    foreach (Anchor anchor in anchors)
-    //    {
-    //        WorldPos pos = new WorldPos(
-    //            Mathf.FloorToInt(anchor.position.x / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
-    //            Mathf.FloorToInt(anchor.position.y / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE,
-    //            Mathf.FloorToInt(anchor.position.z / Chunk.CHUNK_SIZE) * Chunk.CHUNK_SIZE
-    //        );
-    //        for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
-    //            for (int y = -CHUNK_LOAD_DISTANCE/2; y < CHUNK_LOAD_DISTANCE/2; y++) {
-    //                for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
-    //                    //TODO dont update a chunk twice in a frame. Just send.
-    //                    int xPos = pos.x + (x*Chunk.CHUNK_SIZE);
-    //                    int yPos = pos.y + (y*Chunk.CHUNK_SIZE);
-    //                    int zPos = pos.z + (z*Chunk.CHUNK_SIZE);
-    //                    Chunk chunk = GetChunk(xPos, yPos, zPos);
-    //                    if (chunk != null)
-    //                    {
-    //                        chunk.Update();
-    //                    }
-    //                    else
-    //                    {
-    //                        GenerateChunk(xPos, yPos, zPos);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    public bool stopLoading = false;
 
     public void Update()
     {
@@ -186,49 +146,45 @@ public class World : MonoBehaviour
         //    entity.Update();
         //}
 
-        //lock (_chunksReadyToRemove)
-        //{
-        //    while (_chunksReadyToRemove.Count > 0)
-        //    {
-        //        var chunkPos = _chunksReadyToRemove.First();
+        lock (_chunksReadyToRemove)
+        {
+            while (_chunksReadyToRemove.Count > 0)
+            {
+                var chunkPos = _chunksReadyToRemove.First();
 
-        //        ChunkInstance chunk;
-        //        if (loadedChunks.TryGetValue(chunkPos, out chunk))
-        //        {
-        //            lock (loadedChunks)
-        //            {
-        //                loadedChunks.Remove(chunkPos);
-        //            }
-        //            _populatedChunks.Remove(chunkPos);
-        //            //chunk.Dispose();
-        //        }
+                ChunkInstance chunk;
+                if (loadedChunksMap.TryGetValue(chunkPos, out chunk))
+                {
+                    lock (loadedChunksMap)
+                    {
+                        loadedChunksMap.Remove(chunkPos);
+                    }
+                    _populatedChunks.Remove(chunkPos);
+                }
 
-        //        _chunksReadyToRemove.Remove(chunkPos);
-        //    }
-        //}
+                _chunksReadyToRemove.Remove(chunkPos);
+            }
+        }
 
-        //lock (_chunksReadyToAdd)
-        //{
-        //    while (_chunksReadyToAdd.Count > 0)
-        //    {
-        //        var entry = _chunksReadyToAdd.First();
-        //        lock (loadedChunks)
-        //        {
-        //            if (!loadedChunks.ContainsKey(entry.Key))
-        //                loadedChunks.Add(entry.Key, new ChunkInstance(entry.Value));
-        //            else Debug.Log("Chunk has already been loaded! " + entry.Key);
-        //        }
-        //        _populatedChunks.Add(entry.Key);
-        //        _chunksReadyToAdd.Remove(entry.Key);
-        //    }
-        //}
+        int chunksToLoadPerFrame = 4;
+        int chunksLoadedThisFrame = 0;
+        lock (_chunksReadyToAdd)
+        {
+            while (_chunksReadyToAdd.Count > 0 && chunksLoadedThisFrame < chunksToLoadPerFrame)
+            {
+                chunksLoadedThisFrame++;
 
-        //while (_chunksReadyToCreateGraphics.Count > 0)
-            //lock (_chunksReadyToCreateGraphics)
-            //{
-            //    //_chunksReadyToUpload.Dequeue().Upload();
-            //}
-
+                var entry = _chunksReadyToAdd.First();
+                lock (loadedChunksMap)
+                {
+                    if (!loadedChunksMap.ContainsKey(entry.Key))
+                        loadedChunksMap.Add(entry.Key, new ChunkInstance(entry.Value));
+                    else Debug.Log("Chunk has already been loaded! " + entry.Key);
+                }
+                _populatedChunks.Add(entry.Key);
+                _chunksReadyToAdd.Remove(entry.Key);
+            }
+        }
     }
 
     public void Unload()
@@ -240,7 +196,7 @@ public class World : MonoBehaviour
             Thread.Sleep(100);
 
         Debug.Log("Saving world...");
-        foreach (var entry in loadedChunks)
+        foreach (var entry in loadedChunksMap)
             Serialization.SaveChunkInstance(entry.Value);
         Debug.Log("World saved");
     }
@@ -253,6 +209,8 @@ public class World : MonoBehaviour
 
         while (!_unloaded)
         {
+			if (stopLoading)
+				return;
             //while (_queuedLightUpdates.Count > 0)
             //{
             //    lock (_queuedLightUpdates)
@@ -298,16 +256,29 @@ public class World : MonoBehaviour
     {
         while (!_unloaded)
         {
-            List<ChunkInstance> chunksToUnload;
+			if (stopLoading)
+				return;
+            
+            List<ChunkInstance> chunksToUnload = new List<ChunkInstance>();
+
+            lock (loadedChunksMap)
+            {
+                foreach(var loadedChunk in loadedChunksMap) {
+                    if(DateTime.Now - loadedChunk.Value.Time > ChunkLifetime 
+                       && !_chunksReadyToRemove.Contains(loadedChunk.Key)) 
+                    {
+                        chunksToUnload.Add(loadedChunk.Value);
+                    }
+                }
+            }
 
             //lock (loadedChunks)
             //{
-                //TODO fix closure
-                chunksToUnload =
-                    loadedChunks.Where(
-                        pair =>
-                            DateTime.Now - pair.Value.Time > ChunkLifetime &&
-                        !_chunksReadyToRemove.Contains(pair.Key.GetHashCode())).Select(pair => pair.Value).ToList();
+                //chunksToUnload =
+                    //loadedChunksMap.Where(
+                        //pair =>
+                        //    DateTime.Now - pair.Value.Time > ChunkLifetime &&
+                        //!_chunksReadyToRemove.Contains(pair.Key.GetHashCode())).Select(pair => pair.Value).ToList();
             //}
 
             foreach (var chunk in chunksToUnload)
@@ -316,17 +287,17 @@ public class World : MonoBehaviour
 
                 int hash = chunk.position.GetHashCode();
 
-                lock (loadedChunks)
-                {
-                    loadedChunks.Remove(hash);
-                }
-                _populatedChunks.Remove(hash);
+                //lock (loadedChunks)
+                //{
+                //    loadedChunks.Remove(hash);
+                //}
+                //_populatedChunks.Remove(hash);
                  //chunk.Dispose();
 
-                //lock (_chunksReadyToRemove)
-                //{
-                //    _chunksReadyToRemove.Add(chunk.position.GetHashCode());
-                //}
+                lock (_chunksReadyToRemove)
+                {
+                    _chunksReadyToRemove.Add(hash);
+                }
             }
 
             Thread.Sleep(1000);
@@ -335,58 +306,52 @@ public class World : MonoBehaviour
 
     HashSet<WorldPos> chunksWaitingForNeighbours = new HashSet<WorldPos>();
 
-    //WorldPos[] chunkLoadingOrder = new WorldPos[] {
-    //    new WorldPos(0, 0, 0),
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, 0, 0), //Left
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, 0, 0), //Right
-    //    new WorldPos(0, 0, ChunkInstance.CHUNK_SIZE), //Front
-    //    new WorldPos(0, 0, -ChunkInstance.CHUNK_SIZE), //Back
-    //    new WorldPos(0, ChunkInstance.CHUNK_SIZE, 0), //Up
-    //    new WorldPos(0, -ChunkInstance.CHUNK_SIZE, 0), //Down
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, 0, -ChunkInstance.CHUNK_SIZE), //Left back
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, 0, ChunkInstance.CHUNK_SIZE), //Left front
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, 0, -ChunkInstance.CHUNK_SIZE), //Right back
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, 0, ChunkInstance.CHUNK_SIZE), //Right front
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, 0), //Left up
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, 0), //Left down
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, 0), //Right up
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, 0), //Right down
-    //    new WorldPos(0, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Front up
-    //    new WorldPos(0, -ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Front down
-    //    new WorldPos(0, ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Back up
-    //    new WorldPos(0, -ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Back down
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Left back up
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Left front up
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Right back up
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Right front up
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Left back down
-    //    new WorldPos(-ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Left front down
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE), //Right back down
-    //    new WorldPos(ChunkInstance.CHUNK_SIZE, -ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE), //Right front down
-    //};
-
     private void LoadThread()
     {
         while (!_unloaded)
         {
+            if (stopLoading)
+                return;
+
             if (_chunksReadyToAdd.Count > 0)
                 continue;
-            //Remove chunks waiting that have been unloaded
-            //TODO fix closure
-            var chunksToRemove =
-                chunksWaitingForNeighbours.Where(
-                    chunkPos =>
-                    !_populatedChunks.Contains(chunkPos.GetHashCode()) && !_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()) ||
-                    _populatedChunks.Contains(chunkPos.GetHashCode()) && !loadedChunks.ContainsKey(chunkPos.GetHashCode())).ToList();
-            chunksToRemove.ForEach(chunkPos => chunksWaitingForNeighbours.Remove(chunkPos));
+
+            List<WorldPos> chunksToRemove = new List<WorldPos>();
+
+			//Remove chunks waiting that have been unloaded
+            //If not in _populatedChunks and not in _chunksReadyToAdd OR is in _populatedChunks and not in loadedChunksMap
+            foreach(var chunkPos in chunksWaitingForNeighbours) {
+                if(!_populatedChunks.Contains(chunkPos.GetHashCode()) && !_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()) 
+                   || _populatedChunks.Contains(chunkPos.GetHashCode()) && !loadedChunksMap.ContainsKey(chunkPos.GetHashCode())) 
+                {
+                    //chunksWaitingForNeighbours.Remove(chunkPos); //TODO FIX
+                    chunksToRemove.Add(chunkPos);
+                }
+            }
+			chunksToRemove.ForEach(chunkPos => chunksWaitingForNeighbours.Remove(chunkPos));
+
+            //var chunksToRemove =
+            //chunksWaitingForNeighbours.Where(
+            //chunkPos =>
+            //!_populatedChunks.Contains(chunkPos.GetHashCode()) && !_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()) ||
+            //_populatedChunks.Contains(chunkPos.GetHashCode()) && !loadedChunksMap.ContainsKey(chunkPos.GetHashCode())).ToList();
 
             //Update chunks waiting for neighbours
-            //TODO fix closure
-            var chunksToUpdate =
-                chunksWaitingForNeighbours.Where(
-                        chunkPos =>
-                    BlockFaceHelper.Faces.All(face => _populatedChunks.Contains((chunkPos + face.GetNormali() * ChunkInstance.CHUNK_SIZE).GetHashCode()))
-                ).ToList();
+
+            List<WorldPos> chunksToUpdate = new List<WorldPos>();
+            foreach(var chunkPos in chunksWaitingForNeighbours) {
+                for (int i = 0, n = BlockFaceHelper.Faces.Length; i < n; i++) {
+                    if(_populatedChunks.Contains((chunkPos + BlockFaceHelper.Faces[i].GetNormali() * ChunkInstance.CHUNK_SIZE).GetHashCode())) {
+                        chunksToUpdate.Add(chunkPos);
+                    }
+                }
+            }
+
+            //var chunksToUpdate =
+                //chunksWaitingForNeighbours.Where(
+                //        chunkPos =>
+                //    BlockFaceHelper.Faces.All(face => _populatedChunks.Contains((chunkPos + face.GetNormali() * ChunkInstance.CHUNK_SIZE).GetHashCode()))
+                //).ToList();
             foreach (var chunkPos in chunksToUpdate)
             {
                 QueueChunkUpdate(chunkPos/*, true*/);
@@ -399,28 +364,6 @@ public class World : MonoBehaviour
                 var anchorChunksToLoad = new List<WorldPos>();
                 var anchorChunk = ChunkInWorld(new WorldPos(anchor.position));
 
-
-                //for (int x = -CHUNK_LOAD_DISTANCE/2; x < CHUNK_LOAD_DISTANCE/2; x++) {
-                //    for (int y = -CHUNK_LOAD_DISTANCE/2; y < CHUNK_LOAD_DISTANCE/2; y++) {
-                //        for (int z = -CHUNK_LOAD_DISTANCE/2; z < CHUNK_LOAD_DISTANCE/2; z++) {
-                //            //TODO dont update a chunk twice in a frame. Just send.
-                //            int xPos = pos.x + (x*Chunk.CHUNK_SIZE);
-                //            int yPos = pos.y + (y*Chunk.CHUNK_SIZE);
-                //            int zPos = pos.z + (z*Chunk.CHUNK_SIZE);
-                //            Chunk chunk = GetChunk(xPos, yPos, zPos);
-                //            if (chunk != null)
-                //            {
-                //                chunk.Update();
-                //            }
-                //            else
-                //            {
-                //                GenerateChunk(xPos, yPos, zPos);
-                //            }
-                //        }
-                //    }
-                //}
-
-
                 //TODO switch to not reiterate over insides and do edges only.
 
                 for(int i = 0; i <= CHUNK_LOAD_DISTANCE; i++)
@@ -432,7 +375,7 @@ public class World : MonoBehaviour
                             for (var z = -i; z <= i; z++)
                             {
                                 //TODO skip these iterations
-                                if (x > 0 && x < CHUNK_LOAD_DISTANCE && y > 0 && y < CHUNK_LOAD_DISTANCE && z > 0 && z < CHUNK_LOAD_DISTANCE)
+                                if (!(x == 0 && y == 0 && z == 0) && (x > 0 && x < CHUNK_LOAD_DISTANCE && y > 0 && y < CHUNK_LOAD_DISTANCE && z > 0 && z < CHUNK_LOAD_DISTANCE))
                                     continue;
                                 
                                 var chunkPos = anchorChunk + (new WorldPos(x, y, z) * ChunkInstance.CHUNK_SIZE);
@@ -442,12 +385,14 @@ public class World : MonoBehaviour
                                 {
                                     //Reset chunk time so it will not be unloaded
                                     ChunkInstance chunk;
-                                    if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
+                                    if (loadedChunksMap.TryGetValue(chunkPos.GetHashCode(), out chunk))
                                         chunk.Time = DateTime.Now;
                                     continue;
                                 }
 
                                 anchorChunksToLoad.Add(chunkPos);
+
+								//Cap player chunk load tasks to 16
                                 if (anchorChunksToLoad.Count >= 16)
                                 {
                                     x = y = z = i = CHUNK_LOAD_DISTANCE + 1;
@@ -456,73 +401,6 @@ public class World : MonoBehaviour
                         }
                     }
                 }
-
-                ////Load 7x7x7 around player
-                //for (var x = -CHUNK_LOAD_DISTANCE; x <= CHUNK_LOAD_DISTANCE; x++)
-                //{
-                //    for (var y = -CHUNK_LOAD_DISTANCE; y <= CHUNK_LOAD_DISTANCE; y++)
-                //    {
-                //        for (var z = -CHUNK_LOAD_DISTANCE; z <= CHUNK_LOAD_DISTANCE; z++)
-                //        {
-                //            var chunkPos = anchorChunk + (new WorldPos(x, y, z) * ChunkInstance.CHUNK_SIZE);
-                //            if (anchorChunksToLoad.Contains(chunkPos))
-                //                continue;
-                //            if (_populatedChunks.Contains(chunkPos.GetHashCode()) || _chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
-                //            {
-                //                //Reset chunk time so it will not be unloaded
-                //                ChunkInstance chunk;
-                //                if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
-                //                    chunk.Time = DateTime.Now;
-                //                continue;
-                //            }
-
-                //            anchorChunksToLoad.Add(chunkPos);
-                //            if (anchorChunksToLoad.Count >= 9)
-                //            {
-                //                x = y = z = CHUNK_LOAD_DISTANCE + 1;
-                //            }
-                //        }
-                //    }
-                //}
-
-
-                //Load 61x3x61 terrain if overworld
-                //heightmap(x*Chunk.Size + Chunk.Size/2, z*Chunk.Size + Chunk.Size/2)
-
-                //TODO figure out what this height BS does
-
-                //var height = 0 + ChunkInstance.CHUNK_SIZE / 2;
-                //var heightMapChunkY = ChunkInWorld(0, height, 0).y;
-                //for (var x = -30; x <= 30; x++)
-                    //for (var y = -1; y <= 1; y++)
-                        //for (var z = -30; z <= 30; z++)
-                        //{
-                        //    if (x <= 3 && x >= -3 && y <= 3 && y >= -3 && z <= 3 && z >= -3) continue;
-
-                        //    var chunkPos = new WorldPos(anchorChunk.x + x, heightMapChunkY + y, anchorChunk.z + z);
-
-                        //    if (_populatedChunks.Contains(chunkPos.GetHashCode()) || _chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
-                        //    {
-                        //        //Reset chunk time so it will not be unloaded
-                        //        ChunkInstance chunk;
-                        //        if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
-                        //            chunk.Time = DateTime.Now;
-                        //        continue;
-                        //    }
-
-                        //    anchorChunksToLoad.Add(chunkPos);
-                        //}
-
-
-                ////TODO fix closure
-                //anchorChunksToLoad.Sort(
-                    //(v0, v1) =>
-                    //(int)(v0.ToVector3() - anchorChunk.ToVector3()).sqrMagnitude -
-                    //(int)(v1.ToVector3() - anchorChunk.ToVector3()).sqrMagnitude);
-
-                //Cap player chunk load tasks to 16
-                //if (anchorChunksToLoad.Count > 16)
-                    //anchorChunksToLoad.RemoveRange(16, anchorChunksToLoad.Count - 16);
 
                 playerChunksLists.Add(anchorChunksToLoad);
             }
@@ -552,27 +430,27 @@ public class World : MonoBehaviour
 
                 //var entry = _chunksReadyToAdd.First();
                 int hashCode = chunkPos.GetHashCode();
-                lock (loadedChunks)
-                {
-                    if (!loadedChunks.ContainsKey(hashCode))
-                        loadedChunks.Add(hashCode, new ChunkInstance(cachedChunk));
-                    else Debug.Log("Chunk has already been loaded! " + hashCode);
-                }
-                _populatedChunks.Add(hashCode);
+
+                //lock (loadedChunksMap)
+                //{
+                //    if (!loadedChunksMap.ContainsKey(hashCode))
+                //        loadedChunksMap.Add(hashCode, new ChunkInstance(cachedChunk));
+                //    else Debug.Log("Chunk has already been loaded! " + hashCode);
+                //}
+                ////_populatedChunks.Add(hashCode);
                 //_chunksReadyToAdd.Remove(entry.Key);
 
-                //lock (_chunksReadyToAdd)
-                    //{
-                    //    if (_chunksReadyToAdd.ContainsKey(chunkPos.GetHashCode()))
-                    //    {
-                    //        Debug.LogError("_chunksReadyToAdd ALREADY CONTAINS KEY");
-                    //    }
-                    //    else
-                    //    {
-                    //        _chunksReadyToAdd.Add(chunkPos.GetHashCode(), cachedChunk);
-                    //    }
-                    //}
-                    //chunksWaitingForNeighbours.Add(chunkPos);
+                lock (_chunksReadyToAdd) {
+                    if (_chunksReadyToAdd.ContainsKey(hashCode))
+                    {
+                        Debug.LogError("_chunksReadyToAdd ALREADY CONTAINS KEY");
+                    }
+                    else
+                    {
+                        _chunksReadyToAdd.Add(hashCode, cachedChunk);
+                    }
+                }
+                chunksWaitingForNeighbours.Add(chunkPos);
                 //}
             }
 
@@ -583,7 +461,7 @@ public class World : MonoBehaviour
     public void QueueChunkUpdate(WorldPos chunkPos/*, bool lowPrioriity*/)
     {
         ChunkInstance chunk;
-        if (loadedChunks.TryGetValue(chunkPos.GetHashCode(), out chunk))
+        if (loadedChunksMap.TryGetValue(chunkPos.GetHashCode(), out chunk))
             QueueChunkUpdate(chunk/*, lowPrioriity*/);
     }
 
@@ -762,7 +640,7 @@ public class World : MonoBehaviour
 
         ChunkInstance containerChunk = null;
 
-        loadedChunks.TryGetValue(hash, out containerChunk);
+        loadedChunksMap.TryGetValue(hash, out containerChunk);
 
         return containerChunk;
     }
@@ -862,7 +740,7 @@ public class World : MonoBehaviour
 	private void OnGUI()
 	{
         if(showChunkLoadingStats) {
-            GUILayout.Label("loadedChunks: " + loadedChunks.Count);
+            GUILayout.Label("loadedChunks: " + loadedChunksMap.Count);
             GUILayout.Label("_chunksReadyToAdd: " + _chunksReadyToAdd.Count);
             GUILayout.Label("_chunksReadyToRemove: " + _chunksReadyToRemove.Count);
             GUILayout.Label("_populatedChunks: " + _populatedChunks.Count);
