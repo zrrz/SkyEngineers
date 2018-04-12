@@ -13,6 +13,8 @@ public class MeshData
 
     public bool useRenderDataForCol;
 
+    public bool isClear = false;
+
     public MeshData() {
         vertices = new List<Vector3>();
         triangles = new List<int>();
@@ -23,6 +25,7 @@ public class MeshData
     }
 
     public void Clear() {
+        isClear = true;
         vertices.Clear();
         triangles.Clear();
         uv.Clear();

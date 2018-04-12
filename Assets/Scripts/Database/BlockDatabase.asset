@@ -25,7 +25,7 @@ MonoBehaviour:
       y: 0
     - x: 5
       y: 0
-    solid: 000000000000
+    solid: 0
     ID: 0
     name: Air
     hardnessTier: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
       y: 0
     - x: 0
       y: 0
-    solid: 010101010101
+    solid: 1
     ID: 1
     name: Rock
     hardnessTier: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
       y: 0
     - x: 3
       y: 0
-    solid: 010101010101
+    solid: 1
     ID: 2
     name: Dirt
     hardnessTier: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
       y: 0
     - x: 4
       y: 0
-    solid: 000000000000
+    solid: 1
     ID: 3
     name: Leaves
     hardnessTier: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
       y: 0
     - x: 6
       y: 0
-    solid: 010101010101
+    solid: 1
     ID: 4
     name: Log
     hardnessTier: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
       y: 0
     - x: 7
       y: 0
-    solid: 010101010101
+    solid: 1
     ID: 5
     name: Cobblestone
     hardnessTier: 0

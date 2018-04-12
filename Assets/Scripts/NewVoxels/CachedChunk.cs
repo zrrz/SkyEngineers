@@ -18,6 +18,8 @@ public class CachedChunk {
     public WorldPos min = new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE);
     public WorldPos max = new WorldPos(-1, -1, -1);
 
+
+
     internal CachedChunk(World world, WorldPos position)
     {
         this.world = world;
@@ -49,16 +51,21 @@ public class CachedChunk {
 
     public void SetBlock(int x, int y, int z, BlockData block)
     {
-        if (blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] == block.ID) return;
+        int solid = block.solid ? (1 << 14) : 0;
+        ushort blockData = (ushort)(block.ID | (ushort)solid);
+        if (blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] == blockData) return;
 
-        blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] = block.ID;
+        blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] = blockData;
 
-        if (x < min.x) min.x = x;
-        if (y < min.y) min.y = y;
-        if (z < min.z) min.z = z;
-        if (x > max.x) max.x = x;
-        if (y > max.y) max.y = y;
-        if (z > max.z) max.z = z;
+        if (block.ID != 0)
+        {
+            if (x < min.x) min.x = x;
+            if (y < min.y) min.y = y;
+            if (z < min.z) min.z = z;
+            if (x > max.x) max.x = x;
+            if (y > max.y) max.y = y;
+            if (z > max.z) max.z = z;
+        }
     }
 
     public BlockData GetBlock(int x, int y, int z)

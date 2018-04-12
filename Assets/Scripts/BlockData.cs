@@ -27,7 +27,7 @@ public class BlockData {
         public int x; public int y;
     } //TODO idk rename maybe
     public TexturePosition[] texturePosition;
-    public bool[] solid;
+    public bool solid;
 //    public bool downSolid;
 //    public bool eastSolid;
 //    public bool westSolid;
@@ -143,37 +143,37 @@ public class BlockData {
     public MeshData GetBlockdata
      (ChunkInstance chunk, int x, int y, int z, MeshData meshData)
     {
-        meshData.useRenderDataForCol = true;
+        //meshData.useRenderDataForCol = true;
 
         //if (x >= 1 && x < ChunkInstance.CHUNK_SIZE - 1 && y >= 1 && y < ChunkInstance.CHUNK_SIZE - 1 && z >= 1 && z < ChunkInstance.CHUNK_SIZE - 1)
         //TODO
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z)).solid[(int)Direction.Down])
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataUp(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y - 1, z)).solid[(int)Direction.Up])
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y - 1, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataDown(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z + 1)).solid[(int)Direction.South])
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z + 1) & ~(1 << 14)).solid)
         {
             meshData = FaceDataNorth(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z - 1)).solid[(int)Direction.North])
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z - 1) & ~(1 << 14)).solid)
         {
             meshData = FaceDataSouth(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x + 1, y, z)).solid[(int)Direction.West])
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x + 1, y, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataEast(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x - 1, y, z)).solid[(int)Direction.East])
+        if (!BlockLoader.GetBlock(chunk.GetBlock(x - 1, y, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataWest(chunk, x, y, z, meshData);
         }
@@ -191,7 +191,7 @@ public class BlockData {
         meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.AddUVs(FaceUVs(Direction.Up));
+        meshData.AddUVs(FaceUVs(ID, Direction.Up));
 
         //Debug.LogError("meshData.vertices.Count: " + meshData.vertices.Count + " meshData.triangles.Count: " + meshData.triangles.Count);
 
@@ -211,7 +211,7 @@ public class BlockData {
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.AddUVs(FaceUVs(Direction.Down));
+        meshData.AddUVs(FaceUVs(ID, Direction.Down));
         return meshData;
     }
 
@@ -225,7 +225,7 @@ public class BlockData {
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.AddUVs(FaceUVs(Direction.North));
+        meshData.AddUVs(FaceUVs(ID, Direction.North));
         return meshData;
     }
 
@@ -239,7 +239,7 @@ public class BlockData {
         meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.AddUVs(FaceUVs(Direction.East));
+        meshData.AddUVs(FaceUVs(ID, Direction.East));
         return meshData;
     }
 
@@ -253,7 +253,7 @@ public class BlockData {
         meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.AddUVs(FaceUVs(Direction.South));
+        meshData.AddUVs(FaceUVs(ID, Direction.South));
         return meshData;
     }
 
@@ -267,14 +267,16 @@ public class BlockData {
         meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
 
         meshData.AddQuadTriangles();
-        meshData.AddUVs(FaceUVs(Direction.West));
+        meshData.AddUVs(FaceUVs(ID, Direction.West));
 
         return meshData;
     }
 
     [MethodImpl(256)]
-    public TexturePosition GetTexturePosition(Direction direction)
+    public static TexturePosition GetTexturePosition(int ID, Direction direction)
     {
+        return BlockLoader.GetBlock(ID).texturePosition[(int)direction];
+
         //        Tile tile = new Tile();
         //        tile.x = 0;
         //        tile.y = 0;
@@ -282,18 +284,20 @@ public class BlockData {
         //        return tile;
         //
         //
-        if (BlockLoader.GetBlock(ID).texturePosition != null && BlockLoader.GetBlock(ID).texturePosition.Length > (int)direction)
-            return BlockLoader.GetBlock(ID).texturePosition[(int)direction];
-        else
-            return new TexturePosition(0, 0);
+        //BlockData blockData = BlockLoader.GetBlock(ID);
+        //if(blockData.texturePosition != null && )
+        //if (BlockLoader.GetBlock(ID).texturePosition != null && BlockLoader.GetBlock(ID).texturePosition.Length > (int)direction)
+        //    return BlockLoader.GetBlock(ID).texturePosition[(int)direction];
+        //else
+            //return new TexturePosition(0, 0);
         //        return BlockDatabase.GetBlock(ID).texturePosition[(int)direction];
     }
 
     [MethodImpl(256)]
-    public Vector2[] FaceUVs(Direction direction)
+    public static Vector2[] FaceUVs(int ID, Direction direction)
     {
         Vector2[] UVs = new Vector2[4];
-        BlockData.TexturePosition tilePos = GetTexturePosition(direction);
+        BlockData.TexturePosition tilePos = GetTexturePosition(ID, direction);
 
         UVs[0] = new Vector2(TILE_SIZE * tilePos.x + TILE_SIZE,
                              TILE_SIZE * tilePos.y);

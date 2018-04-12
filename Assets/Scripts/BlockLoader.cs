@@ -34,15 +34,15 @@ public class BlockLoader : MonoBehaviour {
 		}
 	}
 
-    [MethodImpl(256)]
+    //[MethodImpl(256)]
 	public static BlockData GetBlock(int ID) {
-        return instance.blocks[ID];
-		//BlockData block;
-		//if(instance.blocks.TryGetValue(ID, out block)) {
-		//	return block;
-		//} else {
-		//	Debug.LogError("Block ID: " + ID + " not found.");
-		//	return null;
-		//}
+        //return instance.blocks[ID];
+		BlockData block;
+		if(instance.blocks.TryGetValue(ID, out block)) {
+			return block;
+		} else {
+			Debug.LogError("Block ID: " + ID + " not found.");
+			return null;
+		}
 	}
 }

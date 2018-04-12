@@ -45,12 +45,14 @@ public class BlockDatabaseEditorWindow : EditorWindow {
 
 		if (GUILayout.Button("Add new"))
 		{
-			BlockData block = new BlockData();
-			block.textures = new Texture2D[6];
-			block.texturePosition = new BlockData.TexturePosition[6];
-			block.solid = new bool[6];
-			block.ID = (ushort)blockDatabase.blocks.Count;
-			blockDatabase.blocks.Add(block);
+			BlockData block = new BlockData
+            {
+                textures = new Texture2D[6],
+                texturePosition = new BlockData.TexturePosition[6],
+                solid = true,
+                ID = (ushort)blockDatabase.blocks.Count
+            };
+            blockDatabase.blocks.Add(block);
 		}
 
 
