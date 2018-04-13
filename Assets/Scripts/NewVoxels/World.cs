@@ -630,6 +630,7 @@ public class World : MonoBehaviour
     //        }
     //    }
 
+    [System.Runtime.CompilerServices.MethodImpl(256)]
     public ChunkInstance GetChunk(int x, int y, int z)
     {
         int hash = WorldPos.GenerateHashCode(
@@ -651,7 +652,7 @@ public class World : MonoBehaviour
 
         if (containerChunk != null)
         {
-            ushort blockID = containerChunk.GetBlock(
+            ushort blockID = containerChunk.GetBlockID(
                 x - containerChunk.position.x,
                 y - containerChunk.position.y,
                 z - containerChunk.position.z);

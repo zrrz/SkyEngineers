@@ -55,8 +55,6 @@ public class ChunkInstance {
         //blockDatas = cachedChunk.blockDatas;
 		//world = cachedChunk.world;
         //position = cachedChunk.position;
-        //min = cachedChunk.min;
-        //max = cachedChunk.max;
 
         Time = System.DateTime.Now;
 
@@ -71,16 +69,45 @@ public class ChunkInstance {
         //TODO implement
     }
 
-    public ushort GetBlock(int x, int y, int z)
+    /// <summary>
+    /// Gets the block with extra data except ID stripped out.
+    /// </summary>
+    /// <returns>The block identifier.</returns>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="z">The z coordinate.</param>
+    public ushort GetBlockID(int x, int y, int z)
     {
-        UnityEngine.Profiling.Profiler.BeginSample("Instance GetBlock");
+        //UnityEngine.Profiling.Profiler.BeginSample("Instance GetBlock");
         ushort blockID;
         if (x >= 0 && x < CHUNK_SIZE && y >= 0 && y < CHUNK_SIZE && z >= 0 && z < CHUNK_SIZE)
             blockID = chunkData.blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
         else
             blockID = chunkData.world.GetBlock(position.x + x, position.y + y, position.z + z);
 
-        UnityEngine.Profiling.Profiler.EndSample();
+        blockID &= 0x3FFF; //Strip out anything but first bits
+
+        //UnityEngine.Profiling.Profiler.EndSample();
+        return blockID;
+    }
+
+    /// <summary>
+    /// Gets the block with extra data included
+    /// </summary>
+    /// <returns>The block.</returns>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="z">The z coordinate.</param>
+    public ushort GetBlock(int x, int y, int z)
+    {
+        //UnityEngine.Profiling.Profiler.BeginSample("Instance GetBlock");
+        ushort blockID;
+        if (x >= 0 && x < CHUNK_SIZE && y >= 0 && y < CHUNK_SIZE && z >= 0 && z < CHUNK_SIZE)
+            blockID = chunkData.blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
+        else
+            blockID = chunkData.world.GetBlock(position.x + x, position.y + y, position.z + z);
+
+        //UnityEngine.Profiling.Profiler.EndSample();
         return blockID;
     }
 

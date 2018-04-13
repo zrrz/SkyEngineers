@@ -49,7 +49,7 @@ public static class EditTerrain
 
 		WorldPos pos = GetBlockPos(hit, adjacent);
 
-        ushort blockID = chunkRenderer.chunk.world.GetBlock(pos.x, pos.y, pos.z);
+        ushort blockID = chunkRenderer.chunk.world.GetBlock(pos.x, pos.y, pos.z) ;
         BlockLoader.GetBlock(blockID).Break(new Vector3(pos.x, pos.y, pos.z));
         chunkRenderer.chunk.world.SetBlockID(pos.x, pos.y, pos.z, 0);
 

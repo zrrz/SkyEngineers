@@ -148,32 +148,32 @@ public class BlockData {
         //if (x >= 1 && x < ChunkInstance.CHUNK_SIZE - 1 && y >= 1 && y < ChunkInstance.CHUNK_SIZE - 1 && z >= 1 && z < ChunkInstance.CHUNK_SIZE - 1)
         //TODO
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y + 1, z) & ~(1 << 14)).solid)
+        if (!BlockLoader.GetBlock(chunk.GetBlockID(x, y + 1, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataUp(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y - 1, z) & ~(1 << 14)).solid)
+        if (!BlockLoader.GetBlock(chunk.GetBlockID(x, y - 1, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataDown(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z + 1) & ~(1 << 14)).solid)
+        if (!BlockLoader.GetBlock(chunk.GetBlockID(x, y, z + 1) & ~(1 << 14)).solid)
         {
             meshData = FaceDataNorth(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x, y, z - 1) & ~(1 << 14)).solid)
+        if (!BlockLoader.GetBlock(chunk.GetBlockID(x, y, z - 1) & ~(1 << 14)).solid)
         {
             meshData = FaceDataSouth(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x + 1, y, z) & ~(1 << 14)).solid)
+        if (!BlockLoader.GetBlock(chunk.GetBlockID(x + 1, y, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataEast(chunk, x, y, z, meshData);
         }
 
-        if (!BlockLoader.GetBlock(chunk.GetBlock(x - 1, y, z) & ~(1 << 14)).solid)
+        if (!BlockLoader.GetBlock(chunk.GetBlockID(x - 1, y, z) & ~(1 << 14)).solid)
         {
             meshData = FaceDataWest(chunk, x, y, z, meshData);
         }
