@@ -98,6 +98,7 @@ public class ChunksLoadedVisualizer : MonoBehaviour {
         DebugChunkVisualizerObject visualizerObj = new DebugChunkVisualizerObject();
         visualizerObj.objRenderer = GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<Renderer>();
         visualizerObj.objRenderer.transform.position = pos.ToVector3();
+        visualizerObj.objRenderer.transform.localScale *= 3f;
         visualizerObj.objRenderer.material.color = Color.red;
         visualizerObj.objRenderer.transform.parent = parent;
         debugMap.Add(pos, visualizerObj);

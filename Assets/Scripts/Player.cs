@@ -24,6 +24,8 @@ public class Player : PlayerBehavior {
         {
             Debug.LogError("No PlayerData on object", this);
         }
+
+        UIManager.instance.InitializePlayerUI(inventory, playerData);
     }
 
     void Start () {

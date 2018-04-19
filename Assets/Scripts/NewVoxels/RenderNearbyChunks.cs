@@ -107,9 +107,9 @@ public class RenderNearbyChunks : MonoBehaviour
     {
         //Get the position of this gameobject to generate around
         WorldPos playerPos = new WorldPos(
-            Mathf.FloorToInt(_transform.position.x / ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
-            Mathf.FloorToInt(_transform.position.y / ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
-            Mathf.FloorToInt(_transform.position.z / ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE
+            Mathf.FloorToInt(_transform.position.x / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
+            Mathf.FloorToInt(_transform.position.y / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
+            Mathf.FloorToInt(_transform.position.z / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE
             );
 
         if (highPriorityBuildList.Count == 0)
@@ -117,10 +117,10 @@ public class RenderNearbyChunks : MonoBehaviour
             LoadNearbyChunks(playerPos);
         }
 
-        //if (highPriorityBuildList.Count == 0 && lowPriorityBuildList.Count == 0)
-        //{
-        //    LoadViewDirectionChunks(playerPos);
-        //}
+        if (highPriorityBuildList.Count == 0 && lowPriorityBuildList.Count == 0)
+        {
+            LoadViewDirectionChunks(playerPos);
+        }
     }
 
     void LoadViewDirectionChunks(WorldPos playerPos)
@@ -128,11 +128,17 @@ public class RenderNearbyChunks : MonoBehaviour
         Vector3 viewDirection = Camera.main.transform.forward;
 
         WorldPos chunkPosition = playerPos;
+
         for (int i = 0; i < renderDistance; i++)
         {
-            chunkPosition.x += (int)(viewDirection.x * ChunkInstance.CHUNK_SIZE);
-            chunkPosition.y += (int)(viewDirection.y * ChunkInstance.CHUNK_SIZE);
-            chunkPosition.z += (int)(viewDirection.z * ChunkInstance.CHUNK_SIZE);
+            int step = i * ChunkInstance.CHUNK_SIZE;
+            chunkPosition.x = Mathf.FloorToInt((playerPos.x + (int)(viewDirection.x * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+            chunkPosition.y = Mathf.FloorToInt((playerPos.y + (int)(viewDirection.y * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+            chunkPosition.z = Mathf.FloorToInt((playerPos.z + (int)(viewDirection.z * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+
+            //Mathf.FloorToInt(_transform.position.x / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
+            //Mathf.FloorToInt(_transform.position.y / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
+            //Mathf.FloorToInt(_transform.position.z / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE
 
             if (highPriorityBuildList.Contains(chunkPosition) || lowPriorityBuildList.Contains(chunkPosition))
                 continue;
@@ -171,6 +177,7 @@ public class RenderNearbyChunks : MonoBehaviour
             chunkPos.x = chunkPositions[i].x * ChunkInstance.CHUNK_SIZE + playerPos.x;
             chunkPos.y = chunkPositions[i].y * ChunkInstance.CHUNK_SIZE + playerPos.y;
             chunkPos.z = chunkPositions[i].z * ChunkInstance.CHUNK_SIZE + playerPos.z;
+
 
             if (highPriorityBuildList.Contains(chunkPos) || lowPriorityBuildList.Contains(chunkPos))
                 continue;

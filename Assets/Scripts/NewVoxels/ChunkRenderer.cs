@@ -540,10 +540,12 @@ public class ChunkRenderer : MonoBehaviour {
         mesh.SetVertices(meshData.vertices);
         mesh.SetTriangles(meshData.triangles, 0);
         mesh.SetUVs(0, meshData.uv);
+
+        mesh.RecalculateBounds();
         mesh.RecalculateNormals();
 
         if(meshData.useRenderDataForCol)
-            filter.sharedMesh = mesh;
-        coll.sharedMesh = mesh;
+			coll.sharedMesh = mesh;
+        filter.sharedMesh = mesh;
     }
 }

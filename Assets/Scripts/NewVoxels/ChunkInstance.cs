@@ -42,6 +42,7 @@ public class ChunkInstance {
 
     public ChunkInstance(CachedChunk cachedChunk)/* : this(cachedChunk.world, cachedChunk.position)*/
     {
+        UnityEngine.Profiling.Profiler.BeginSample("Create ChunkInstance");
         chunkData = cachedChunk;
         world = cachedChunk.world;
         position = cachedChunk.position;
@@ -58,7 +59,8 @@ public class ChunkInstance {
 
         Time = System.DateTime.Now;
 
-        //ChunksLoadedVisualizer.SetChunkLoadedState(position, true, true);
+        ChunksLoadedVisualizer.SetChunkLoadedState(position, true, true);
+        UnityEngine.Profiling.Profiler.EndSample();
     }
 
     //~ChunkInstance() {

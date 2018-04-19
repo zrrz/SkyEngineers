@@ -15,33 +15,55 @@ public class UIManager : MonoBehaviour {
 
     bool inventoryDirty = true;
 
+    public static UIManager instance;
+
+	private void Awake()
+	{
+        if(instance != null) {
+            Debug.LogError("Already an instance of UIManager in scene. Disabling this.", this);
+            this.enabled = false;
+            return;
+        }
+
+        instance = this;
+	}
+
 	void Start () {
 		healthBar = transform.Find("Stats/Health/Foreground");
 		staminaBar = transform.Find("Stats/Stamina/Foreground");
 
 		SetInventoryVisibility(false);
 
+        Cursor.lockState = CursorLockMode.Locked;
+	}
+
+    public void InitializePlayerUI(PlayerInventory playerInventory, PlayerData playerData) {
+        this.playerData = playerData;
+
+        this.playerInventory = playerInventory;
         playerInventory.inventory.inventoryChangedEvent.AddListener(OnInventoryChanged);
         playerInventory.selectionChangedEvent.AddListener(OnSelectionChanged);
 
-        Cursor.lockState = CursorLockMode.Locked;
-
         int hotbarSize = 10;
 
-        for(int i = 0; i < hotbarSize; i++) {
-//            transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
+        for (int i = 0; i < hotbarSize; i++)
+        {
+            //            transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
             Button button = transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Button>();
             button.onClick.AddListener(() => ClickSlot(button, playerInventory.inventory));
         }
 
-		for (int i = 10; i < PlayerInventory.INVENTORY_SIZE + PlayerInventory.CRAFTING_SIZE; i++)
+        for (int i = 10; i < PlayerInventory.INVENTORY_SIZE + PlayerInventory.CRAFTING_SIZE; i++)
         {
             Button button = transform.Find("Canvas/Inventory/Bag/Slots/" + i).GetComponent<Button>();
             button.onClick.AddListener(() => ClickSlot(button, playerInventory.inventory));
         }
-	}
+    }
 	
 	void Update () {
+        if (playerData == null || playerInventory == null)
+            return;
+        
 		Vector3 scale = healthBar.transform.localScale;
 		scale.x = playerData.currentHealth/playerData.maxHealth;
 		healthBar.transform.localScale = scale;

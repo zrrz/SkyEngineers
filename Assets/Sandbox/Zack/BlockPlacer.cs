@@ -11,7 +11,8 @@ public class BlockPlacer : MonoBehaviour {
     public Transform blockSelector;
 
 	void Start () {
-		
+        blockSelector.transform.parent = null;
+        blockSelector.transform.rotation = Quaternion.identity;
 	}
 	
     //TODO clean this up to reduce raycasts
