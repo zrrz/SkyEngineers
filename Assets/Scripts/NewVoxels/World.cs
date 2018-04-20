@@ -285,13 +285,14 @@ public class World : MonoBehaviour
             List<ChunkInstance> chunksToUnload = new List<ChunkInstance>();
 
             //TODO keep track of a separate list or something so we don't have to lock loadedChunksMap or alloc a new collection.
+            List<KeyValuePair<int, ChunkInstance>> loadChunksMapCopy = null;
             lock (loadedChunksMap)
             {
-                var loadChunksMapCopy = new Dictionary<int, ChunkInstance>(loadedChunksMap).ToList();
+                loadChunksMapCopy = new Dictionary<int, ChunkInstance>(loadedChunksMap).ToList();
             }
             //lock (loadedChunksMap)
             //{
-                foreach(var loadedChunk in loadedChunksMap) {
+                foreach(var loadedChunk in loadChunksMapCopy) {
                     if(DateTime.Now - loadedChunk.Value.Time > ChunkLifetime 
                        && !_chunksReadyToRemove.Contains(loadedChunk.Key)) 
                     {
@@ -777,14 +778,14 @@ public class World : MonoBehaviour
 
     bool showChunkLoadingStats = true;
 
-	private void OnGUI()
-	{
-        if(showChunkLoadingStats) {
-            GUILayout.Label("loadedChunks: " + loadedChunksMap.Count);
-            GUILayout.Label("_chunksReadyToAdd: " + _chunksReadyToAdd.Count);
-            GUILayout.Label("_chunksReadyToRemove: " + _chunksReadyToRemove.Count);
-            GUILayout.Label("_populatedChunks: " + _populatedChunks.Count);
-            GUILayout.Label("chunksWaitingForNeighbours: " + chunksWaitingForNeighbours.Count);
-        }
-	}
+	//private void OnGUI()
+	//{
+ //       if(showChunkLoadingStats) {
+ //           GUILayout.Label("loadedChunks: " + loadedChunksMap.Count);
+ //           GUILayout.Label("_chunksReadyToAdd: " + _chunksReadyToAdd.Count);
+ //           GUILayout.Label("_chunksReadyToRemove: " + _chunksReadyToRemove.Count);
+ //           GUILayout.Label("_populatedChunks: " + _populatedChunks.Count);
+ //           GUILayout.Label("chunksWaitingForNeighbours: " + chunksWaitingForNeighbours.Count);
+ //       }
+	//}
 }

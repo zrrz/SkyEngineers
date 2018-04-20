@@ -103,13 +103,23 @@ public class ChunkRenderer : MonoBehaviour {
                                 id = chunk.chunkData.blockIds[index + ChunkInstance.CHUNK_SIZE];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                    UnityEngine.Profiling.Profiler.BeginSample("Alloc up Face");
+
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[1].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[2].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[3].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                    meshData.AddVertices(vertices);
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.Up));
+
+									UnityEngine.Profiling.Profiler.EndSample();
                                 }
                             }
 
@@ -119,13 +129,34 @@ public class ChunkRenderer : MonoBehaviour {
                                 if ((id & 1 << 14) == 0)
                                 {
                                     UnityEngine.Profiling.Profiler.BeginSample("Alloc down Face");
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                    UnityEngine.Profiling.Profiler.BeginSample("Get verts");
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    UnityEngine.Profiling.Profiler.EndSample();
 
+                                    UnityEngine.Profiling.Profiler.BeginSample("set verts");
+                                    vertices[0].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[1].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[2].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                    vertices[3].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                    UnityEngine.Profiling.Profiler.EndSample();
+
+                                    UnityEngine.Profiling.Profiler.BeginSample("add verts to mesh data");
+                                    meshData.AddVertices(vertices);
+                                    UnityEngine.Profiling.Profiler.EndSample();
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+
+                                    UnityEngine.Profiling.Profiler.BeginSample("add quad triangles");
                                     meshData.AddQuadTriangles();
+                                    UnityEngine.Profiling.Profiler.EndSample();
+
+                                    UnityEngine.Profiling.Profiler.BeginSample("add uvs");
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.Down));
+                                    UnityEngine.Profiling.Profiler.EndSample();
+
                                     UnityEngine.Profiling.Profiler.EndSample();
                                 }
                             }
@@ -135,13 +166,24 @@ public class ChunkRenderer : MonoBehaviour {
                                 id = chunk.chunkData.blockIds[index + ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                    UnityEngine.Profiling.Profiler.BeginSample("Alloc north Face");
+
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                    vertices[1].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[2].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[3].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.North));
+
+									UnityEngine.Profiling.Profiler.EndSample();
                                 }
                             }
 
@@ -150,13 +192,24 @@ public class ChunkRenderer : MonoBehaviour {
                                 id = chunk.chunkData.blockIds[index - ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                    UnityEngine.Profiling.Profiler.BeginSample("Alloc south Face");
+
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[1].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[2].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[3].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.South));
+
+									UnityEngine.Profiling.Profiler.EndSample();
                                 }
                             }
 
@@ -165,13 +218,24 @@ public class ChunkRenderer : MonoBehaviour {
                                 id = chunk.chunkData.blockIds[index + 1];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                    UnityEngine.Profiling.Profiler.BeginSample("Alloc east Face");
+
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[1].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[2].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[3].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.East));
+
+									UnityEngine.Profiling.Profiler.EndSample();
                                 }
                             }
 
@@ -180,13 +244,24 @@ public class ChunkRenderer : MonoBehaviour {
                                 id = chunk.chunkData.blockIds[index - 1];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                    UnityEngine.Profiling.Profiler.BeginSample("Alloc west Face");
+
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                    vertices[1].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[2].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[3].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.West));
+
+									UnityEngine.Profiling.Profiler.EndSample();
                                 }
                             }
                             UnityEngine.Profiling.Profiler.EndSample();
@@ -209,10 +284,17 @@ public class ChunkRenderer : MonoBehaviour {
                             int currentBlockID = chunk.chunkData.blockIds[index] & 0x3FFF;
                             if ((chunk.chunkData.blockIds[index] & 1 << 14) > 0) //If I'm solid then lets look
                             {
-                                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                vertices[0].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                vertices[1].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                vertices[2].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                vertices[3].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                meshData.AddVertices(vertices);
+
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
 
                                 meshData.AddQuadTriangles();
                                 meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.West));
@@ -231,10 +313,17 @@ public class ChunkRenderer : MonoBehaviour {
                                 ushort id = westChunk.chunkData.blockIds[index + ChunkInstance.CHUNK_SIZE - 1];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                    vertices[1].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[2].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[3].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.West));
@@ -259,10 +348,17 @@ public class ChunkRenderer : MonoBehaviour {
                             int currentBlockID = chunk.chunkData.blockIds[index] & 0x3FFF;
                             if ((chunk.chunkData.blockIds[index] & 1 << 14) > 0) //If I'm solid then lets look
                             {
-                                meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                vertices[0].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                vertices[1].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                vertices[2].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                vertices[3].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                meshData.AddVertices(vertices);
+
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
 
                                 meshData.AddQuadTriangles();
                                 meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.East));
@@ -284,10 +380,17 @@ public class ChunkRenderer : MonoBehaviour {
                                 ushort id = eastChunk.chunkData.blockIds[newIndex];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[1].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[2].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[3].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.East));
@@ -312,10 +415,17 @@ public class ChunkRenderer : MonoBehaviour {
                             int currentBlockID = chunk.chunkData.blockIds[index] & 0x3FFF;
                             if ((chunk.chunkData.blockIds[index] & 1 << 14) > 0) //If I'm solid then lets look
                             {
-                                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                vertices[0].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                vertices[1].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                vertices[2].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                vertices[3].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                meshData.AddVertices(vertices);
+
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
                                 meshData.AddQuadTriangles();
                                 meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.Down));
@@ -337,10 +447,17 @@ public class ChunkRenderer : MonoBehaviour {
                                 ushort id = downChunk.chunkData.blockIds[newIndex];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[1].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[2].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                    vertices[3].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.Down));
@@ -365,10 +482,17 @@ public class ChunkRenderer : MonoBehaviour {
                             int currentBlockID = chunk.chunkData.blockIds[index] & 0x3FFF;
                             if ((chunk.chunkData.blockIds[index] & 1 << 14) > 0) //If I'm solid then lets look
                             {
-                                meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                vertices[0].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                vertices[1].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                vertices[2].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                vertices[3].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                meshData.AddVertices(vertices);
+
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
 
                                 meshData.AddQuadTriangles();
                                 meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.Up));
@@ -390,10 +514,17 @@ public class ChunkRenderer : MonoBehaviour {
                                 ushort id = downChunk.chunkData.blockIds[newIndex];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[1].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[2].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[3].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.Up));
@@ -418,10 +549,17 @@ public class ChunkRenderer : MonoBehaviour {
                             int currentBlockID = chunk.chunkData.blockIds[index] & 0x3FFF;
                             if ((chunk.chunkData.blockIds[index] & 1 << 14) > 0) //If I'm solid then lets look
                             {
-                                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                vertices[0].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                vertices[1].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                vertices[2].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                vertices[3].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                meshData.AddVertices(vertices);
+
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
 
                                 meshData.AddQuadTriangles();
                                 meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.South));
@@ -442,10 +580,17 @@ public class ChunkRenderer : MonoBehaviour {
                                 ushort id = southChunk.chunkData.blockIds[index + (ChunkInstance.CHUNK_SIZE - 1) * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x - 0.5f, y - 0.5f, z - 0.5f);
+                                    vertices[1].Set(x - 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[2].Set(x + 0.5f, y + 0.5f, z - 0.5f);
+                                    vertices[3].Set(x + 0.5f, y - 0.5f, z - 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z - 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z - 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.South));
@@ -470,10 +615,17 @@ public class ChunkRenderer : MonoBehaviour {
                             int currentBlockID = chunk.chunkData.blockIds[index] & 0x3FFF;
                             if ((chunk.chunkData.blockIds[index] & 1 << 14) > 0) //If I'm solid then lets look
                             {
-                                meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                vertices[0].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                vertices[1].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                vertices[2].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                vertices[3].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                meshData.AddVertices(vertices);
+
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
                                 meshData.AddQuadTriangles();
                                 meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.North));
@@ -494,10 +646,17 @@ public class ChunkRenderer : MonoBehaviour {
                                 ushort id = northChunk.chunkData.blockIds[index - (ChunkInstance.CHUNK_SIZE - 1) * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE];
                                 if ((id & 1 << 14) == 0)
                                 {
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
-                                    meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
+                                    Vector3[] vertices = MemoryPoolManager.vector3ArrayPool.Rent(4);
+                                    vertices[0].Set(x + 0.5f, y - 0.5f, z + 0.5f);
+                                    vertices[1].Set(x + 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[2].Set(x - 0.5f, y + 0.5f, z + 0.5f);
+                                    vertices[3].Set(x - 0.5f, y - 0.5f, z + 0.5f);
+                                    meshData.AddVertices(vertices);
+
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y - 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x + 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y + 0.5f, z + 0.5f));
+                                    //meshData.AddVertex(new Vector3(x - 0.5f, y - 0.5f, z + 0.5f));
 
                                     meshData.AddQuadTriangles();
                                     meshData.AddUVs(BlockData.FaceUVs(currentBlockID, BlockData.Direction.North));

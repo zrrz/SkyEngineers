@@ -210,7 +210,8 @@ public class RenderNearbyChunks : MonoBehaviour
     {
         if (highPriorityBuildList.Count != 0)
         {
-            for (int i = 0; i < highPriorityBuildList.Count && i < highPriorityChunksPerFrame; i++)
+            int chunksBuilt = 0;
+            for (int i = 0; i < highPriorityBuildList.Count && chunksBuilt < highPriorityChunksPerFrame; i++, chunksBuilt++)
             {
                 BuildChunkRenderer(highPriorityBuildList[0]);
                 highPriorityBuildList.RemoveAt(0);
@@ -223,7 +224,8 @@ public class RenderNearbyChunks : MonoBehaviour
 
         if (lowPriorityBuildList.Count != 0)
         {
-            for (int i = 0; i < lowPriorityBuildList.Count && i < lowPriorityChunksPerFrame; i++)
+            int chunksBuilt = 0;
+            for (int i = 0; i < lowPriorityBuildList.Count && chunksBuilt < lowPriorityChunksPerFrame; i++, chunksBuilt++)
             {
                 BuildChunkRenderer(lowPriorityBuildList[0]);
                 lowPriorityBuildList.RemoveAt(0);

@@ -29,8 +29,8 @@ public class UIManager : MonoBehaviour {
 	}
 
 	void Start () {
-		healthBar = transform.Find("Stats/Health/Foreground");
-		staminaBar = transform.Find("Stats/Stamina/Foreground");
+		healthBar = transform.Find("Canvas - GUI/Stats/Health/Foreground");
+		staminaBar = transform.Find("Canvas - GUI/Stats/Stamina/Foreground");
 
 		SetInventoryVisibility(false);
 
@@ -49,13 +49,13 @@ public class UIManager : MonoBehaviour {
         for (int i = 0; i < hotbarSize; i++)
         {
             //            transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
-            Button button = transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Button>();
+            Button button = transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i).GetComponent<Button>();
             button.onClick.AddListener(() => ClickSlot(button, playerInventory.inventory));
         }
 
         for (int i = 10; i < PlayerInventory.INVENTORY_SIZE + PlayerInventory.CRAFTING_SIZE; i++)
         {
-            Button button = transform.Find("Canvas/Inventory/Bag/Slots/" + i).GetComponent<Button>();
+            Button button = transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i).GetComponent<Button>();
             button.onClick.AddListener(() => ClickSlot(button, playerInventory.inventory));
         }
     }
@@ -137,12 +137,12 @@ public class UIManager : MonoBehaviour {
     }
 
     void OnSelectionChanged() {
-        transform.Find("Canvas/Hotbar/Slots/Selection").transform.position = transform.Find("Canvas/Hotbar/Slots/" + playerInventory.currentActiveSlot).transform.position;
+        transform.Find("Canvas - MENU/Hotbar/Slots/Selection").transform.position = transform.Find("Canvas - MENU/Hotbar/Slots/" + playerInventory.currentActiveSlot).transform.position;
     }
 
 	void SetInventoryVisibility(bool visible) {
-		transform.Find("Canvas/Hotbar").gameObject.SetActive(!visible);
-        transform.Find("Canvas/Inventory").gameObject.SetActive(visible);
+		transform.Find("Canvas - MENU/Hotbar").gameObject.SetActive(!visible);
+        transform.Find("Canvas - MENU/Inventory").gameObject.SetActive(visible);
 //        inventoryDirty = true;
 	}
 
@@ -151,48 +151,48 @@ public class UIManager : MonoBehaviour {
 		for(int i = 0; i < hotbarSize; i++) {
             if (playerInventory.inventory.items[i] != null)
             {
-                transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
-                transform.Find("Canvas/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
+                transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
+                transform.Find("Canvas - MENU/Hotbar/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
                 if (playerInventory.inventory.items[i].amount == 1)
                 {
-                    transform.Find("Canvas/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
-                    transform.Find("Canvas/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
+                    transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
+                    transform.Find("Canvas - MENU/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
                 }
                 else
                 {
-                    transform.Find("Canvas/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = true;
-                    transform.Find("Canvas/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().text = playerInventory.inventory.items[i].amount.ToString();
-                    transform.Find("Canvas/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = true;
-                    transform.Find("Canvas/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().text = playerInventory.inventory.items[i].amount.ToString();
+                    transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = true;
+                    transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().text = playerInventory.inventory.items[i].amount.ToString();
+                    transform.Find("Canvas - MENU/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = true;
+                    transform.Find("Canvas - MENU/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().text = playerInventory.inventory.items[i].amount.ToString();
                 }
             }
             else
             {
-                transform.Find("Canvas/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = null;
-                transform.Find("Canvas/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
-                transform.Find("Canvas/Hotbar/Slots/" + i).GetComponent<Image>().sprite = null;
-                transform.Find("Canvas/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
+                transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i).GetComponent<Image>().sprite = null;
+                transform.Find("Canvas - MENU/Inventory/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
+                transform.Find("Canvas - MENU/Hotbar/Slots/" + i).GetComponent<Image>().sprite = null;
+                transform.Find("Canvas - MENU/Hotbar/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
             }
 		}
 		for (int i = 10; i < PlayerInventory.INVENTORY_SIZE + PlayerInventory.CRAFTING_SIZE; i++)
         {
             if (playerInventory.inventory.items[i] != null)
             {
-                transform.Find("Canvas/Inventory/Bag/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
+                transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i).GetComponent<Image>().sprite = playerInventory.inventory.items[i].sprite;
                 if (playerInventory.inventory.items[i].amount == 1)
                 {
-                    transform.Find("Canvas/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
+                    transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
                 }
                 else
                 {
-                    transform.Find("Canvas/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().enabled = true;
-                    transform.Find("Canvas/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().text = playerInventory.inventory.items[i].amount.ToString();
+                    transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().enabled = true;
+                    transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().text = playerInventory.inventory.items[i].amount.ToString();
                 }
             }
             else
             {
-                transform.Find("Canvas/Inventory/Bag/Slots/" + i).GetComponent<Image>().sprite = null;
-                transform.Find("Canvas/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
+                transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i).GetComponent<Image>().sprite = null;
+                transform.Find("Canvas - MENU/Inventory/Bag/Slots/" + i + "/Amount").GetComponent<Text>().enabled = false;
             }
         }
 	}

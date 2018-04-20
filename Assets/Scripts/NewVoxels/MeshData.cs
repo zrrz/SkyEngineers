@@ -68,6 +68,16 @@ public class MeshData
         }
     }
 
+    public void AddVertices(Vector3[] newVertices)
+    {
+        vertices.AddRange(newVertices);
+
+        if (useRenderDataForCol)
+        {
+            colVertices.AddRange(newVertices);
+        }
+    }
+
     //public void AddTriangle(int tri)
     //{
         //triangles.Add(tri);
