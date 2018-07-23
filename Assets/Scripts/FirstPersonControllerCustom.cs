@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+//using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -148,7 +148,7 @@ public class FirstPersonControllerCustom : PlayerBehavior
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump && m_CharacterController.isGrounded)
             {
-                m_Jump = CrossPlatformInputManager.GetButton("Jump");
+                m_Jump = PlayerInputManager.input.Jump.IsPressed;// CrossPlatformInputManager.GetButton("Jump");
             }
             GetInput();
         }
@@ -323,15 +323,15 @@ public class FirstPersonControllerCustom : PlayerBehavior
     private void GetInput()
     {
         // Read input
-        float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-        float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+        float horizontal = PlayerInputManager.input.Move.X;//CrossPlatformInputManager.GetAxis("Horizontal");
+        float vertical = PlayerInputManager.input.Move.Y;//CrossPlatformInputManager.GetAxis("Vertical");
 
         bool waswalking = m_IsWalking;
 
 #if !MOBILE_INPUT
         // On standalone builds, walk/run speed is modified by a key press.
         // keep track of whether or not the character is walking or running
-		m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+        m_IsWalking = !PlayerInputManager.input.Sprint.IsPressed;//Input.GetKey(KeyCode.LeftShift);
         m_Input = new Vector2(horizontal, vertical);
 
         if(!m_IsWalking && m_Input.sqrMagnitude > 0) {

@@ -5,13 +5,22 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
 
+    //Playing: Player moving around so just shorthand inventory and stats
+    //Equipment: Shows equipment and full inventory
+    //CraftingInHand: Crafting in hand shows full inventory and 2x2 crafting
+    //CraftingInBench: Crifting on bench shows full inventory and 3x3 crafting
+    //Options: shows options menu
+    enum UIState {Playing, Equipment, CraftingInHand, CraftingOnBench, Options}
+
+    UIState uiState = UIState.Playing;
+
 	public PlayerData playerData;
 	public PlayerInventory playerInventory;
 
 	Transform healthBar;
 	Transform staminaBar;
 
-	bool showInventory = false;
+	//bool showInventory = false;
 
     bool inventoryDirty = true;
 
@@ -73,12 +82,22 @@ public class UIManager : MonoBehaviour {
 		staminaBar.transform.localScale = scale;
 
 		if(Input.GetKeyDown(KeyCode.E)) {
-			showInventory = !showInventory;
-			Cursor.lockState = showInventory ? CursorLockMode.None : CursorLockMode.Locked;
-            playerData.GetComponent<FirstPersonControllerCustom>().inputLocked = showInventory;
-			SetInventoryVisibility(showInventory);
-
-			//TODO drop items in crafting slot
+            switch (uiState)
+            {
+                case UIState.Playing:
+                    SwitchUIState(UIState.Equipment);
+                    break;
+                case UIState.CraftingInHand:
+                case UIState.CraftingOnBench:
+                case UIState.Equipment:
+                    SwitchUIState(UIState.Playing);
+                    break;
+                case UIState.Options:
+                    break;
+                default:
+                    Debug.LogError("State undefinded");
+                    break;
+            }
 		}
 
         if (inventoryDirty)
@@ -87,6 +106,63 @@ public class UIManager : MonoBehaviour {
             UpdateInventory();
         }
 	}
+
+    void SwitchUIState(UIState newState) {
+        if (newState == uiState) {
+            Debug.LogError("Trying to switch from " + uiState.ToString() + " to " + newState.ToString());
+			return;
+        }
+        
+        switch (uiState)
+        {
+            case UIState.Playing:
+                switch (newState)
+                {
+                    case UIState.CraftingInHand:
+                    case UIState.CraftingOnBench:
+                    case UIState.Equipment:
+                        Cursor.lockState = CursorLockMode.None;
+                        playerData.GetComponent<FirstPersonControllerCustom>().inputLocked = true;
+                        SetInventoryVisibility(true);
+                        break;
+                    case UIState.Options:
+                        break;
+                    default:
+                        Debug.LogError("State switch undefinded");
+                        break;
+                }
+                break;
+            case UIState.CraftingInHand:
+            case UIState.CraftingOnBench:
+            case UIState.Equipment:
+                switch (newState)
+                {
+                    case UIState.Playing:
+                        Cursor.lockState = CursorLockMode.Locked;
+                        playerData.GetComponent<FirstPersonControllerCustom>().inputLocked = false;
+                        SetInventoryVisibility(false);
+                        //TODO drop items in crafting slot
+                        break;
+                    case UIState.CraftingInHand:
+                    case UIState.CraftingOnBench:
+                    case UIState.Equipment:
+                        break;
+                    case UIState.Options:
+                        break;
+                    default:
+                        Debug.LogError("State switch undefinded");
+                        break;
+                }
+                break;
+            case UIState.Options:
+                break;
+            default:
+                Debug.LogError("State undefinded");
+                break;
+        }
+
+        uiState = newState;
+    }
 
     int selectedSlot = -1;
     Inventory selectedInventory = null;

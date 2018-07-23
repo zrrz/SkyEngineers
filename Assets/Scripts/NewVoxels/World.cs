@@ -84,6 +84,7 @@ public class World : MonoBehaviour
         //loadedChunksList = new List<int>();
 
 		spawnPoint = new Anchor();
+        spawnPoint.position = new Vector3(0f, 25f, 0f);
 
         _unloadThread = new Thread(UnloadThread) { Name = "Unload Thread" };
         _loadThread = new Thread(LoadThread) { Name = "Load Thread" };

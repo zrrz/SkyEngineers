@@ -35,12 +35,12 @@ public class BlockPlacer : MonoBehaviour {
                 blockSelector.gameObject.SetActive(false);
         }
 
-		if(Input.GetButtonDown("Fire1")) {
+		if(PlayerInputManager.input.Attack.WasPressed) {
             if(Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f, 0f)), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore)) {//, int.MaxValue, QueryTriggerInteraction.Ignore)) {
 				EditTerrain.BreakBlock(hit);
 			}
  		}
-        if(Input.GetButton("Fire2")) {
+        if(PlayerInputManager.input.Use.IsPressed) {
 //            RaycastHit hit;
             if(Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f, 0f)), out hit, maxReach, layerMask, QueryTriggerInteraction.Ignore)) {//, int.MaxValue, QueryTriggerInteraction.Ignore)) {
                 if (GetComponent<PlayerInventory>().CurrentActiveItem != null && GetComponent<PlayerInventory>().CurrentActiveItem.placeable)

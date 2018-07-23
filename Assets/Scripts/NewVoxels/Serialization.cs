@@ -117,6 +117,8 @@ public static class Serialization
         writer.Write(chunkData.max.y);
         writer.Write(chunkData.max.z);
 
+        writer.Write(chunkData.solidBlockCount);
+
         for (int x = chunkData.min.x, n1 = chunkData.max.x; x <= n1; x++)
             for (int y = chunkData.min.y, n2 = chunkData.max.y; y <= n2; y++)
                 for (int z = chunkData.min.z, n3 = chunkData.max.z; z <= n3; z++)

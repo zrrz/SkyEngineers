@@ -109,7 +109,7 @@ MonoBehaviour:
       y: 0
     - x: 4
       y: 0
-    solid: 1
+    solid: 0
     ID: 3
     name: Leaves
     hardnessTier: 0

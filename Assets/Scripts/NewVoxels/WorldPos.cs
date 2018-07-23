@@ -27,6 +27,13 @@ public struct WorldPos : IEquatable<WorldPos>
         this.z = z;
     }
 
+    public WorldPos(uint x, uint y, uint z)
+    {
+        this.x = (int)x;
+        this.y = (int)y;
+        this.z = (int)z;
+    }
+
     public static int GenerateHashCode(int x, int y, int z) {
         unchecked
         {

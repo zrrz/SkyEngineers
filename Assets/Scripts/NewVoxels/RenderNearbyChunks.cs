@@ -71,7 +71,11 @@ public class RenderNearbyChunks : MonoBehaviour
 
     Transform _transform;
 
+    Frustrum viewFrustrum;
+
     void Start() {
+        viewFrustrum = new Frustrum();
+        viewFrustrum.CalculateFrustum();
         _transform = transform;
     }
 
@@ -119,52 +123,61 @@ public class RenderNearbyChunks : MonoBehaviour
 
         if (highPriorityBuildList.Count == 0 && lowPriorityBuildList.Count == 0)
         {
-            LoadViewDirectionChunks(playerPos);
+            //LoadViewDirectionChunks(playerPos);
         }
     }
 
     void LoadViewDirectionChunks(WorldPos playerPos)
     {
         Vector3 viewDirection = Camera.main.transform.forward;
+        Vector3 viewDirectionRight = Camera.main.transform.right;
+        Vector3 viewDirectionUp = Camera.main.transform.up;
 
         WorldPos chunkPosition = playerPos;
 
         for (int i = 0; i < renderDistance; i++)
         {
             int step = i * ChunkInstance.CHUNK_SIZE;
-            chunkPosition.x = Mathf.FloorToInt((playerPos.x + (int)(viewDirection.x * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
-            chunkPosition.y = Mathf.FloorToInt((playerPos.y + (int)(viewDirection.y * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
-            chunkPosition.z = Mathf.FloorToInt((playerPos.z + (int)(viewDirection.z * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
 
-            //Mathf.FloorToInt(_transform.position.x / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
-            //Mathf.FloorToInt(_transform.position.y / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE,
-            //Mathf.FloorToInt(_transform.position.z / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE
+            for (int x = -i; x < i; x++) {
+                for (int y = -i; y < i; y++)
+                {
+                    //chunkPosition = new WorldPos(playerPos.ToVector3() + ((viewDirection + (viewDirectionRight * x) + (viewDirectionUp * y)) * step));
 
-            if (highPriorityBuildList.Contains(chunkPosition) || lowPriorityBuildList.Contains(chunkPosition))
-                continue;
+                    //chunkPosition.x = Mathf.FloorToInt((float)chunkPosition.x / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+                    //chunkPosition.y = Mathf.FloorToInt((float)chunkPosition.y / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+                    //chunkPosition.z = Mathf.FloorToInt((float)chunkPosition.z / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
 
-            //If no chunk data available, ignore.
-            if (world.GetChunk(chunkPosition.x, chunkPosition.y, chunkPosition.z) == null)
-            {
-                //ChunksLoadedVisualizer.SetChunkLoadedState(newChunkPos, false);
-                //Debug.LogError("No world data at " + newChunkPos.ToString());
-                continue;
+                    chunkPosition.x = Mathf.FloorToInt((playerPos.x + (int)(viewDirection.x * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+					chunkPosition.y = Mathf.FloorToInt((playerPos.y + (int)(viewDirection.y * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+					chunkPosition.z = Mathf.FloorToInt((playerPos.z + (int)(viewDirection.z * step)) / (float)ChunkInstance.CHUNK_SIZE) * ChunkInstance.CHUNK_SIZE;
+					
+					if (highPriorityBuildList.Contains(chunkPosition) || lowPriorityBuildList.Contains(chunkPosition))
+						continue;
+					
+					//If no chunk data available, ignore.
+					if (world.GetChunk(chunkPosition.x, chunkPosition.y, chunkPosition.z) == null)
+					{
+						//ChunksLoadedVisualizer.SetChunkLoadedState(newChunkPos, false);
+						//Debug.LogError("No world data at " + newChunkPos.ToString());
+						continue;
+					}
+					
+					ChunkRenderer newChunk;
+					chunkRendererMap.TryGetValue(chunkPosition, out newChunk);
+					
+					//If the chunk already exists and it's already
+					//rendered or in queue to be rendered continue
+					if (newChunk != null
+					    && (newChunk.rendered))// || updateList.Contains(newChunkPos)))
+					{
+						continue;
+					}
+					
+					//Otherwise let's build it
+					lowPriorityBuildList.Add(chunkPosition);
+                }
             }
-
-            ChunkRenderer newChunk;
-            chunkRendererMap.TryGetValue(chunkPosition, out newChunk);
-
-            //If the chunk already exists and it's already
-            //rendered or in queue to be rendered continue
-            if (newChunk != null
-                && (newChunk.rendered))// || updateList.Contains(newChunkPos)))
-            {
-                continue;
-            }
-
-
-            //Otherwise let's build it
-            lowPriorityBuildList.Add(chunkPosition);
         }
     }
 
@@ -213,9 +226,11 @@ public class RenderNearbyChunks : MonoBehaviour
             int chunksBuilt = 0;
             for (int i = 0; i < highPriorityBuildList.Count && chunksBuilt < highPriorityChunksPerFrame; i++, chunksBuilt++)
             {
-                BuildChunkRenderer(highPriorityBuildList[0]);
-                highPriorityBuildList.RemoveAt(0);
-                i--;
+                if (BuildChunkRenderer(highPriorityBuildList[0]))
+                {
+                    highPriorityBuildList.RemoveAt(0);
+                    i--;
+                }
             }
             //If chunks were built return early
             return;
@@ -227,9 +242,11 @@ public class RenderNearbyChunks : MonoBehaviour
             int chunksBuilt = 0;
             for (int i = 0; i < lowPriorityBuildList.Count && chunksBuilt < lowPriorityChunksPerFrame; i++, chunksBuilt++)
             {
-                BuildChunkRenderer(lowPriorityBuildList[0]);
-                lowPriorityBuildList.RemoveAt(0);
-                i--;
+                if (BuildChunkRenderer(lowPriorityBuildList[0]))
+                {
+                    lowPriorityBuildList.RemoveAt(0);
+                    i--;
+                }
             }
 			//If chunks were built return early
 			return;
@@ -251,25 +268,62 @@ public class RenderNearbyChunks : MonoBehaviour
         //}
     }
 
-    void BuildChunkRenderer(WorldPos pos)
+    bool BuildChunkRenderer(WorldPos pos)
     {
-        //Instantiate the chunk at the coordinates using the chunk prefab
-        GameObject newChunkObject = Instantiate(
-            chunkPrefab, new Vector3(pos.x, pos.y, pos.z),
-            Quaternion.Euler(Vector3.zero)
-        ) as GameObject;
+        if (false == ChunkHasAllNeighbors(pos))
+            return false;
 
-        ChunkRenderer chunkRenderer = newChunkObject.GetComponent<ChunkRenderer>();
-        chunkRenderer.chunk = world.GetChunk(pos.x, pos.y, pos.z);
-        if (chunkRenderer.chunk == null)
+        ChunkInstance chunk = world.GetChunk(pos.x, pos.y, pos.z);
+        if (chunk == null)
         {
             Debug.LogError("No chunk at " + pos.x + " " + pos.y + " " + pos.z);
+            return false;
         }
-        chunkRendererMap.Add(pos, newChunkObject.GetComponent<ChunkRenderer>());
-        chunkRenderers.Add(pos);
-        //chunkRenderer.rendered = true;
-        //chunkRenderer.chunk.update = true;
-        chunkRenderer.UpdateChunk();
+        else
+        {
+            //Instantiate the chunk at the coordinates using the chunk prefab
+            GameObject newChunkObject = Instantiate(
+                chunkPrefab, new Vector3(pos.x, pos.y, pos.z),
+                Quaternion.Euler(Vector3.zero)
+            ) as GameObject;
+            ChunkRenderer chunkRenderer = newChunkObject.GetComponent<ChunkRenderer>();
+            chunkRenderer.chunk = chunk;
+
+            chunkRendererMap.Add(pos, chunkRenderer);
+            chunkRenderers.Add(pos);
+            //chunkRenderer.rendered = true;
+            //chunkRenderer.chunk.update = true;
+            chunkRenderer.UpdateChunk();
+            return true;
+        }
+    }
+
+    bool ChunkHasAllNeighbors(WorldPos pos) {
+        if(world.GetChunk(pos.x, pos.y, pos.z + ChunkInstance.CHUNK_SIZE) == null) {
+            return false;
+        }
+        if (world.GetChunk(pos.x, pos.y, pos.z - ChunkInstance.CHUNK_SIZE) == null)
+        {
+            return false;
+        }
+        if (world.GetChunk(pos.x, pos.y + ChunkInstance.CHUNK_SIZE, pos.z) == null)
+        {
+            return false;
+        }
+        if (world.GetChunk(pos.x, pos.y - ChunkInstance.CHUNK_SIZE, pos.z) == null)
+        {
+            return false;
+        }
+        if (world.GetChunk(pos.x + ChunkInstance.CHUNK_SIZE, pos.y, pos.z) == null)
+        {
+            return false;
+        }
+        if (world.GetChunk(pos.x - ChunkInstance.CHUNK_SIZE, pos.y, pos.z) == null)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     bool DeleteChunkRenderers()

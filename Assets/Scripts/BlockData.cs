@@ -296,7 +296,8 @@ public class BlockData {
     [MethodImpl(256)]
     public static Vector2[] FaceUVs(int ID, Direction direction)
     {
-        Vector2[] UVs = MemoryPoolManager.vector2ArrayPool.Rent(4);
+        Vector2[] UVs = new Vector2[4];
+        //Vector2[] UVs = MemoryPoolManager.vector2ArrayPool.Rent(4);
         BlockData.TexturePosition tilePos = GetTexturePosition(ID, direction);
 
         UVs[0].Set(TILE_SIZE * tilePos.x + TILE_SIZE, TILE_SIZE * tilePos.y);

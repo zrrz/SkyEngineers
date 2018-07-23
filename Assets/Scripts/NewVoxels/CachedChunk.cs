@@ -13,12 +13,12 @@ public class CachedChunk {
     //public readonly LightLevel[,,] LightLevels = new LightLevel[Chunk.Size, Chunk.Size, Chunk.Size];
     //public readonly Dictionary<WorldPos, BlockData> blockDatas = new Dictionary<WorldPos, BlockData>();
 
-    public bool IsEmpty => min.x == ChunkInstance.CHUNK_SIZE;
+    public bool IsEmpty => solidBlockCount == 0;
 
     public WorldPos min = new WorldPos(ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE, ChunkInstance.CHUNK_SIZE);
     public WorldPos max = new WorldPos(-1, -1, -1);
 
-
+    public int solidBlockCount = 0;
 
     internal CachedChunk(World world, WorldPos position)
     {
@@ -30,6 +30,8 @@ public class CachedChunk {
     {
         min = new WorldPos(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
         max = new WorldPos(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+
+        solidBlockCount = reader.ReadInt32();
 
         for (var x = min.x; x <= max.x; x++)
             for (var y = min.y; y <= max.y; y++)
@@ -51,20 +53,26 @@ public class CachedChunk {
 
     public void SetBlock(int x, int y, int z, BlockData block)
     {
-        int solid = block.solid ? (1 << 14) : 0;
-        ushort blockData = (ushort)(block.ID | (ushort)solid);
-        if (blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] == blockData) return;
+        ushort solid = (ushort)(block.solid ? (1 << 14) : 0);
+        ushort blockData = (ushort)(block.ID | solid);
+        int index = x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE;
+        if (blockIds[index] == blockData) 
+            return;
 
-        blockIds[x + y * ChunkInstance.CHUNK_SIZE + z * ChunkInstance.CHUNK_SIZE * ChunkInstance.CHUNK_SIZE] = blockData;
+        blockIds[index] = blockData;
 
         if (block.ID != 0)
         {
+            solidBlockCount++;
+
             if (x < min.x) min.x = x;
             if (y < min.y) min.y = y;
             if (z < min.z) min.z = z;
             if (x > max.x) max.x = x;
             if (y > max.y) max.y = y;
             if (z > max.z) max.z = z;
+        } else {
+            solidBlockCount--;
         }
     }
 
